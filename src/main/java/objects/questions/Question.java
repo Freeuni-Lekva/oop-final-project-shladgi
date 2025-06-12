@@ -44,25 +44,3 @@ public abstract class Question {
 
     public void setMaxScore(int maxScore) {this.maxScore = maxScore;}
 }
-
-
-//int id;
-//String question;
-//String imageLink;
-//QType type;
-//int maxScore;
-//public int check(Answer answer); // returns the amount of score you got
-//public Answer getCorrectAnswer();
-//
-//
-//public void setImage(String imageLink){
-//    this.imageLink = imageLink;
-//}
-//
-//// json storing for database
-//// generates json from the data that is specific to a given class
-//public JsonObject getData();
-//
-//// given the json data generated for this object. store it in this object
-//// variables
-//public void putData(JsonObject json);
