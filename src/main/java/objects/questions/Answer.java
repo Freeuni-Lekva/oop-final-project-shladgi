@@ -5,8 +5,10 @@ import java.util.List;
 
 public class Answer<T>{
     private List<T> list;
-    public Answer(List<T> indexes){
-        this.list = indexes;
+
+    // gets the list of user inputs mainly Integers or Strings;
+    public Answer(List<T> list){
+        this.list = list;
     }
 
     // for when there is only one choice or answer
