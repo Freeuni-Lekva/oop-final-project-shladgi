@@ -4,11 +4,11 @@ package objects.questions;
 import com.google.gson.JsonObject;
 
 public abstract class Question {
-    private int id;
-    private String question;
-    private String imageLink;
-    private QType type;
-    private int maxScore;
+    protected int id;
+    protected String question;
+    protected String imageLink;
+    protected QType type;
+    protected int maxScore;
 
     // checks the answer and returns a score
     public abstract int check(Answer<?> answer);
