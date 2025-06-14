@@ -11,7 +11,15 @@ public class QuestionSingleChoice extends Question{
     int correctId;
     ArrayList<String> choices;
 
-    public QuestionSingleChoice(int correctId, ArrayList<String> choices) {
+
+    /*
+    constructor that gets
+    question string
+    correct id
+    choices for displaying
+     */
+    public QuestionSingleChoice(String question, int correctId, ArrayList<String> choices) {
+        this.question = question;
         this.correctId = correctId;
         this.choices = choices;
     }
