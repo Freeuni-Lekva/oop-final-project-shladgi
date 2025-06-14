@@ -88,7 +88,7 @@ public class QuestionFillInBlanks extends Question{
 
     // may be deleted.
     @Override
-    public void putData(JsonObject json) {
+    protected void putData(JsonObject json) {
         // load blankIdx
         // blankIdx = new  ArrayList<>();
 

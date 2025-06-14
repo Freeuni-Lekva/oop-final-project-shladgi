@@ -10,6 +10,17 @@ public abstract class Question {
     protected QType type;
     protected int maxScore;
 
+    public Question(){}
+
+    public Question(int id, String question, String imageLink, QType type, int maxScore, JsonObject json) {
+        this.id = id;
+        this.question = question;
+        this.imageLink = imageLink;
+        this.type = type;
+        this.maxScore = maxScore;
+        putData(json);
+    }
+
     // checks the answer and returns a score
     public abstract int check(Answer<?> answer);
 
@@ -19,7 +30,7 @@ public abstract class Question {
 
     // given the json data generated for this object. store it in this object
     // variables
-    public abstract void putData(JsonObject json);
+    protected abstract void putData(JsonObject json);
 
 
 
