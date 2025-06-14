@@ -45,7 +45,7 @@ public class QuestionSingleChoice extends Question{
     }
 
     @Override
-    public void putData(JsonObject json) {
+    protected void putData(JsonObject json) {
         correctId = json.get("correctId").getAsInt();
 
         choices.clear();
