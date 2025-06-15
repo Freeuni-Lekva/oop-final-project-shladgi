@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 public abstract class Question {
     protected int id;
+    protected int quizId;
     protected String question;
     protected String imageLink;
     protected QType type;
@@ -12,11 +13,13 @@ public abstract class Question {
 
     public Question(){}
 
-    public Question(int id, String question, String imageLink, QType type, int maxScore, JsonObject json) {
+    //Question Constructor that will construct the object from database row
+    public Question(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json, QType type) {
         this.id = id;
+        this.quizId = quizId;
+        this.type = type;
         this.question = question;
         this.imageLink = imageLink;
-        this.type = type;
         this.maxScore = maxScore;
         putData(json);
     }
