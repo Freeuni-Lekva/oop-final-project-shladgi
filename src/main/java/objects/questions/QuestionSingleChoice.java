@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionSingleChoice extends Question{
 
@@ -17,12 +18,12 @@ public class QuestionSingleChoice extends Question{
     correct id
     choices for displaying
      */
-    public QuestionSingleChoice(String question, int correctId, ArrayList<String> choices) {
+    public QuestionSingleChoice(String question, int correctId, List<String> choices) {
         this.type = QType.SingleChoice;
         this.maxScore = 1;
         this.question = question;
         this.correctId = correctId;
-        this.choices = choices;
+        this.choices = new ArrayList<>(choices);
     }
 
     // this is a constructor that constructs the object from database table information.
