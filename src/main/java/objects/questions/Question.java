@@ -10,6 +10,7 @@ public abstract class Question {
     protected QType type;
     protected int maxScore;
 
+
     // checks the answer and returns a score
     public abstract int check(Answer<?> answer);
 
