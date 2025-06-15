@@ -20,7 +20,7 @@ public class QuestionFillInBlanks extends Question{
     // indexes of where the blanks start in the string
     // possible correct answers with appropriate sorting
     // if the correct and user's answers should be exactly same
-    public QuestionFillInBlanks(String question, ArrayList<Integer> blankIdx, ArrayList<ArrayList<String>> correctAnswers, boolean exactMatch){
+    public QuestionFillInBlanks(String question, List<Integer> blankIdx, List<ArrayList<String>> correctAnswers, boolean exactMatch){
         type = QType.FillInBlanks;
         this.question = question;
 
