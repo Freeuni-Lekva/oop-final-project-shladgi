@@ -22,23 +22,27 @@ public class QuestionFillInBlanks extends Question{
     // if the correct and user's answers should be exactly same
     public QuestionFillInBlanks(String question, ArrayList<Integer> blankIdx, ArrayList<ArrayList<String>> correctAnswers, boolean exactMatch){
         type = QType.FillInBlanks;
-        maxScore = blankIdx.size();
         this.question = question;
 
-        this.blankIdx = blankIdx;
-        this.correctAnswers = correctAnswers;
+        // deep copy of blankIdx
+        this.blankIdx = new ArrayList<>(blankIdx);
+
+        this.correctAnswers = new ArrayList<>();
+        for(ArrayList<String> arr : correctAnswers){
+            this.correctAnswers.add(new ArrayList<>(arr)); // copy inner list
+        }
+
         this.exactMatch = exactMatch;
+
+        maxScore = this.blankIdx.size();
     }
 
 
 
-    // to do in superClass
-    /*public QuestionFillInBlanks(String question){
-        type = QType.FillInBlanks;
-        maxScore = blankIdx.size();
-        this.question = question;
-    }*/
-
+    // this is a constructor that constructs the object from database table information.
+    public QuestionFillInBlanks(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json) {
+        super(id,quizId,question,imageLink,maxScore,json, QType.FillInBlanks);
+    }
 
 
     // compare participant's answers with given possible correct answers.
@@ -83,15 +87,44 @@ public class QuestionFillInBlanks extends Question{
 
         json.addProperty("exactMatch", exactMatch);
 
+        json.addProperty("maxScore", maxScore);
+
         return json;
     }
 
-    // may be deleted.
+
     @Override
     protected void putData(JsonObject json) {
-        // load blankIdx
-        // blankIdx = new  ArrayList<>();
+        // blanks
+        blankIdx = new ArrayList<>();
+        JsonArray jsonBlanks = json.getAsJsonArray("blanks");
+        for(int i = 0; i <  jsonBlanks.size(); i++){
+            blankIdx.add(jsonBlanks.get(i).getAsInt());
+        }
 
+        // correct answers
+        correctAnswers = new ArrayList<>();
+
+        // get full answers matrix
+        JsonArray jsonCorrectAnswers = json.getAsJsonArray("correctAnswers");
+
+        for(int i = 0; i <  jsonCorrectAnswers.size(); i++){
+            // get each questions possible answers
+            JsonArray jsonPossibleAnswers = jsonCorrectAnswers.get(i).getAsJsonArray();
+
+            ArrayList<String> possibleAnswers = new ArrayList<>();
+
+            // add from json to arrayList
+            for(int j = 0; j <  jsonPossibleAnswers.size(); j++){
+                possibleAnswers.add(jsonPossibleAnswers.get(j).getAsString());
+            }
+            // add array's to matrix
+            correctAnswers.add(possibleAnswers);
+        }
+
+        exactMatch = json.get("exactMatch").getAsBoolean();
+
+        maxScore = json.get("maxScore").getAsInt();
     }
 
     // i should compare string due to given exactMatch boolean.
