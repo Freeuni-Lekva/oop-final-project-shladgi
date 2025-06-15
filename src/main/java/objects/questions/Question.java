@@ -5,10 +5,24 @@ import com.google.gson.JsonObject;
 
 public abstract class Question {
     protected int id;
+    protected int quizId;
     protected String question;
     protected String imageLink;
     protected QType type;
     protected int maxScore;
+
+    public Question(){}
+
+    //Question Constructor that will construct the object from database row
+    public Question(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json, QType type) {
+        this.id = id;
+        this.quizId = quizId;
+        this.type = type;
+        this.question = question;
+        this.imageLink = imageLink;
+        this.maxScore = maxScore;
+        putData(json);
+    }
 
     // checks the answer and returns a score
     public abstract int check(Answer<?> answer);
@@ -19,7 +33,7 @@ public abstract class Question {
 
     // given the json data generated for this object. store it in this object
     // variables
-    public abstract void putData(JsonObject json);
+    protected abstract void putData(JsonObject json);
 
 
 
