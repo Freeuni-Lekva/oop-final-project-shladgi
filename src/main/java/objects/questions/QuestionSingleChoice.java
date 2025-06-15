@@ -11,7 +11,6 @@ public class QuestionSingleChoice extends Question{
     int correctId;
     ArrayList<String> choices;
 
-
     /*
     constructor that gets
     question string
@@ -19,9 +18,16 @@ public class QuestionSingleChoice extends Question{
     choices for displaying
      */
     public QuestionSingleChoice(String question, int correctId, ArrayList<String> choices) {
+        this.type = QType.SingleChoice;
+        this.maxScore = 1;
         this.question = question;
         this.correctId = correctId;
         this.choices = choices;
+    }
+
+    // this is a constructor that constructs the object from database table information.
+    public QuestionSingleChoice(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json) {
+        super(id,quizId,question,imageLink,maxScore,json, QType.SingleChoice);
     }
 
 
@@ -45,11 +51,11 @@ public class QuestionSingleChoice extends Question{
     }
 
     @Override
-    public void putData(JsonObject json) {
+    protected void putData(JsonObject json) {
         correctId = json.get("correctId").getAsInt();
 
-        choices.clear();
-        JsonArray choicesJson = new JsonArray();
+        choices = new ArrayList<String>();
+        JsonArray choicesJson = json.get("choices").getAsJsonArray();
         for(JsonElement choice : choicesJson) choices.add(choice.getAsString());
     }
 }
