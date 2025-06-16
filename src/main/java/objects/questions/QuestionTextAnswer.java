@@ -17,7 +17,7 @@ public class QuestionTextAnswer extends Question {
         this.question = question;
         this.correctAnswers = new ArrayList<>();
         for (String s : correctAnswers) {
-            this.correctAnswers.add(s.toLowerCase());
+            this.correctAnswers.add(s);
         }
     }
 
@@ -28,7 +28,8 @@ public class QuestionTextAnswer extends Question {
     @Override
     public int check(Answer<?> answer) {
         for(int i = 0; i < correctAnswers.size(); i++)
-            if(myEquals((String) answer.get(), correctAnswers.get(i)))return 1;
+            if (myEquals((String) answer.get(), correctAnswers.get(i))) return 1;
+
         return 0;
     }
 
@@ -38,6 +39,7 @@ public class QuestionTextAnswer extends Question {
         JsonArray jsonArray = new JsonArray();
         for (String s : correctAnswers) jsonArray.add(s);
         json.add("correctAnswers", jsonArray);
+        json.addProperty("exactMatch", exactMatch);
         return json;
     }
 
@@ -47,6 +49,7 @@ public class QuestionTextAnswer extends Question {
         JsonArray jsonArray = json.getAsJsonArray("correctAnswers");
         for (int i = 0; i < jsonArray.size(); i++)
             this.correctAnswers.add(jsonArray.get(i).getAsString());
+        exactMatch = json.get("exactMatch").getAsBoolean();
     }
 
     private boolean myEquals(String answer, String correctAnswer){
