@@ -9,9 +9,11 @@ import java.util.List;
 public class QuestionMultiTextAnswer extends Question{
     List<List<String>> correctAnswers;
     boolean exactMatch;
+    boolean ordered;
 
-    public QuestionMultiTextAnswer(String question, List<List<String>> correctAnswers, boolean exactMatch){
+    public QuestionMultiTextAnswer(String question, List<List<String>> correctAnswers, boolean exactMatch, boolean ordered){
         this.question = question;
+        this.ordered = ordered;
 
         this.correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswers.size(); i++){
@@ -26,6 +28,8 @@ public class QuestionMultiTextAnswer extends Question{
 
     @Override
     public int check(Answer<?> answer) {
+        if(this.ordered) return orderedCheck(answer);
+
         if (!(answer.get(0) instanceof String)) return 0;
 
         List<String> userAnswers = new ArrayList<>();
@@ -58,6 +62,27 @@ public class QuestionMultiTextAnswer extends Question{
         return points;
     }
 
+    private int orderedCheck(Answer<?> answer) {
+        if (!(answer.get(0) instanceof String)) return 0;
+
+        int points = 0;
+        int minSize = Math.min(answer.getSize(), correctAnswers.size());
+
+        for (int i = 0; i < minSize; i++) {
+            String userAnswer = ((String) answer.get(i));
+
+            for (String possible : correctAnswers.get(i)) {
+                if (myCheck(possible, userAnswer)) {
+                    points++;
+                    break;
+                }
+            }
+        }
+
+        return points;
+    }
+
+
     private boolean myCheck(String possibleAnswer, String answer){
         if(this.exactMatch){
             return possibleAnswer.equals(answer);
@@ -79,6 +104,7 @@ public class QuestionMultiTextAnswer extends Question{
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty("exactMatch", this.exactMatch);
+        jsonObject.addProperty("ordered", this.ordered);
 
         JsonArray jsonArray = new JsonArray();
         for(int i = 0; i < this.correctAnswers.size(); i++){
@@ -91,14 +117,16 @@ public class QuestionMultiTextAnswer extends Question{
 
         jsonObject.add("correctAnswers", jsonArray);
 
-        return null;
+        return jsonObject;
     }
 
     @Override
     public void putData(JsonObject json) {
         this.exactMatch = json.get("exactMatch").getAsBoolean();
+        this.ordered = json.get("ordered").getAsBoolean();
         JsonArray jsonArray = json.get("correctAnswers").getAsJsonArray();
 
+        this.correctAnswers = new ArrayList<>();
         for(int i = 0; i < jsonArray.size(); i++){
             JsonArray jsonEach = jsonArray.get(i).getAsJsonArray();
             List<String> each = new ArrayList<>();
