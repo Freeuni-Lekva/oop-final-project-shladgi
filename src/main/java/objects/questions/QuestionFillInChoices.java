@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionFillInChoices extends Question{
+    // this shows the correct index of answer for each blank space
     private List<Integer> correctIndexes;
+    // list of answers for each blank
     private List<List<String>> choices;
+    // indexes where blanks should be inserted
     private List<Integer> fillIndexes;
 
-    public QuestionFillInChoices(String question, List<Integer> correctIndexes, List<List<String>> choices, List<Integer> fillIndexes, int quizId){
+    public QuestionFillInChoices(String question, List<Integer> correctIndexes, List<List<String>> choices, List<Integer> fillIndexes){
         this.question = question;
         this.type = QType.FillChoices;
         this.maxScore = correctIndexes.size();
