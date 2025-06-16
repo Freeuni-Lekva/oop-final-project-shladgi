@@ -17,7 +17,7 @@ public class QuestionMultiTextAnswer extends Question{
 
         this.correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswers.size(); i++){
-            correctAnswers.add(new ArrayList<>(correctAnswers.get(i)));
+            this.correctAnswers.add(new ArrayList<>(correctAnswers.get(i)));
         }
         this.exactMatch = exactMatch;
     }
@@ -28,6 +28,7 @@ public class QuestionMultiTextAnswer extends Question{
 
     @Override
     public int check(Answer<?> answer) {
+        if(answer.getSize() == 0) return 0;
         if(this.ordered) return orderedCheck(answer);
 
         if (!(answer.get(0) instanceof String)) return 0;
@@ -103,8 +104,8 @@ public class QuestionMultiTextAnswer extends Question{
     public JsonObject getData() {
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("exactMatch", this.exactMatch);
-        jsonObject.addProperty("ordered", this.ordered);
+        jsonObject.addProperty("exactMatch", (Boolean) this.exactMatch);
+        jsonObject.addProperty("ordered", (Boolean) this.ordered);
 
         JsonArray jsonArray = new JsonArray();
         for(int i = 0; i < this.correctAnswers.size(); i++){

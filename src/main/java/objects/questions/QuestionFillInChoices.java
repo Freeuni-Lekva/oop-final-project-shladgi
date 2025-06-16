@@ -33,8 +33,9 @@ public class QuestionFillInChoices extends Question{
 
     @Override
     public int check(Answer<?> answer) {
+        if(answer.getSize() == 0) return 0;
         int points = 0;
-        for(int i = 0; i < this.correctIndexes.size(); i++){
+        for(int i = 0; i < Math.min(this.correctIndexes.size(), answer.getSize()); i++){
             if(this.correctIndexes.get(i) == (int)answer.get(i)) points++;
         }
         return points;
@@ -81,7 +82,7 @@ public class QuestionFillInChoices extends Question{
         this.correctIndexes = new ArrayList<>();
         JsonArray jsonCorrectIndexes = json.get("correctIndexes").getAsJsonArray();
         for(int i = 0; i < jsonCorrectIndexes.size(); i++){
-            this.correctIndexes.add(jsonCorrectIndexes.get(i).getAsInt());
+            this.correctIndexes.add((Integer)jsonCorrectIndexes.get(i).getAsInt());
         }
 
         this.choices = new ArrayList<>();
@@ -100,7 +101,7 @@ public class QuestionFillInChoices extends Question{
         JsonArray jsonBlanks = json.get("blanks").getAsJsonArray();
 
         for(int i = 0; i < jsonBlanks.size(); i++){
-            fillIndexes.add(jsonBlanks.get(i).getAsInt());
+            fillIndexes.add((Integer)jsonBlanks.get(i).getAsInt());
         }
 
     }
