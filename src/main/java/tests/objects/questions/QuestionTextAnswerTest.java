@@ -25,10 +25,12 @@ public class QuestionTextAnswerTest {
         Answer<String> answer = new Answer<>(List.of("test"));
         Answer<String> answer1 = new Answer<>(List.of("tes"));
         Answer<String> answer2 = new Answer<>(List.of("Test"));
+        Answer<String> answer3 = new Answer<>(List.of("Test1"));
         questionTextAnswer = new QuestionTextAnswer("abc", answers,true);
         assertEquals(1, questionTextAnswer.check(answer));
         assertEquals(0,  questionTextAnswer.check(answer1));
         assertEquals(1,  questionTextAnswer.check(answer2));
+        assertEquals(0,  questionTextAnswer.check(answer3));
     }
 
     @Test
@@ -42,10 +44,14 @@ public class QuestionTextAnswerTest {
         Answer<String> answer1 = new Answer<>(List.of(" test "));
         Answer<String> answer2 = new Answer<>(List.of("TEST1"));
         Answer<String> answer3 = new Answer<>(List.of("es"));
+        Answer<String> answer4 = new Answer<>(List.of("tesT    1"));
+        Answer<String> answer5 = new Answer<>(List.of("te    s1t"));
 
         assertEquals(1, questionTextAnswer.check(answer1));
         assertEquals(1, questionTextAnswer.check(answer2));
         assertEquals(0, questionTextAnswer.check(answer3));
+        assertEquals(1, questionTextAnswer.check(answer4));
+        assertEquals(0, questionTextAnswer.check(answer5));
     }
 
 
@@ -83,6 +89,8 @@ public class QuestionTextAnswerTest {
         Answer<String> answer = new Answer<>(List.of("test"));
         Answer<String> answer1 = new Answer<>(List.of("tesT"));
         Answer<String> answer2 = new Answer<>(List.of("TE     S T 1 "));
+        Answer<String> answer3 = new Answer<>(List.of(" t es "));
+        Answer<String> answer4 = new Answer<>(List.of("tesT."));
 
         questionTextAnswer = new QuestionTextAnswer("abc", correctAnswers, false);
         JsonObject jsonObject = questionTextAnswer.getData();
@@ -95,6 +103,7 @@ public class QuestionTextAnswerTest {
         assertEquals(1, questionTextAnswer.check(answer));
         assertEquals(1, questionTextAnswer.check(answer1));
         assertEquals(1, questionTextAnswer.check(answer2));
+        assertEquals(0, questionTextAnswer.check(answer3));
+        assertEquals(0, questionTextAnswer.check(answer4));
     }
-
 }
