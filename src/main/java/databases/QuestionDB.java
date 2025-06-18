@@ -56,9 +56,12 @@ public class QuestionDB extends DataBase<Question> {
         String filterString = filter.toString();
         try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM questions WHERE "+filterString)){
             ResultSet rs = stmt.executeQuery();
+
+            // loop over the query result rows and add them to the list
             while(rs.next()){
                 list.add(convert(rs));
             }
+
             rs.close();
         }catch (Exception e){
             System.out.println("ERROR IN QUERY FUNCTION IN DATABASE");
@@ -66,6 +69,8 @@ public class QuestionDB extends DataBase<Question> {
         return list;
     }
 
+
+    // Converts The current resultset to a correct question object and returns it
     private Question convert(ResultSet rs){
         Question ret = null;
         try {
@@ -77,12 +82,14 @@ public class QuestionDB extends DataBase<Question> {
             String type = rs.getString("type");
             int maxScore = rs.getInt("maxscore");
 
+            // read json
             String jsonData = rs.getString("jsondata");
             Gson gson = new Gson();
             JsonObject json = gson.fromJson(jsonData, JsonObject.class);
 
             QType qtype = QType.valueOf(type);
 
+            // make the question
             ret =  QuestionMaker.makeQuestion(id, quizId, question, imageLink, maxScore, qtype, json);
 
         } catch (SQLException e) {

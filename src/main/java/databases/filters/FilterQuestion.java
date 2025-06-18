@@ -12,7 +12,7 @@ public class FilterQuestion implements Filter<Question>{
     String queryStr = "(true)";
 
     /**
-     * Construct a Filter for database with given constraints 'null' means no constraint
+     * Construct a Filter for database with given constraints,  'null' means no constraint
      * @param id Question id
      * @param quizId QuizId of the quiz containing this question
      * @param type
