@@ -15,13 +15,13 @@ import java.util.List;
 
 public class QuestionFillInBlanksTest {
 
-    ArrayList<Integer> blanks;
-    ArrayList<ArrayList<String>> corrects = new ArrayList<>();
+    List<Integer> blanks;
+    List<List<String>> corrects;
 
     @BeforeEach
     void setUp() {
         blanks = new ArrayList<>();
-        ArrayList<ArrayList<String>> corrects = new ArrayList<>();
+        corrects = new ArrayList<>();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class QuestionFillInBlanksTest {
         corrects.get(0).add("was");
 
         QuestionFillInBlanks q = new QuestionFillInBlanks(question, blanks, corrects, false);
-        ArrayList<String> ls = new ArrayList<>();
+        List<String> ls = new ArrayList<>();
         // there should not be null, it throws an error.
         ls.add("am");
         Answer<String> ans = new Answer<>(ls);
@@ -60,7 +60,7 @@ public class QuestionFillInBlanksTest {
         corrects.get(1).add("good");
 
         QuestionFillInBlanks q = new QuestionFillInBlanks(question, blanks, corrects, false);
-        ArrayList<String> ls = new ArrayList<>();
+        List<String> ls = new ArrayList<>();
         ls.add("am");
         ls.add("");
 
@@ -96,7 +96,7 @@ public class QuestionFillInBlanksTest {
         corrects.get(2).add("Test to write");
 
         QuestionFillInBlanks q = new QuestionFillInBlanks(question, blanks, corrects, true);
-        ArrayList<String> ls = new ArrayList<>();
+        List<String> ls = new ArrayList<>();
         ls.add("am");
         ls.add("Ba d");
         ls.add("test to write");
@@ -117,12 +117,12 @@ public class QuestionFillInBlanksTest {
     void  questionFillInBlanksTest_getDataAndPutData1() {
         String question = "i _ a _ student";
         // blanks
-        ArrayList<Integer> blanks = new ArrayList<>(List.of(2, 6));
+        List<Integer> blanks = new ArrayList<>(List.of(2, 6));
 
         // correctAnswers
-        ArrayList<ArrayList<String>> corrects = new ArrayList<>();
-        ArrayList<String> blank1 = new ArrayList<>(List.of("am", "was"));
-        ArrayList<String> blank2 = new ArrayList<>(List.of("good", "bad"));
+        List<List<String>> corrects = new ArrayList<>();
+        List<String> blank1 = new ArrayList<>(List.of("am", "was"));
+        List<String> blank2 = new ArrayList<>(List.of("good", "bad"));
         corrects.add(blank1);
         corrects.add(blank2);
 
@@ -147,7 +147,7 @@ public class QuestionFillInBlanksTest {
         assertEquals(q.correctAnswers, loaded.correctAnswers);
         assertEquals(q.exactMatch, loaded.exactMatch);
 */
-        ArrayList<String> ls = new ArrayList<>();
+        List<String> ls = new ArrayList<>();
         ls.add("am");
         ls.add("Ba d");
         Answer<String> ans = new Answer<>(ls);
@@ -166,10 +166,10 @@ public class QuestionFillInBlanksTest {
     void questionFillInBlanksTest_getDataAndPutData_exactMatchTrue() {
         String question = "I _ to _ the _ because it _";
         // blank positions
-        ArrayList<Integer> blanks = new ArrayList<>(List.of(2, 7, 16, 33));
+        List<Integer> blanks = new ArrayList<>(List.of(2, 7, 16, 33));
 
         // correctAnswers
-        ArrayList<ArrayList<String>> corrects = new ArrayList<>();
+        List<List<String>> corrects = new ArrayList<>();
         corrects.add(new ArrayList<>(List.of("went", "go")));
         corrects.add(new ArrayList<>(List.of("see", "visit")));
         corrects.add(new ArrayList<>(List.of("museum")));
@@ -186,19 +186,19 @@ public class QuestionFillInBlanksTest {
         assertEquals(q.getMaxScore(), loaded.getMaxScore());
 
         // all answers match exactly
-        ArrayList<String> answers1 = new ArrayList<>(List.of("went", "see", "museum", "closed"));
+        List<String> answers1 = new ArrayList<>(List.of("went", "see", "museum", "closed"));
         Answer<String> ans1 = new Answer<>(answers1);
         assertEquals(4, q.check(ans1));
         assertEquals(4, loaded.check(ans1));
 
         // one answer is almost right but not exactly
-        ArrayList<String> answers2 = new ArrayList<>(List.of("Went", "see", "museum", "closed")); // capitalized first
+        List<String> answers2 = new ArrayList<>(List.of("Went", "see", "museum", "closed")); // capitalized first
         Answer<String> ans2 = new Answer<>(answers2);
         assertEquals(3, q.check(ans2));
         assertEquals(3, loaded.check(ans2));
 
         // Negative test: wrong last 2 answers
-        ArrayList<String> answers3 = new ArrayList<>(List.of("went", "visit", "m useum", "close"));
+        List<String> answers3 = new ArrayList<>(List.of("went", "visit", "m useum", "close"));
         Answer<String> ans3 = new Answer<>(answers3);
         assertEquals(2, q.check(ans3));
         assertEquals(2, loaded.check(ans3));

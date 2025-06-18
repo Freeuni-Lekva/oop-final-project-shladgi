@@ -7,10 +7,10 @@ import java.util.*;
 public class QuestionFillInBlanks extends Question{
 
     // indecies where the blanks are.
-    ArrayList<Integer> blankIdx;
+    List<Integer> blankIdx;
 
     // list of possible correct answers for each blank
-    ArrayList<ArrayList<String>> correctAnswers;
+    List<List<String>> correctAnswers;
 
     // it is true if user's answer should match exactly with possible correct answer, otherwise false.
     boolean exactMatch;
@@ -20,7 +20,7 @@ public class QuestionFillInBlanks extends Question{
     // indexes of where the blanks start in the string
     // possible correct answers with appropriate sorting
     // if the correct and user's answers should be exactly same
-    public QuestionFillInBlanks(String question, List<Integer> blankIdx, List<ArrayList<String>> correctAnswers, boolean exactMatch){
+    public QuestionFillInBlanks(String question, List<Integer> blankIdx, List<List<String>> correctAnswers, boolean exactMatch){
         type = QType.FillInBlanks;
         this.question = question;
 
@@ -28,7 +28,7 @@ public class QuestionFillInBlanks extends Question{
         this.blankIdx = new ArrayList<>(blankIdx);
 
         this.correctAnswers = new ArrayList<>();
-        for(ArrayList<String> arr : correctAnswers){
+        for(List<String> arr : correctAnswers){
             this.correctAnswers.add(new ArrayList<>(arr)); // copy inner list
         }
 
@@ -73,7 +73,7 @@ public class QuestionFillInBlanks extends Question{
         json.add("blanks", jsonBlanks);
 
         JsonArray jsonCorrectAnswers = new JsonArray();
-        for (ArrayList<String> possibleAnswers : correctAnswers){
+        for (List<String> possibleAnswers : correctAnswers){
             JsonArray jsonPossibleAnswers = new JsonArray();
 
             for (String  possibleAnswer : possibleAnswers){
@@ -112,7 +112,7 @@ public class QuestionFillInBlanks extends Question{
             // get each questions possible answers
             JsonArray jsonPossibleAnswers = jsonCorrectAnswers.get(i).getAsJsonArray();
 
-            ArrayList<String> possibleAnswers = new ArrayList<>();
+            List<String> possibleAnswers = new ArrayList<>();
 
             // add from json to arrayList
             for(int j = 0; j <  jsonPossibleAnswers.size(); j++){
