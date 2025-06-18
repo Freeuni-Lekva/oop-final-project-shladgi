@@ -33,6 +33,7 @@ public class FilterQuestion implements Filter<Question>{
         return true;
     }
 
+    // this is fot the database query
     @Override
     public String toString(){
         return queryStr;
