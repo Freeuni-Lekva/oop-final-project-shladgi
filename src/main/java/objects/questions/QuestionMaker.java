@@ -17,8 +17,7 @@ public class QuestionMaker {
         if(type == QType.FillInBlanks) return new QuestionFillInBlanks(id, quizId, question, imageLink, maxScore, json);
         //if(type == QType.FillChoices) return new QuestionFillChoices(id, quizId, question, imageLink, maxScore, json);
 
-        // if none of the types matched
-        System.out.println("UNKNOWN QUESTION TYPE DETECTED IN QUESTIONMAKER" + type);
-        return null;
+        // if none of the types matched we messed up somewhere
+        throw new RuntimeException("UNKNOWN QUESTION TYPE DETECTED IN QUESTIONMAKER" + type);
     }
 }
