@@ -27,15 +27,17 @@ public class QuestionDB extends DataBase<Question> {
 
     @Override
     public void add(Question entity) {
-        try(PreparedStatement stmt = con.prepareStatement("INSERT INTO questions (quizid, imagelink, type, maxscore, jsondata) " +
-                "Values(?, ?, ?, ?, ?)")){
+        try(PreparedStatement stmt = con.prepareStatement("INSERT INTO questions (quizid, imagelink, type, maxscore, jsondata, question) " +
+                "Values(?, ?, ?, ?, ?, ?)")){
 
             // set everything but id
             stmt.setInt(1, entity.getQuizId());
             stmt.setString(2, entity.getImageLink());
             stmt.setString(3, entity.getType().name());
             stmt.setInt(4, entity.getMaxScore());
-            stmt.setString(5, entity.getData().toString());
+            stmt.setObject(5, entity.getData().toString(), Types.OTHER);
+            stmt.setString(6, entity.getQuestion());
+
 
             // add to database
             stmt.executeUpdate();
@@ -46,7 +48,19 @@ public class QuestionDB extends DataBase<Question> {
             rs.close();
 
         }catch (Exception e){
-            System.out.println("ERROR IN ADD FUNCTION IN DATABASE");
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    
+    
+
+    @Override
+    public int delete(Filter<Question> filter) {
+        String filterString = filter.toString();
+        try (PreparedStatement stmt = con.prepareStatement("DELETE FROM questions WHERE " + filterString)) {
+            return stmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -64,7 +78,7 @@ public class QuestionDB extends DataBase<Question> {
 
             rs.close();
         }catch (Exception e){
-            System.out.println("ERROR IN QUERY FUNCTION IN DATABASE");
+            throw new RuntimeException(e.getMessage());
         }
         return list;
     }
@@ -87,13 +101,14 @@ public class QuestionDB extends DataBase<Question> {
             Gson gson = new Gson();
             JsonObject json = gson.fromJson(jsonData, JsonObject.class);
 
+
             QType qtype = QType.valueOf(type);
 
             // make the question
             ret =  QuestionMaker.makeQuestion(id, quizId, question, imageLink, maxScore, qtype, json);
 
         } catch (SQLException e) {
-            System.out.println("ERROR IN CONVERT FUNCTION IN DATABASE");
+            throw new RuntimeException("ERROR IN CONVERT FUNCTION IN DATABASE");
         }
         return ret;
     }

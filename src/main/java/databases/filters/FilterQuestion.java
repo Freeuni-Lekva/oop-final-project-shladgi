@@ -12,6 +12,15 @@ public class FilterQuestion implements Filter<Question>{
     String queryStr = "(true)";
 
     /**
+     * Static method for easily getting all filter
+     * @return new all Filter
+     */
+    public static FilterQuestion all(){
+        return new FilterQuestion(null,null,null);
+    }
+
+
+    /**
      * Construct a Filter for database with given constraints,  'null' means no constraint
      * @param id Question id
      * @param quizId QuizId of the quiz containing this question

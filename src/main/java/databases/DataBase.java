@@ -1,6 +1,7 @@
 package databases;
 
 import databases.filters.Filter;
+import objects.questions.Question;
 
 import java.sql.Connection;
 import java.util.List;
@@ -13,6 +14,12 @@ public abstract class DataBase<T>{
      */
     public abstract void add(T entity);
 
+    /**
+     * Delete all the questions satisfying the Filter
+     * @param filter
+     * @return amount of rows deleted
+     */
+    public abstract int delete(Filter<T> filter);
 
     /**
      * Query the database with the filter
