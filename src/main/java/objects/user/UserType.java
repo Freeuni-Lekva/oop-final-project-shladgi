@@ -1,4 +1,4 @@
-package objects.questions.user;
+package objects.user;
 
 public enum UserType {
     Admin,
