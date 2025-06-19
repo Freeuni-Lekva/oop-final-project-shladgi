@@ -1,11 +1,11 @@
 package objects.user;
 
-public class Achievements {
+public class Achievement {
     private String id;
     private String iconLink;
     private AchievementRarity achivementRarity;
 
-    public Achievements(String id, String iconLink, AchievementRarity achivementRarity) {
+    public Achievement(String id, String iconLink, AchievementRarity achivementRarity) {
         this.id = id;
         this.iconLink = iconLink;
         this.achivementRarity = achivementRarity;

@@ -6,6 +6,12 @@ public class UserAchievement {
     private int id, userId, achievementId;
     private LocalDateTime creationDate;
 
+    public UserAchievement(int userId, int achievementId, LocalDateTime creationDate) {
+        this.userId = userId;
+        this.achievementId = achievementId;
+        this.creationDate = creationDate;
+    }
+
     public UserAchievement(int id, int userId, int achievementId, LocalDateTime creationDate) {
         this.id = id;
         this.userId = userId;
