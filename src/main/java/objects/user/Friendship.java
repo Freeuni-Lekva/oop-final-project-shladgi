@@ -2,16 +2,16 @@ package objects.user;
 
 import java.time.LocalDateTime;
 
-public class FriendShip {
+public class Friendship {
     private int id,firstId, secondId;
     private LocalDateTime creationDate;
 
-    public FriendShip(int firstId, int secondId,  LocalDateTime creationDate) {
+    public Friendship(int firstId, int secondId,  LocalDateTime creationDate) {
         this.firstId = firstId;
         this.secondId = secondId;
         this.creationDate = creationDate;
     }
-    public FriendShip(int id,int firstId, int secondId,  LocalDateTime creationDate) {
+    public Friendship(int id,int firstId, int secondId,  LocalDateTime creationDate) {
         this.id = id;
         this.firstId = firstId;
         this.secondId = secondId;
