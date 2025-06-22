@@ -1,10 +1,6 @@
-package tests.objects.questions;
+package objects.questions;
 
 import com.google.gson.JsonObject;
-import objects.questions.Answer;
-import objects.questions.QType;
-import objects.questions.Question;
-import objects.questions.QuestionTextAnswer;
 import org.junit.Test;
 
 import java.util.ArrayList;
