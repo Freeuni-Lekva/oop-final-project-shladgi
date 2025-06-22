@@ -1,8 +1,6 @@
-package tests.objects.questions;
+package objects.questions;
 
 import com.google.gson.JsonObject;
-import objects.questions.Answer;
-import objects.questions.QuestionFillInChoices;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
