@@ -37,7 +37,7 @@ CREATE TABLE quizzes
 
 CREATE TABLE questions
 (
-    questionid INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     quizid     INT                                                                                                  NOT NULL,
     question   VARCHAR(1000)                                                                                        NOT NULL,
     imagelink  VARCHAR(255),

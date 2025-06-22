@@ -1,13 +1,15 @@
 package databases;
 
-import databases.filters.FilterQuestion;
+import databases.filters.FilterCondition;
+import databases.filters.Operator;
+import databases.filters.fields.QuestionField;
 import objects.questions.Question;
 import objects.questions.QuestionSingleChoice;
 import objects.questions.QuestionTextAnswer;
-import org.junit.Before;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,15 +18,15 @@ public class QuestionDBTest {
 
     private static Connection conn;
     private static QuestionDB questionDB;
-    private static FilterQuestion allFilter = FilterQuestion.all();
-
+    private static List<FilterCondition<QuestionField>> allFilter;
     @BeforeAll
     public static void setUp() throws SQLException {
+        allFilter = new ArrayList<>();
         conn = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
         Statement stmt = conn.createStatement();
         stmt.execute("CREATE TABLE questions\n" +
                 "(\n" +
-                "    questionid INT PRIMARY KEY AUTO_INCREMENT,\n" +
+                "    id INT PRIMARY KEY AUTO_INCREMENT,\n" +
                 "    quizid     INT                                                                                                  NOT NULL,\n" +
                 "    question   VARCHAR(1000)                                                                                        NOT NULL,\n" +
                 "    imagelink  VARCHAR(255),\n" +
@@ -70,15 +72,15 @@ public class QuestionDBTest {
         int size = questions.size();
 
         // delete by small amounts
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 1, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 1)));
         assertEquals( size - 1, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 2, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 2)));
         assertEquals(size - 2, questionDB.query(allFilter).size());
-        assertEquals(0, questionDB.delete(new FilterQuestion(null, 1, null)));
+        assertEquals(0, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 1)));
         assertEquals(size - 2, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 3, null)));
+        assertEquals(1, questionDB.delete(List.of(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 3))));
         assertEquals(size - 3, questionDB.query(allFilter).size());
-        assertEquals(2, questionDB.delete(new FilterQuestion(null, 4, null)));
+        assertEquals(2, questionDB.delete(List.of(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 4))));
         assertEquals(size - 5, questionDB.query(allFilter).size());
 
         questionDB.delete(allFilter);
@@ -110,12 +112,12 @@ public class QuestionDBTest {
         assertEquals(0, questionDB.query(allFilter).size());
         questionDB.add(q1);
         assertEquals(1, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 1, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 1)));
         assertEquals(0, questionDB.query(allFilter).size());
 
         questionDB.add(q2);
         assertEquals(1, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 2, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 2)));
         assertEquals(0, questionDB.query(allFilter).size());
 
         // Test adding multiple and deleting one by one
@@ -126,15 +128,15 @@ public class QuestionDBTest {
         questionDB.add(q4);
         assertEquals(5, questionDB.query(allFilter).size());
 
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 3, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 3)));
         assertEquals(4, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 5, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 5)));
         assertEquals(3, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 2, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 2)));
         assertEquals(2, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 4, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 4)));
         assertEquals(1, questionDB.query(allFilter).size());
-        assertEquals(1, questionDB.delete(new FilterQuestion(null, 1, null)));
+        assertEquals(1, questionDB.delete(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, 1)));
         assertEquals(0, questionDB.query(allFilter).size());
     }
 
