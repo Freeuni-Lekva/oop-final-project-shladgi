@@ -1,9 +1,5 @@
-package tests.objects.questions;
+package objects.questions;
 
-import objects.questions.Answer;
-import objects.questions.Question;
-import objects.questions.QuestionSingleChoice;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

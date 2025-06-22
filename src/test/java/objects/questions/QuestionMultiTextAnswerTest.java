@@ -1,13 +1,10 @@
-package tests.objects.questions;
+package objects.questions;
 
-import objects.questions.Answer;
-import objects.questions.QuestionMultiTextAnswer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class QuestionMultiTextAnswerTest {
 

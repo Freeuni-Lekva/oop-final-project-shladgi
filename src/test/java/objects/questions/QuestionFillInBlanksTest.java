@@ -1,10 +1,6 @@
-package tests.objects.questions;
+package objects.questions;
 
 import com.google.gson.JsonObject;
-import objects.questions.Answer;
-import objects.questions.QType;
-import objects.questions.QuestionFillInBlanks;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
