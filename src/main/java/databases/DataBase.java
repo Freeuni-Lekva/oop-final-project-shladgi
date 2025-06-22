@@ -3,7 +3,7 @@ package databases;
 import databases.filters.Filter;
 import databases.filters.FilterBuilder;
 import databases.filters.FilterCondition;
-import databases.filters.fields.Field;
+import databases.filters.fields.SqlField;
 import objects.questions.Question;
 
 import java.sql.Connection;
@@ -12,12 +12,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DataBase<T, TField extends Field>{
+public abstract class DataBase<T, TField extends SqlField>{
     Connection con;
+    Class<T> clazz;
 
-
-    DataBase(Connection con){
+    DataBase(Connection con, Class<T> clazz){
         this.con = con;
+        this.clazz = clazz;
     }
 
     /**
@@ -26,11 +27,7 @@ public abstract class DataBase<T, TField extends Field>{
      */
     public void add(T entity){
         try{
-            PreparedStatement stmt = prepareAddStatement(entity);
-            int rows = stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
-            if(rs.next()) setIdWithResultSet(entity, rs);
-            rs.close();
+            DatabaseAdder.Add(entity, con);
         }catch (Exception e){
             throw new RuntimeException("ADD ERROR " + e.getMessage());
         }
@@ -62,7 +59,7 @@ public abstract class DataBase<T, TField extends Field>{
             ResultSet rs = stmt.executeQuery();
 
             // loop over the query result rows and add them to the list
-            while(rs.next()) list.add(convert(rs));
+            while(rs.next()) list.add((T) Converter.convert(clazz, rs));
 
             rs.close();
         }catch (Exception e){
@@ -78,9 +75,5 @@ public abstract class DataBase<T, TField extends Field>{
     public int delete(FilterCondition<TField>... filter){
         return delete(List.of(filter));
     }
-
-    protected abstract T convert(ResultSet rs);
-    protected abstract void setIdWithResultSet(T entity, ResultSet rs);
-    protected abstract PreparedStatement prepareAddStatement(T entity);
 
 }

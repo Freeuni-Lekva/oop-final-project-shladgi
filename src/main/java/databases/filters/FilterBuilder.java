@@ -1,6 +1,5 @@
 package databases.filters;
 
-import databases.filters.fields.Field;
 
 import java.util.List;
 

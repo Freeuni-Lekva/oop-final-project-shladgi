@@ -1,5 +1,5 @@
 package databases.filters.fields;
 
-public interface Field{
+public interface SqlField{
     public String getColumnName();
 }

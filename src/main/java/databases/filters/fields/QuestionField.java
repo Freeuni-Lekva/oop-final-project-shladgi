@@ -2,7 +2,7 @@ package databases.filters.fields;
 
 import objects.questions.QType;
 
-public enum QuestionField implements Field{
+public enum QuestionField implements SqlField{
     ID("id"),
     QUIZID("quizid"),
     TYPE("type");

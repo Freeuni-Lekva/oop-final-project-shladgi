@@ -44,6 +44,10 @@ public class QuestionFillInBlanks extends Question{
         super(id,quizId,question,imageLink,maxScore,json, QType.FillInBlanks);
     }
 
+    public QuestionFillInBlanks() {
+
+    }
+
 
     // compare participant's answers with given possible correct answers.
     @Override
@@ -94,7 +98,7 @@ public class QuestionFillInBlanks extends Question{
 
 
     @Override
-    protected void putData(JsonObject json) {
+    public void putData(JsonObject json) {
         // blanks
         blankIdx = new ArrayList<>();
         JsonArray jsonBlanks = json.getAsJsonArray("blanks");

@@ -26,6 +26,10 @@ public class QuestionMultiTextAnswer extends Question{
     public QuestionMultiTextAnswer(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json) {
         super(id,quizId,question,imageLink,maxScore,json, QType.MultiTextAnswer);    }
 
+    public QuestionMultiTextAnswer() {
+
+    }
+
     @Override
     public int check(Answer<?> answer) {
         if(answer.getSize() == 0) return 0;

@@ -1,8 +1,8 @@
 package databases.filters;
 
-import databases.filters.fields.Field;
+import databases.filters.fields.SqlField;
 
-public class FilterCondition<T extends Field>{
+public class FilterCondition<T extends SqlField>{
     private T field;
     private Operator operator;
     private String value;
