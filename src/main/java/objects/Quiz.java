@@ -10,6 +10,8 @@ public class Quiz {
     private double totalScore;
     private boolean isRandom, singlePage, immediateCorrection;
 
+    public Quiz(){}
+
     public Quiz(String title, int userId, LocalDateTime creationDate, double totalScore, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection) {
         this.title = title;
         this.userId = userId;

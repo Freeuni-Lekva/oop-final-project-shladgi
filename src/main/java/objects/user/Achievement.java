@@ -7,6 +7,8 @@ public class Achievement {
     private String iconLink;
     private AchievementRarity achivementRarity;
 
+    public Achievement(){}
+
     public Achievement(int id, String iconLink, AchievementRarity achivementRarity) {
         this.id = id;
         this.iconLink = iconLink;

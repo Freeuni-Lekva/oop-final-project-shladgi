@@ -1,11 +1,14 @@
 package databases;
 
+import databases.annotations.AnnotationUtil;
+import databases.annotations.Table;
 import databases.filters.Filter;
 import databases.filters.FilterBuilder;
 import databases.filters.FilterCondition;
 import databases.filters.fields.SqlField;
 import objects.questions.Question;
 
+import java.lang.annotation.Annotation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,10 +18,23 @@ import java.util.List;
 public abstract class DataBase<T, TField extends SqlField>{
     Connection con;
     Class<T> clazz;
+    String tableName = null;
 
-    DataBase(Connection con, Class<T> clazz){
+    public DataBase(Connection con, Class<T> clazz){
         this.con = con;
         this.clazz = clazz;
+        initTable();
+    }
+
+    private void initTable(){
+        List<Annotation> classAnnotations = AnnotationUtil.getClassAnnotationsWithAncestors(clazz);
+        for(Annotation a : classAnnotations){
+            if(a.annotationType().equals(Table.class)){
+                if(tableName != null) throw new RuntimeException("More than one table annotation found in class " + clazz.getName());
+                tableName = ((Table) a ).name();
+            }
+        }
+        if(tableName == null) throw new RuntimeException("No table annotation found in class " + clazz.getName());
     }
 
     /**
@@ -40,7 +56,7 @@ public abstract class DataBase<T, TField extends SqlField>{
      */
     public int delete(List<FilterCondition<TField>> filterConditions){
         String filterString = FilterBuilder.buildFilter(filterConditions);
-        try (PreparedStatement stmt = con.prepareStatement("DELETE FROM questions WHERE " + filterString)) {
+        try (PreparedStatement stmt = con.prepareStatement("DELETE FROM "+tableName+" WHERE " + filterString)) {
             return stmt.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException("DELETE ERROR " + e.getMessage());
@@ -55,7 +71,7 @@ public abstract class DataBase<T, TField extends SqlField>{
     public List<T> query(List<FilterCondition<TField>> filterConditions){
         List<T> list = new ArrayList<>();
         String filterString = FilterBuilder.buildFilter(filterConditions);
-        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM questions WHERE "+filterString)){
+        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM "+tableName+" WHERE "+filterString)){
             ResultSet rs = stmt.executeQuery();
 
             // loop over the query result rows and add them to the list

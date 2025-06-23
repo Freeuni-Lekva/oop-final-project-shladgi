@@ -7,6 +7,8 @@ public class QuizResult {
     private LocalDateTime creationDate;
     private double totalScore;
 
+    public QuizResult(){}
+
     public QuizResult(int userId, int quizId, LocalDateTime creationDate, double totalScore) {
         this.id = id;
         this.userId = userId;

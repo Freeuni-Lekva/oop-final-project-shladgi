@@ -6,6 +6,8 @@ public class FriendRequest {
     private int id, firstId, secondId;
     private LocalDateTime creationDate;
 
+    public FriendRequest(){}
+
     public FriendRequest(int firstId, int secondId, LocalDateTime creationDate) {
         this.firstId = firstId;
         this.secondId = secondId;

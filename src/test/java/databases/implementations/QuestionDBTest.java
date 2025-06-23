@@ -1,4 +1,4 @@
-package databases;
+package databases.implementations;
 
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
@@ -14,11 +14,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QuestionDBTest {
 
     private static Connection conn;
     private static QuestionDB questionDB;
     private static List<FilterCondition<QuestionField>> allFilter;
+
+
     @BeforeAll
     public static void setUp() throws SQLException {
         allFilter = new ArrayList<>();

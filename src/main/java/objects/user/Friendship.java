@@ -1,10 +1,26 @@
 package objects.user;
 
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "friendships")
 public class Friendship {
-    private int id,firstId, secondId;
+
+    @Column(name = "id", primary = true)
+    private int id;
+
+    @Column(name = "firstid")
+    private int firstId;
+
+    @Column(name = "secondid")
+    private int secondId;
+
+    @Column(name = "creationdate")
     private LocalDateTime creationDate;
+
+    public Friendship(){}
 
     public Friendship(int firstId, int secondId,  LocalDateTime creationDate) {
         this.firstId = firstId;

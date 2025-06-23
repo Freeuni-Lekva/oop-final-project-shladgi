@@ -48,7 +48,11 @@ public class Converter {
                 QType qType = QType.valueOf(type);
                 obj = QuestionMaker.makeQuestion(qType);
             }else{
-                obj = clazz.getDeclaredConstructor().newInstance();
+                try{
+                    obj = clazz.getDeclaredConstructor().newInstance();
+                }catch (NoSuchMethodException e){
+                    throw new RuntimeException("Class " + clazz.getName() + " does not have a default constructor with no parameters.  add () constructor to fix it");
+                }
             }
 
             if(jsonColumnName != null){

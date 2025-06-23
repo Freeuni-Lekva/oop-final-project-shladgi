@@ -2,14 +2,14 @@
 USE quizKhana;
 
 -- DROP TABLES
-DROP TABLE IF EXISTS questions;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS achievements;
-DROP TABLE IF EXISTS user_achievements;
-DROP TABLE IF EXISTS quizzes;
-DROP TABLE IF EXISTS quiz_results;
-DROP TABLE IF EXISTS friendships;
 DROP TABLE IF EXISTS friend_requests;
+DROP TABLE IF EXISTS friendships;
+DROP TABLE IF EXISTS quiz_results;
+DROP TABLE IF EXISTS user_achievements;
+DROP TABLE IF EXISTS achievements;
+DROP TABLE IF EXISTS questions;
+DROP TABLE IF EXISTS quizzes;
+DROP TABLE IF EXISTS users;
 
 -- CREATE TABLES
 CREATE TABLE users
@@ -50,7 +50,7 @@ CREATE TABLE questions
 
 CREATE TABLE achievements
 (
-    id       VARCHAR(64) PRIMARY KEY,
+    id       INT PRIMARY KEY,
     title    VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     iconlink VARCHAR(255),
@@ -60,9 +60,9 @@ CREATE TABLE achievements
 
 CREATE TABLE user_achievements
 (
-    id             INT PRIMARY KEY AUTO_INCREMENT,
+    id            INT PRIMARY KEY AUTO_INCREMENT,
     userid        INT       NOT NULL,
-    achievementid VARCHAR(64)       NOT NULL,
+    achievementid INT       NOT NULL,
     creationdate  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (userid) REFERENCES users (id),
     FOREIGN KEY (achievementid) REFERENCES achievements (id)
@@ -91,7 +91,7 @@ CREATE TABLE friendships
     FOREIGN KEY (secondid) REFERENCES users (id),
     
     -- Ensure no duplicate friendships (regardless of order)
-    UNIQUE KEY unique_friendship (firstid, secondid),
+    CONSTRAINT unique_friendship UNIQUE (firstid, secondid),
     CONSTRAINT check_ids CHECK (firstid < secondid)
 );
 

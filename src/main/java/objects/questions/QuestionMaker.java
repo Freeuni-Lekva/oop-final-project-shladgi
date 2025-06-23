@@ -20,7 +20,6 @@ public class QuestionMaker {
     public static Question makeQuestion(Integer id, Integer quizId, String question, String imageLink, int maxScore, QType type, JsonObject json){
 
 
-        // things are commented because they arent implemented yet and they need to be implemented before getting uncomented
         if(type == QType.SingleChoice) return new QuestionSingleChoice(id, quizId, question, imageLink, maxScore, json);
         if(type == QType.MultiChoice) return new QuestionMultiChoice(id, quizId, question, imageLink, maxScore, json);
         if(type == QType.TextAnswer) return new QuestionTextAnswer(id, quizId, question, imageLink, maxScore, json);
