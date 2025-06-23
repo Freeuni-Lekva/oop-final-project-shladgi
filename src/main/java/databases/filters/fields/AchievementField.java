@@ -3,8 +3,8 @@ package databases.filters.fields;
 public enum AchievementField implements SqlField{
     ID("id"),
     TITLE("title"),
-    RARITY("rarity"),
-    CREATIONDATE("creationdate");
+    DESCRIPTION("description"),
+    RARITY("rarity");
 
     private String columnName;
     AchievementField(String columnName){

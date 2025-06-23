@@ -23,10 +23,18 @@ public class Achievement {
 
     public Achievement(){}
 
-    public Achievement(int id, String iconLink, AchievementRarity achivementRarity) {
+    public Achievement(String title, String description, String iconLink, AchievementRarity achivementRarity) {
+        this.iconLink = iconLink;
+        this.achivementRarity = achivementRarity;
+        this.title = title;
+        this.description = description;
+    }
+    public Achievement(int id,String title, String description, String iconLink, AchievementRarity achivementRarity) {
         this.id = id;
         this.iconLink = iconLink;
         this.achivementRarity = achivementRarity;
+        this.title = title;
+        this.description = description;
     }
 
     public int getId() {return id;}

@@ -51,11 +51,11 @@ CREATE TABLE questions
 
 CREATE TABLE achievements
 (
-    id       INT PRIMARY KEY,
+    id       INT PRIMARY KEY AUTO_INCREMENT,
     title    VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     iconlink VARCHAR(255),
-    rarity   ENUM ('Common', 'Uncommon', 'Rare', 'Epic', 'Legendary') NOT NULL
+    rarity   ENUM ('Common', 'Rare', 'Epic', 'Legendary') NOT NULL
 );
 
 
