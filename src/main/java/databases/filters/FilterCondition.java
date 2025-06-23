@@ -3,9 +3,11 @@ package databases.filters;
 import databases.filters.fields.SqlField;
 
 public class FilterCondition<T extends SqlField>{
-    private T field;
-    private Operator operator;
-    private String value;
+    private T field;  // this is the field meaning Column name in database which we want to add a constraint to
+    private Operator operator; // operator like less, equal, more...
+    private String value; // what we want to compare against
+
+    // Different Constructors ==========================================================================
     public FilterCondition(T field, Operator operator, String value){
         this.field = field;
         this.operator = operator;
@@ -28,6 +30,7 @@ public class FilterCondition<T extends SqlField>{
         this.operator = operator;
         this.value = Boolean.toString(value); // if the value is true it will be converted to "true" for database
     }
+    // =================================================================================================================
     public String getColumnName() {return field.getColumnName();}
     public String getOperator() {return operator.getOperator();}
     public String getValue() {return value;}

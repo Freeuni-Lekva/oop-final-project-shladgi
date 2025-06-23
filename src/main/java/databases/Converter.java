@@ -18,7 +18,15 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// This is a Class that will convert a resultset to a given class
 public class Converter {
+
+    /**
+     * Converts the given resultset to the given class, but the class needs to have @Table annotation
+     * @param clazz The class you want to convert to
+     * @param rs ResultSet you want to convert From
+     * @return clazz Type Object converted from ResultSet
+     */
     public static Object convert(Class<?> clazz, ResultSet rs){
         List<Annotation> classAnnotations = AnnotationUtil.getClassAnnotationsWithAncestors(clazz);
 
@@ -40,7 +48,7 @@ public class Converter {
 
         List<Field> fields = AnnotationUtil.getFieldsWithAnnotationsWithAncestors(clazz, Column.class);
         try{
-            // create the object (handle question objects differently
+            // create the object (handle question objects differently as they have individual constructors
             Object obj = null;
             if(clazz == Question.class){
                 String type = rs.getString("type");
@@ -49,20 +57,28 @@ public class Converter {
                 obj = QuestionMaker.makeQuestion(qType);
             }else{
                 try{
+                    // try ro create the object with empty constructor in the object this will throw an error if a constructor with no parameters is not present
                     obj = clazz.getDeclaredConstructor().newInstance();
                 }catch (NoSuchMethodException e){
                     throw new RuntimeException("Class " + clazz.getName() + " does not have a default constructor with no parameters.  add () constructor to fix it");
                 }
             }
 
+            // if the object had HasJson annotation, then save the json data in the ibject
+            // the object must alse implement ObjectWithJson interface or an error will be thrown
             if(jsonColumnName != null){
-                if(ObjectWithJson.class.isAssignableFrom(clazz) == false)
-                    new RuntimeException("Class " + clazz.getName() + " does not implement ObjectWithJson While it has a json column annotation");
+                if(!ObjectWithJson.class.isAssignableFrom(clazz))
+                    throw new RuntimeException("Class " + clazz.getName() + " does not implement ObjectWithJson While it has a json column annotation");
+
                 String jsonData = rs.getString(jsonColumnName);
+
                 Gson gson = new Gson();
                 JsonObject json = gson.fromJson(jsonData, JsonObject.class);
+
                 ((ObjectWithJson) obj).putData(json);
             }
+
+            // set fields that have the column annotation
             for(Field f : fields){
                 Column a = f.getAnnotation(Column.class);
                 if(a == null) continue;
@@ -75,6 +91,15 @@ public class Converter {
 
     }
 
+    /**
+     * Sets the field of an object with correct value given the ResultSet and the Column Name
+     * @param f The field you want to set
+     * @param obj The Object with this field
+     * @param rs ResultSet for getting the data
+     * @param columnName The Colum Name in the result set
+     * @throws IllegalAccessException
+     * @throws SQLException
+     */
     private static void setField(Field f, Object obj, ResultSet rs, String columnName) throws IllegalAccessException, SQLException {
         f.setAccessible(true);
         Class<?> type = f.getType();

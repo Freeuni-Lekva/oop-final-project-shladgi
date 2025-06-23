@@ -1,5 +1,6 @@
 package databases.filters;
 
+// this is an enum for database operations
 public enum Operator {
     EQUALS("="),
     MOREEQ(">="),

@@ -3,11 +3,16 @@ package objects;
 import com.google.gson.JsonObject;
 
 public interface ObjectWithJson {
-    // json storing for database
-    // generates json from the data that is specific to a given class
+
+    /**
+     * Gets the object specific fata
+     * @return JsonObject storing the object specific data
+     */
     public JsonObject getData();
 
-    // given the json data generated for this object. store it in this object
-    // variables
+    /**
+     * Stores the JsonObject data in the object, this must be the same kind of data that the GetData() function returned
+     * @param json JsonData that was at once taken from this class with GetData()
+     */
     public void putData(JsonObject json);
 }
