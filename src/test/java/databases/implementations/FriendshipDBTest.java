@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestFriendshipDB {
+public class FriendshipDBTest {
     private static Connection conn;
     private static FriendshipDB friendshipDB;
     private static List<FilterCondition<FriendshipField>> allFilter;
