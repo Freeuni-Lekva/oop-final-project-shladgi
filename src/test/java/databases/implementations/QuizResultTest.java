@@ -1,24 +1,26 @@
 package databases.implementations;
 
 import databases.filters.FilterCondition;
+import databases.filters.Operator;
 import databases.filters.fields.QuizResultField;
-import databases.filters.fields.UserAchievementField;
 import objects.user.QuizResult;
-import objects.user.UserAchievement;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QuizResultTest {
     private static Connection conn;
-    private static QuizResultDB userAchDB;
+    private static QuizResultDB quizResultDB;
     private static List<FilterCondition<QuizResultField>> allFilter;
 
 
@@ -35,11 +37,11 @@ public class QuizResultTest {
                 "    userid       INT            NOT NULL,\n" +
                 "    quizid       INT            NOT NULL,\n" +
                 "    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                "    totalscore   DECIMAL(10, 2) NOT NULL DEFAULT 0,\n" +
+                "    totalscore   DECIMAL(10, 2) NOT NULL DEFAULT 0\n" +
                 "    -- FOREIGN KEY (userid) REFERENCES users (id),\n" +
                 "    -- FOREIGN KEY (quizid) REFERENCES quizzes (id)\n" +
                 ");");
-        userAchDB = new QuizResultDB(conn);
+        quizResultDB = new QuizResultDB(conn);
     }
 
     public void testQueryDeleteAddOnce(int startSize, int affected, List<FilterCondition<QuizResultField>> filters, QuizResultDB db) {
@@ -49,5 +51,57 @@ public class QuizResultTest {
         assertEquals(startSize - affected, db.query(allFilter).size());
         for(QuizResult u : quizResults) db.add(u);
         assertEquals(startSize, db.query(allFilter).size());
+    }
+    
+    @Test
+    @Order(1)
+    public void testAdding() {
+        QuizResult r1 = new QuizResult(1, 4, LocalDateTime.of(2020, 1, 1, 10, 0), 10.0);
+        QuizResult r2 = new QuizResult(2, 5, LocalDateTime.of(2020, 2, 1, 11, 0), 15.5);
+        QuizResult r3 = new QuizResult(3, 6, LocalDateTime.of(2020, 3, 1, 12, 0), 20.0);
+        QuizResult r4 = new QuizResult(4, 7, LocalDateTime.of(2020, 4, 1, 13, 0), 25.5);
+        QuizResult r5 = new QuizResult(5, 8, LocalDateTime.of(2020, 5, 1, 14, 0), 30.0);
+        QuizResult r6 = new QuizResult(6, 9, LocalDateTime.of(2020, 6, 1, 15, 0), 35.5);
+
+        quizResultDB.add(r1);
+        assertEquals(1, quizResultDB.query(allFilter).size());
+
+        quizResultDB.add(r2);
+        assertEquals(2, quizResultDB.query(allFilter).size());
+        quizResultDB.add(r3);
+        assertEquals(3, quizResultDB.query(allFilter).size());
+        quizResultDB.add(r4);
+        assertEquals(4, quizResultDB.query(allFilter).size());
+        quizResultDB.add(r5);
+        assertEquals(5, quizResultDB.query(allFilter).size());
+        quizResultDB.add(r6);
+        assertEquals(6, quizResultDB.query(allFilter).size());
+    }
+
+    @Test
+    @Order(2)
+    public void testQueryDeleteAdd() {
+        List<QuizResult> results = quizResultDB.query(allFilter);
+        int size = results.size();
+        assertEquals(6, size);
+
+        List<FilterCondition<QuizResultField>> filters = List.of(
+                new FilterCondition<>(QuizResultField.USERID, Operator.LESSEQ, 2)
+        );
+        testQueryDeleteAddOnce(size, 2, filters, quizResultDB);
+
+        filters = List.of(
+                new FilterCondition<>(QuizResultField.USERID, Operator.MORE, 2),
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.LESS, 8)
+        );
+        testQueryDeleteAddOnce(size, 2, filters, quizResultDB);
+
+        filters = List.of(
+                new FilterCondition<>(QuizResultField.CREATIONDATE, Operator.MORE, LocalDateTime.of(2020, 3, 1, 0, 0).toString()),
+                new FilterCondition<>(QuizResultField.TOTALSCORE, Operator.LESSEQ, 25.5)
+        );
+        testQueryDeleteAddOnce(size, 2, filters, quizResultDB);
+
+        testQueryDeleteAddOnce(size, size, allFilter, quizResultDB);
     }
 }

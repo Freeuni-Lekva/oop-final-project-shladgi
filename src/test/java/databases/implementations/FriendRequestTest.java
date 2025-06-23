@@ -4,6 +4,8 @@ import databases.filters.FilterCondition;
 import databases.filters.fields.FriendRequestField;
 import objects.user.FriendRequest;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FriendRequestTest {
     private static Connection conn;
     private static FriendRequestDB userAchDB;
