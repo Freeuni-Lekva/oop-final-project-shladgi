@@ -28,7 +28,7 @@ CREATE TABLE quizzes
     userid              INT            NOT NULL,
     creationdate        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     totalscore          DECIMAL(10, 2) NOT NULL DEFAULT 0,
-    israndom            BOOLEAN        NOT NULL DEFAULT FALSE,
+    random            BOOLEAN        NOT NULL DEFAULT FALSE,
     singlepage          BOOLEAN        NOT NULL DEFAULT TRUE,
     immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,
     FOREIGN KEY (userid) REFERENCES users (id)

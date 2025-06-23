@@ -1,10 +1,25 @@
 package objects.user;
 
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "quiz_results")
 public class QuizResult {
-    private int id, userId, quizId;
+    @Column(name = "id", primary = true)
+    private int id;
+
+    @Column(name = "userid")
+    private int userId;
+
+    @Column(name = "quizid")
+    private int quizId;
+
+    @Column(name = "creationdate")
     private LocalDateTime creationDate;
+
+    @Column(name = "totalscore")
     private double totalScore;
 
     public QuizResult(){}

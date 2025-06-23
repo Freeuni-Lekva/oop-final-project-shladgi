@@ -1,10 +1,24 @@
 package objects.user;
 
+
+import databases.annotations.Column;
+import databases.annotations.Table;
+
+@Table(name = "achievements")
 public class Achievement {
+    @Column(name = "id", primary = true)
     private int id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "iconlink")
     private String iconLink;
+
+    @Column(name = "rarity")
     private AchievementRarity achivementRarity;
 
     public Achievement(){}

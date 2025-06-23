@@ -1,9 +1,24 @@
 package objects.user;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "friend_requests")
 public class FriendRequest {
-    private int id, firstId, secondId;
+
+    @Column(name = "id", primary = true)
+    private int id;
+
+    @Column(name = "firstid")
+    private int firstId;
+
+    @Column(name = "secondid")
+    private int secondId;
+
+    @Column(name = "creationdate")
     private LocalDateTime creationDate;
 
     public FriendRequest(){}

@@ -1,14 +1,35 @@
 package objects;
 
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "quizzes")
 public class Quiz {
+    @Column(name = "id", primary = true)
     private int id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "userid")
     private int userId;
+
+    @Column(name = "creationdate")
     private LocalDateTime creationDate;
+
+    @Column(name = "totalscore")
     private double totalScore;
-    private boolean isRandom, singlePage, immediateCorrection;
+
+    @Column(name = "random")
+    private boolean isRandom;
+
+    @Column(name = "singlepage")
+    private boolean singlePage;
+
+    @Column(name = "immediatecorrection")
+    private boolean immediateCorrection;
 
     public Quiz(){}
 
