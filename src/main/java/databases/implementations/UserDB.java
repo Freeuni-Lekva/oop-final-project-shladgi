@@ -7,7 +7,5 @@ import objects.user.User;
 import java.sql.Connection;
 
 public class UserDB extends DataBase<User, UserField> {
-    public UserDB(Connection con ) {
-        super(con, User.class);
-    }
+    public UserDB(Connection con ) {super(con, User.class);}
 }
