@@ -43,7 +43,8 @@ public class DatabaseAdder {
         if(tableName == null) throw new RuntimeException("No table annotation found in class " + clazz.getName());
 
         List<Field> fields = AnnotationUtil.getFieldsWithAnnotationsWithAncestors(clazz, Column.class);
-
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
         try{
             // StringBuilders for correct SQL column names and their correspondint values
             StringBuilder columns = new StringBuilder();
@@ -83,20 +84,23 @@ public class DatabaseAdder {
             String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, values);
 
             // create a statement that will also store the keys it generated. this will be useful
-            PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.executeUpdate();
 
-            ResultSet rs = stmt.getGeneratedKeys(); // get the keys generated
+            rs = stmt.getGeneratedKeys(); // get the keys generated
             if(rs.next()){ // set the id of the object to the generated value
                 primaryField.setAccessible(true);
                 primaryField.set(obj, rs.getInt(primaryKeyName));
             }
-
-            rs.close();
-            stmt.close();
-
         }catch (Exception e){
             throw new RuntimeException("ERROR IN ADD FUNCTION IN DATABASE " + e.getMessage());
+        }finally {
+            try{
+                if(rs != null) rs.close();
+                if(stmt != null) stmt.close();
+            }catch (Exception e){
+                throw new RuntimeException("COULD NOT CLOSE resultset or statement" + e.getMessage());
+            }
         }
     }
 

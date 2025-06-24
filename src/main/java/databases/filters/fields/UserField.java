@@ -4,6 +4,7 @@ public enum UserField implements SqlField{
     ID("id"),
     USERNAME("username"),
     PASSWORD("password"),
+    SALT("salt"),
     TYPE("type"),
     CREATION_DATE("creationdate");
 

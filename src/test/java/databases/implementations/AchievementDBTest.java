@@ -116,7 +116,6 @@ public class AchievementDBTest {
         testQueryDeleteAddOnce(size, 1, filters, userAchDB);
 
 
-
         testQueryDeleteAddOnce(size, size, allFilter, userAchDB);
     }
 }

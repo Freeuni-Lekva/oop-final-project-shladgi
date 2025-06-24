@@ -32,6 +32,7 @@ public class UserDBTest {
                 "(\n" +
                 "    id           INT PRIMARY KEY AUTO_INCREMENT,\n" +
                 "    username     VARCHAR(50) UNIQUE                   NOT NULL,\n" +
+                "    salt         VARCHAR(255)                         NOT NULL,\n" +
                 "    password     VARCHAR(255)                         NOT NULL,\n" +
                 "    type         ENUM ('Admin', 'Basic') NOT NULL,\n" +
                 "    creationdate TIMESTAMP                            NOT NULL DEFAULT CURRENT_TIMESTAMP\n" +
@@ -42,11 +43,11 @@ public class UserDBTest {
     @Test
     @Order(1)
     public void testAdding() {
-        User u1 = new User("aabcqwe", "pass1", UserType.Admin, LocalDateTime.of(2020, 1, 1, 10, 0));
-        User u2 = new User("bzxcasd", "pass2", UserType.Admin, LocalDateTime.of(2011, 1, 1, 11, 0));
-        User u3 = new User("azxcasd", "pass3", UserType.Basic, LocalDateTime.of(2019, 1, 1, 12, 0));
-        User u4 = new User("czxcasd", "pass4", UserType.Basic, LocalDateTime.of(2020, 1, 1, 13, 0));
-        User u5 = new User("babcqwe", "pass5", UserType.Basic, LocalDateTime.of(2020, 1, 1, 14, 0));
+        User u1 = new User("aabcqwe", "pass1", "asd123", UserType.Admin, LocalDateTime.of(2020, 1, 1, 10, 0));
+        User u2 = new User("bzxcasd", "pass2", "asd456", UserType.Admin, LocalDateTime.of(2011, 1, 1, 11, 0));
+        User u3 = new User("azxcasd", "pass3", "asd789", UserType.Basic, LocalDateTime.of(2019, 1, 1, 12, 0));
+        User u4 = new User("czxcasd", "pass4", "qwe123", UserType.Basic, LocalDateTime.of(2020, 1, 1, 13, 0));
+        User u5 = new User("babcqwe", "pass5", "qwe456", UserType.Basic, LocalDateTime.of(2020, 1, 1, 14, 0));
 
         assertEquals(0, userDB.query(allFilter).size());
         userDB.add(u1);
@@ -102,6 +103,21 @@ public class UserDBTest {
                 new FilterCondition<>(UserField.USERNAME, Operator.LIKE, "%abc%")
         );
         testQueryDeleteAddOnce(size, 2, filters, userDB);
+
+        filters = List.of(
+                new FilterCondition<>(UserField.SALT, Operator.LIKE, "asd%"),
+                new FilterCondition<>(UserField.USERNAME, Operator.LIKE, "%asd")
+        );
+
+        testQueryDeleteAddOnce(size, 2, filters, userDB);
+
+        filters = List.of(
+                new FilterCondition<>(UserField.SALT, Operator.LIKE, "asd%"),
+                new FilterCondition<>(UserField.USERNAME, Operator.LIKE, "%asd"),
+                new FilterCondition<>(UserField.TYPE, Operator.EQUALS, UserType.Basic.name())
+        );
+        testQueryDeleteAddOnce(size, 1, filters, userDB);
+
 
         testQueryDeleteAddOnce(size, size, allFilter, userDB);
     }

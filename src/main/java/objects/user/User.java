@@ -16,6 +16,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "salt")
+    private String salt;
+
     @Column(name = "type")
     private UserType type;
 
@@ -24,17 +27,19 @@ public class User {
 
     public User(){}
 
-    public User(int id, String userName, String password, UserType type, LocalDateTime creationDate) {
+    public User(int id, String userName, String password, String salt, UserType type, LocalDateTime creationDate) {
         this.id = id;
         this.userName = userName;
         this.password = password;
+        this.salt = salt;
         this.type = type;
         this.creationDate = creationDate;
     }
 
-    public User(String userName, String password, UserType type, LocalDateTime creationDate) {
+    public User(String userName, String password, String salt, UserType type, LocalDateTime creationDate) {
         this.userName = userName;
         this.password = password;
+        this.salt = salt;
         this.type = type;
         this.creationDate = creationDate;
     }
