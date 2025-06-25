@@ -7,12 +7,12 @@ public class Note {
     private LocalDateTime creationDate;
     private String text;
 
-    public Note(int userId, LocalDateTime creationDate, String text) {
+    public Note(int userId, int friendId, LocalDateTime creationDate, String text) {
         this.userId = userId;
         this.creationDate = creationDate;
         this.text = text;
     }
-    public Note (int id, int userId, LocalDateTime creationDate, String text) {
+    public Note (int id, int userId, int friendId,LocalDateTime creationDate, String text) {
         this.id = id;
         this.userId = userId;
         this.creationDate = creationDate;
