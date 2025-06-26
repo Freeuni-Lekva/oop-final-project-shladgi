@@ -9,12 +9,14 @@ public class Note {
 
     public Note(int userId, int friendId, LocalDateTime creationDate, String text) {
         this.userId = userId;
+        this.friendId = friendId;
         this.creationDate = creationDate;
         this.text = text;
     }
     public Note (int id, int userId, int friendId,LocalDateTime creationDate, String text) {
         this.id = id;
         this.userId = userId;
+        this.friendId = friendId;
         this.creationDate = creationDate;
         this.text = text;
     }
