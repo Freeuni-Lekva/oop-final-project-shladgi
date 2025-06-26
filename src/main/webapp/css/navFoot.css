@@ -1,0 +1,42 @@
+body{
+min-height: 100vh;
+    position: relative;
+}
+
+
+header nav {
+    background-color: #0382f1;
+
+}
+header nav .container .nava {
+    color: white;
+}
+
+header nav li:hover{
+    border-radius:10px ;
+    background-color: rgba(0, 0, 0, 0.4);
+
+}
+
+footer {
+    background-color: #0382f1;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+}
+.footer-content{
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+#user{
+    display: none;
+}
+
+
+
+
+
