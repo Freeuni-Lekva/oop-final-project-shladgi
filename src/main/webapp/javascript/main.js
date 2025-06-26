@@ -1,7 +1,14 @@
-async function loadPage(page) {
-    console.log(page);
-    const p = await fetch('html/'+page +'.html').then(res => res.text());
-    document.getElementById('currentPage').innerHTML = p;
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('nav.html')
+        .then(res => res.text())
+        .then(data => {
+            document.querySelector('nav').innerHTML = data;
+        });
+    fetch('footer.html')
+        .then(res => res.text())
+        .then(data => {
+            document.querySelector('footer').innerHTML = data;
+        });
 
-}
-loadPage('home');
+
+});
