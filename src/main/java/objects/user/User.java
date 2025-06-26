@@ -1,25 +1,45 @@
 package objects.user;
 
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "users")
 public class User {
+    @Column(name = "id", primary = true)
     private int id;
-    private String userName;
-    private String password;
-    private UserType type;
-    private final LocalDateTime creationDate;
 
-    public User(int id, String userName, String password, UserType type, LocalDateTime creationDate) {
+    @Column(name = "username")
+    private String userName;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "salt")
+    private String salt;
+
+    @Column(name = "type")
+    private UserType type;
+
+    @Column(name = "creationdate")
+    private LocalDateTime creationDate;
+
+    public User(){}
+
+    public User(int id, String userName, String password, String salt, UserType type, LocalDateTime creationDate) {
         this.id = id;
         this.userName = userName;
         this.password = password;
+        this.salt = salt;
         this.type = type;
         this.creationDate = creationDate;
     }
 
-    public User(String userName, String password, UserType type, LocalDateTime creationDate) {
+    public User(String userName, String password, String salt, UserType type, LocalDateTime creationDate) {
         this.userName = userName;
         this.password = password;
+        this.salt = salt;
         this.type = type;
         this.creationDate = creationDate;
     }

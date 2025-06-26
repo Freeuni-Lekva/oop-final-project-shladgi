@@ -31,6 +31,10 @@ public class QuestionMultiChoice extends Question{
 
     }
 
+    public QuestionMultiChoice() {
+
+    }
+
     @Override
     public int check(Answer<?> answer) {
         int points = getPoints(answer);
@@ -60,7 +64,7 @@ public class QuestionMultiChoice extends Question{
     }
 
     @Override
-    protected void putData(JsonObject json) {
+    public void putData(JsonObject json) {
         exactMatch = json.get(EM).getAsBoolean();
 
         JsonArray jaChoices = json.get(CH).getAsJsonArray();

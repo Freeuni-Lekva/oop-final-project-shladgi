@@ -25,6 +25,10 @@ public class QuestionTextAnswer extends Question {
         super(id,quizId,question,imageLink,maxScore,json, QType.TextAnswer);
     }
 
+    public QuestionTextAnswer() {
+
+    }
+
     @Override
     public int check(Answer<?> answer) {
         for(int i = 0; i < correctAnswers.size(); i++)
