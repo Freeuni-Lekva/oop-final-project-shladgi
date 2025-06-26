@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "loginServlet", value = "/login-servlet")
+@WebServlet(name = "loginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
 
 
@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         //TODO
         //handle login
-
+        System.out.println("aaa");
     }
 
 }
