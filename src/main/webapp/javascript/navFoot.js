@@ -9,6 +9,4 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             document.querySelector('footer').innerHTML = data;
         });
-
-
 });
