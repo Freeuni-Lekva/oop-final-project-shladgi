@@ -37,9 +37,10 @@ public class QuizResultTest {
                 "    userid       INT            NOT NULL,\n" +
                 "    quizid       INT            NOT NULL,\n" +
                 "    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                "    timetaken    INT            NOT NULL DEFAULT 0,  -- seconds\n" +
                 "    totalscore   DECIMAL(10, 2) NOT NULL DEFAULT 0\n" +
-                "    -- FOREIGN KEY (userid) REFERENCES users (id),\n" +
-                "    -- FOREIGN KEY (quizid) REFERENCES quizzes (id)\n" +
+                "  --  FOREIGN KEY (userid) REFERENCES users (id),\n" +
+                "  --  FOREIGN KEY (quizid) REFERENCES quizzes (id)\n" +
                 ");");
         quizResultDB = new QuizResultDB(conn);
     }

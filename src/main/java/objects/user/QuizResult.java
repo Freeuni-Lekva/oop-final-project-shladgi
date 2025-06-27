@@ -19,6 +19,9 @@ public class QuizResult {
     @Column(name = "creationdate")
     private LocalDateTime creationDate;
 
+    @Column(name = "timetaken")
+    private int timeTaken; // seconds
+
     @Column(name = "totalscore")
     private double totalScore;
 

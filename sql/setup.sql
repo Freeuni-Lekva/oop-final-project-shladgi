@@ -33,6 +33,8 @@ CREATE TABLE quizzes
     random            BOOLEAN        NOT NULL DEFAULT FALSE,
     singlepage          BOOLEAN        NOT NULL DEFAULT TRUE,
     immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,
+    practicemode        BOOLEAN        NOT NULL DEFAULT TRUE,
+    timelimit           INT            NOT NULL DEFAULT -1, -- IN SECONDS
     FOREIGN KEY (userid) REFERENCES users (id)
 );
 
@@ -45,6 +47,7 @@ CREATE TABLE questions
     imagelink  VARCHAR(255),
     type       ENUM ('SingleChoice', 'MultiChoice', 'TextAnswer', 'MultiTextAnswer', 'FillInBlanks', 'FillChoices') NOT NULL,
     maxscore   INT                                                                                                  NOT NULL,
+    weight     double                                                                                               NOT NULL,
     jsondata   JSON,
     FOREIGN KEY (quizid) REFERENCES quizzes (id)
 );
@@ -77,6 +80,7 @@ CREATE TABLE quiz_results
     userid       INT            NOT NULL,
     quizid       INT            NOT NULL,
     creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    timetaken    INT            NOT NULL DEFAULT 0,  -- seconds
     totalscore   DECIMAL(10, 2) NOT NULL DEFAULT 0,
     FOREIGN KEY (userid) REFERENCES users (id),
     FOREIGN KEY (quizid) REFERENCES quizzes (id)

@@ -117,7 +117,7 @@ class QuestionFillInChoicesTest {
 
         JsonObject jsonData = original.getData();
 
-        QuestionFillInChoices restored = new QuestionFillInChoices(1, 1, "Restore", "", 2, jsonData);
+        QuestionFillInChoices restored = new QuestionFillInChoices(1, 1, "Restore", "", 2, 3.0, jsonData);
         restored.putData(jsonData);
 
         assertEquals(2, restored.check(new Answer<>(Arrays.asList(1, 2))));

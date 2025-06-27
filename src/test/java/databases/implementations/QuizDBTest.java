@@ -42,8 +42,10 @@ public class QuizDBTest {
                 "    totalquestions      INT            NOT NULL DEFAULT 0,\n" +
                 "    random            BOOLEAN        NOT NULL DEFAULT FALSE,\n" +
                 "    singlepage          BOOLEAN        NOT NULL DEFAULT TRUE,\n" +
-                "    immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE\n" +
-                "    -- FOREIGN KEY (userid) REFERENCES users (id)\n" +
+                "    immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,\n" +
+                "    practicemode        BOOLEAN        NOT NULL DEFAULT TRUE,\n" +
+                "    timelimit           INT            NOT NULL DEFAULT -1 -- IN SECONDS\n" +
+                "  --  FOREIGN KEY (userid) REFERENCES users (id)\n" +
                 ");");
         userAchDB = new QuizDB(conn);
     }
@@ -60,18 +62,18 @@ public class QuizDBTest {
     @Test
     @Order(1)
     public void testAdding(){
-        Quiz q1 = new Quiz("quiz1", 1, LocalDateTime.of(2020, 1, 1, 10 ,0), 
-                100.0, 10, false, false, true);
-        Quiz q2 = new Quiz("quiz2", 2, LocalDateTime.of(2021, 3, 15, 14, 30),
-                90.5, 15, true, true, false);
-        Quiz q3 = new Quiz("quiz3", 3, LocalDateTime.of(2022, 6, 20, 9, 15),
-                75.0, 8, false, true, true);
-        Quiz q4 = new Quiz("quiz4", 1, LocalDateTime.of(2023, 9, 10, 16, 45),
-                95.5, 12, true, false, false);
-        Quiz q5 = new Quiz("quiz5", 2, LocalDateTime.of(2024, 12, 5, 11, 20),
-                85.0, 20, false, true, true);
-        Quiz q6 = new Quiz("quiz6", 3, LocalDateTime.of(2025, 4, 25, 13, 40),
-                88.5, 18, true, false, true);
+        Quiz q1 = new Quiz("quiz1", 1, LocalDateTime.of(2020, 1, 1, 10 ,0), -1,
+                100.0, 10, false, false, true, false);
+        Quiz q2 = new Quiz("quiz2", 2, LocalDateTime.of(2021, 3, 15, 14, 30), 100,
+                90.5, 15, true, true, false, true);
+        Quiz q3 = new Quiz("quiz3", 3, LocalDateTime.of(2022, 6, 20, 9, 15), 200,
+                75.0, 8, false, true, true, false);
+        Quiz q4 = new Quiz("quiz4", 1, LocalDateTime.of(2023, 9, 10, 16, 45), 10,
+                95.5, 12, true, false, false, true);
+        Quiz q5 = new Quiz("quiz5", 2, LocalDateTime.of(2024, 12, 5, 11, 20), 30,
+                85.0, 20, false, true, true, false);
+        Quiz q6 = new Quiz("quiz6", 3, LocalDateTime.of(2025, 4, 25, 13, 40), -1,
+                88.5, 18, true, false, true, true);
 
         assertEquals(0, userAchDB.query(allFilter).size());
         userAchDB.add(q1);

@@ -5,6 +5,7 @@ import objects.questions.QType;
 public enum QuestionField implements SqlField{
     ID("id"),
     QUIZID("quizid"),
+    WEIGHT("weight"),
     TYPE("type");
 
     private final String columnName;

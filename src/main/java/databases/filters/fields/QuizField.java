@@ -5,11 +5,14 @@ public enum QuizField implements SqlField{
     TITLE("title"),
     USERID("userid"),
     CREATIONDATE("creationdate"),
+    TIMELIMIT("timelimit"),
     TOTALSCORE("totalscore"),
     TOTALQUESTIONS("totalquestions"),
     RANDOM("random"),
     SINGLEPAGE("singlepage"),
-    IMMEDCORRECTION("immediatecorrection");
+    IMMEDCORRECTION("immediatecorrection"),
+    PRACTICEMODE("practicemode");
+
 
     private String columnName;
     QuizField(String columnName){
