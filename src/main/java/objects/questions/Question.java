@@ -2,13 +2,31 @@ package objects.questions;
 
 
 import com.google.gson.JsonObject;
+import databases.annotations.Column;
+import databases.annotations.HasJson;
+import databases.annotations.Table;
+import objects.ObjectWithJson;
 
-public abstract class Question {
+@Table(name = "questions")
+@HasJson(name = "jsondata")
+public abstract class Question implements ObjectWithJson {
+
+    @Column(name = "id", primary = true)
     protected int id;
+
+    @Column(name = "quizid")
     protected int quizId;
+
+    @Column(name = "question")
     protected String question;
+
+    @Column(name = "imagelink")
     protected String imageLink;
+
+    @Column(name = "type")
     protected QType type;
+
+    @Column(name = "maxscore")
     protected int maxScore;
 
     public Question(){}
@@ -27,20 +45,14 @@ public abstract class Question {
     // checks the answer and returns a score
     public abstract int check(Answer<?> answer);
 
-    // json storing for database
-    // generates json from the data that is specific to a given class
-    public abstract JsonObject getData();
-
-    // given the json data generated for this object. store it in this object
-    // variables
-    protected abstract void putData(JsonObject json);
-
-
-
 
     public int getId() {return id;}
 
     public void setId(int id) {this.id = id;}
+
+    public int getQuizId() {return quizId;}
+
+    public void setQuizId(int quizId) {this.quizId = quizId;}
 
     public String getQuestion() {return question;}
 

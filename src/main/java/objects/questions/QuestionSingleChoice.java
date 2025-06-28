@@ -11,7 +11,7 @@ public class QuestionSingleChoice extends Question{
 
     int correctId;  // correct answer index
     List<String> choices; // answer choices that the user will see
-
+    public QuestionSingleChoice() {}
     /**
      * Constructor of QuestionSingleChoice
      * @param question Question string
@@ -52,7 +52,7 @@ public class QuestionSingleChoice extends Question{
     }
 
     @Override
-    protected void putData(JsonObject json) {
+    public void putData(JsonObject json) {
         correctId = json.get("correctId").getAsInt();
 
         choices = new ArrayList<String>();

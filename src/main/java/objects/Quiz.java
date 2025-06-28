@@ -1,36 +1,66 @@
 package objects;
 
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "quizzes")
 public class Quiz {
+    @Column(name = "id", primary = true)
     private int id;
-    private String title;
-    private int userId;
-    private LocalDateTime creationDate;
-    private double totalScore;
-    private boolean isRandom, singlePage, immediateCorrection;
 
-    public Quiz(String title, int userId, LocalDateTime creationDate, double totalScore, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection) {
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "userid")
+    private int userId;
+
+    @Column(name = "creationdate")
+    private LocalDateTime creationDate;
+
+    @Column(name = "totalscore")
+    private double totalScore;
+
+    @Column(name = "totalquestions")
+    private int totalQuestions;
+
+    @Column(name = "random")
+    private boolean isRandom;
+
+    @Column(name = "singlepage")
+    private boolean singlePage;
+
+    @Column(name = "immediatecorrection")
+    private boolean immediateCorrection;
+
+    public Quiz(){}
+
+    public Quiz(String title, int userId, LocalDateTime creationDate, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection) {
         this.title = title;
         this.userId = userId;
         this.creationDate = creationDate;
         this.totalScore = totalScore;
         this.isRandom = isRandom;
         this.singlePage = isSinglePage;
+        this.totalQuestions =totalQuestions;
         this.immediateCorrection = isImmediateCorrection;
     }
 
-    public Quiz(int id, String title, int userId, LocalDateTime creationDate, double totalScore,  boolean isRandom, boolean isSinglePage) {
+    public Quiz(int id, String title, int userId, LocalDateTime creationDate, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage) {
         this.id = id;
         this.title = title;
         this.userId = userId;
         this.creationDate = creationDate;
         this.totalScore = totalScore;
         this.isRandom = isRandom;
+        this.totalQuestions = totalQuestions;
         this.singlePage = isSinglePage;
         this.immediateCorrection = false;
     }
 
+    public int getTotalQuestions() {return totalQuestions;}
+    public void setTotalQuestions(int totalQuestions) {this.totalQuestions = totalQuestions;}
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
     public String getTitle() {return title;}

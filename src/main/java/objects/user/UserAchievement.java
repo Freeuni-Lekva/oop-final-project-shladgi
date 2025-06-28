@@ -1,10 +1,25 @@
 package objects.user;
 
+import databases.annotations.Column;
+import databases.annotations.Table;
+
 import java.time.LocalDateTime;
 
+@Table(name = "user_achievements")
 public class UserAchievement {
-    private int id, userId, achievementId;
+    @Column(name = "id", primary = true)
+    private int id;
+
+    @Column(name = "userid")
+    private int userId;
+
+    @Column(name = "achievementid")
+    private int achievementId;
+
+    @Column(name = "creationdate")
     private LocalDateTime creationDate;
+
+    public UserAchievement(){}
 
     public UserAchievement(int userId, int achievementId, LocalDateTime creationDate) {
         this.userId = userId;

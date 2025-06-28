@@ -31,6 +31,10 @@ public class QuestionFillInChoices extends Question{
         super(id,quizId,question,imageLink,maxScore,json, QType.FillChoices);
     }
 
+    public QuestionFillInChoices() {
+
+    }
+
     @Override
     public int check(Answer<?> answer) {
         if(answer.getSize() == 0) return 0;
