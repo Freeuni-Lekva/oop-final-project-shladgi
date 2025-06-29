@@ -28,6 +28,8 @@ public class Challenge {
     @Column(name = "creationdate")
     private LocalDateTime creationDate;
 
+    public Challenge(){}
+
     public Challenge(int id, int quizId, int senderId, int recipientId, double bestScore, String quizTitle, LocalDateTime creationDate) {
         this.id = id;
         this.quizId = quizId;

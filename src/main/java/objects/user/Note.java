@@ -22,6 +22,8 @@ public class Note {
     @Column(name = "text")
     private String text;
 
+    public Note(){}
+
     public Note(int senderId, int recipientId, LocalDateTime creationDate, String text) {
         this.senderId = senderId;
         this.recipientId = recipientId;
