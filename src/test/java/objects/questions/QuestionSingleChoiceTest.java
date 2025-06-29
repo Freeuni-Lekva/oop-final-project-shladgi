@@ -31,7 +31,7 @@ public class QuestionSingleChoiceTest {
 
 
         // second part of tests using a different  constructor
-        QuestionSingleChoice newQ = new QuestionSingleChoice(1,2,"Q"+correct, "imgLink", 1, q.getData());
+        QuestionSingleChoice newQ = new QuestionSingleChoice(1,2,"Q"+correct, "imgLink", 1, 2.0, q.getData());
 
         assertEquals(1, newQ.check(new Answer<>(List.of(correct))));
         for(int i = -1; i < total+5; i++)

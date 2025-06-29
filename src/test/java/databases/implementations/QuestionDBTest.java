@@ -35,7 +35,9 @@ public class QuestionDBTest {
                 "    imagelink  VARCHAR(255),\n" +
                 "    type       ENUM ('SingleChoice', 'MultiChoice', 'TextAnswer', 'MultiTextAnswer', 'FillInBlanks', 'FillChoices') NOT NULL,\n" +
                 "    maxscore   INT                                                                                                  NOT NULL,\n" +
-                "    jsondata   VARCHAR(65535)\n" + // had to set it to VARCHAR instead of JSON (JSON type works differently in h2) but this works the same
+                "    weight     double                                                                                               NOT NULL,\n" +
+                "    jsondata   VARCHAR(65535)\n" +
+                "  --  FOREIGN KEY (quizid) REFERENCES quizzes (id)\n" +
                 ");");
         questionDB = new QuestionDB(conn);
     }

@@ -29,16 +29,21 @@ public abstract class Question implements ObjectWithJson {
     @Column(name = "maxscore")
     protected int maxScore;
 
+    // this is the score the user gets in a quiz if they get the question correct
+    @Column(name = "weight")
+    protected double weight;
+
     public Question(){}
 
     //Question Constructor that will construct the object from database row
-    public Question(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json, QType type) {
+    public Question(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json, QType type) {
         this.id = id;
         this.quizId = quizId;
         this.type = type;
         this.question = question;
         this.imageLink = imageLink;
         this.maxScore = maxScore;
+        this.weight = weight;
         putData(json);
     }
 

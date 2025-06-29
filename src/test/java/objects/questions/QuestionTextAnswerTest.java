@@ -66,7 +66,7 @@ public class QuestionTextAnswerTest {
         JsonObject jsonObject = questionTextAnswer.getData();
         assertEquals(1, questionTextAnswer.check(answer));
 
-        questionTextAnswer = new QuestionTextAnswer(0, 0, "abc", "link", 1, jsonObject);
+        questionTextAnswer = new QuestionTextAnswer(0, 0, "abc", "link", 1, 1.0, jsonObject);
 
         JsonObject loadedJson = questionTextAnswer.getData();
         assertEquals(jsonObject.toString(), loadedJson.toString());
@@ -92,7 +92,7 @@ public class QuestionTextAnswerTest {
         JsonObject jsonObject = questionTextAnswer.getData();
         assertEquals(1, questionTextAnswer.check(answer));
 
-        questionTextAnswer = new QuestionTextAnswer(0, 0, "abc", "link", 1, jsonObject);
+        questionTextAnswer = new QuestionTextAnswer(0, 0, "abc", "link", 1, 2.0, jsonObject);
 
         JsonObject loadedJson = questionTextAnswer.getData();
         assertEquals(jsonObject.toString(), loadedJson.toString());

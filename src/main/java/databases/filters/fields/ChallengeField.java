@@ -1,15 +1,14 @@
 package databases.filters.fields;
 
-import objects.questions.QType;
-
-public enum QuestionField implements SqlField{
+public enum ChallengeField implements SqlField{
     ID("id"),
     QUIZID("quizid"),
-    WEIGHT("weight"),
-    TYPE("type");
+    SENDERID("senderid"),
+    RECIPIENTID("recipientid"),
+    CREATIONDATE("creationdate");
 
     private final String columnName;
-    QuestionField(String columnName){
+    ChallengeField(String columnName){
         this.columnName = columnName;
     }
 

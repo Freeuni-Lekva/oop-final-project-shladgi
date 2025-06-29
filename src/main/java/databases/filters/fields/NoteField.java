@@ -1,15 +1,14 @@
 package databases.filters.fields;
 
-import objects.questions.QType;
-
-public enum QuestionField implements SqlField{
+public enum NoteField implements SqlField{
     ID("id"),
-    QUIZID("quizid"),
-    WEIGHT("weight"),
-    TYPE("type");
+    SENDERID("senderid"),
+    RECIPIENTID("recipientid"),
+    CREATIONDATE("creationdate"),
+    TEXT("text");
 
     private final String columnName;
-    QuestionField(String columnName){
+    NoteField(String columnName){
         this.columnName = columnName;
     }
 

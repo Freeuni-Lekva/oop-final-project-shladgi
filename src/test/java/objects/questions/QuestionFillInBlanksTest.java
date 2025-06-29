@@ -133,7 +133,7 @@ public class QuestionFillInBlanksTest {
         // QuestionFillInBlanks(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json)
         // simulate to create a quetsion from database, by using a second constructor.
         // this constructor make putData by itself, using data i gave it.
-        QuestionFillInBlanks loaded = new QuestionFillInBlanks(700, 42, question, null, 2, data);
+        QuestionFillInBlanks loaded = new QuestionFillInBlanks(700, 42, question, null, 2, 5.0, data);
 
         assertEquals(q.getQuestion(), loaded.getQuestion());
         assertEquals(q.getMaxScore(), loaded.getMaxScore());
@@ -176,7 +176,7 @@ public class QuestionFillInBlanksTest {
         QuestionFillInBlanks q = new QuestionFillInBlanks(question, blanks, corrects, exactMatch);
         JsonObject data = q.getData();
 
-        QuestionFillInBlanks loaded = new QuestionFillInBlanks(1123, 456, question, null, 4, data);
+        QuestionFillInBlanks loaded = new QuestionFillInBlanks(1123, 456, question, null, 4, 1.0, data);
 
         assertEquals(q.getQuestion(), loaded.getQuestion());
         assertEquals(q.getMaxScore(), loaded.getMaxScore());

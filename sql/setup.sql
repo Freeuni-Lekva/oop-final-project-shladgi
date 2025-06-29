@@ -2,6 +2,8 @@
 USE quizKhana;
 
 -- DROP TABLES
+DROP TABLE IF EXISTS notes;
+DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friendships;
 DROP TABLE IF EXISTS quiz_results;
@@ -33,6 +35,8 @@ CREATE TABLE quizzes
     random            BOOLEAN        NOT NULL DEFAULT FALSE,
     singlepage          BOOLEAN        NOT NULL DEFAULT TRUE,
     immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,
+    practicemode        BOOLEAN        NOT NULL DEFAULT TRUE,
+    timelimit           INT            NOT NULL DEFAULT -1, -- IN SECONDS
     FOREIGN KEY (userid) REFERENCES users (id)
 );
 
@@ -45,6 +49,7 @@ CREATE TABLE questions
     imagelink  VARCHAR(255),
     type       ENUM ('SingleChoice', 'MultiChoice', 'TextAnswer', 'MultiTextAnswer', 'FillInBlanks', 'FillChoices') NOT NULL,
     maxscore   INT                                                                                                  NOT NULL,
+    weight     double                                                                                               NOT NULL,
     jsondata   JSON,
     FOREIGN KEY (quizid) REFERENCES quizzes (id)
 );
@@ -77,6 +82,7 @@ CREATE TABLE quiz_results
     userid       INT            NOT NULL,
     quizid       INT            NOT NULL,
     creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    timetaken    INT            NOT NULL DEFAULT 0,  -- seconds
     totalscore   DECIMAL(10, 2) NOT NULL DEFAULT 0,
     FOREIGN KEY (userid) REFERENCES users (id),
     FOREIGN KEY (quizid) REFERENCES quizzes (id)
@@ -106,4 +112,32 @@ CREATE TABLE friend_requests
     creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (firstid) REFERENCES users (id),
     FOREIGN KEY (secondid) REFERENCES users (id)
+);
+
+
+CREATE TABLE challenges
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    quizid       INT            NOT NULL,
+    senderid     INT            NOT NULL,
+    recipientid  INT            NOT NULL,
+    bestscore    DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    quiztitle    VARCHAR(255)   NOT NULL,
+    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quizid) REFERENCES quizzes (id),
+    FOREIGN KEY (senderid) REFERENCES users (id),
+    FOREIGN KEY (recipientid) REFERENCES users (id)
+);
+
+
+
+CREATE TABLE notes
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    senderid     INT       NOT NULL,
+    recipientid  INT       NOT NULL,
+    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    text         TEXT      NOT NULL,
+    FOREIGN KEY (senderid) REFERENCES users (id),
+    FOREIGN KEY (recipientid) REFERENCES users (id)
 );
