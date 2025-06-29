@@ -27,20 +27,23 @@ public class QuizResult {
 
     public QuizResult(){}
 
-    public QuizResult(int userId, int quizId, LocalDateTime creationDate, double totalScore) {
+    public QuizResult(int userId, int quizId, LocalDateTime creationDate, double totalScore, int timeTaken) {
         this.id = id;
         this.userId = userId;
         this.quizId = quizId;
         this.creationDate = creationDate;
         this.totalScore = totalScore;
+        this.timeTaken = timeTaken;
     }
 
-    public QuizResult(int id, int userId, int quizId, LocalDateTime creationDate, double totalScore) {
+    public QuizResult(int id, int userId, int quizId, LocalDateTime creationDate, double totalScore, int timeTaken) {
         this.id = id;
         this.userId = userId;
         this.quizId = quizId;
         this.creationDate = creationDate;
         this.totalScore = totalScore;
+        this.timeTaken = timeTaken;
+
     }
 
     public int getId() {return id;}

@@ -134,6 +134,17 @@ public class QuizDBTest {
         );
         testQueryDeleteAddOnce(size, 1, filters, userAchDB);
 
+        filters = List.of(
+                new FilterCondition<>(QuizField.TIMELIMIT, Operator.MOREEQ, 50)
+        );
+        testQueryDeleteAddOnce(size, 2, filters, userAchDB);
+
+        filters = List.of(
+            new FilterCondition<>(QuizField.TIMELIMIT, Operator.LESS, 50),
+            new FilterCondition<>(QuizField.TIMELIMIT, Operator.MORE, 0),
+            new FilterCondition<>(QuizField.PRACTICEMODE, Operator.EQUALS, true)
+        );
+        testQueryDeleteAddOnce(size, 1, filters, userAchDB);
 
         testQueryDeleteAddOnce(size, size, allFilter, userAchDB);
 
