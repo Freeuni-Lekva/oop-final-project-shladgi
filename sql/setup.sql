@@ -2,6 +2,8 @@
 USE quizKhana;
 
 -- DROP TABLES
+DROP TABLE IF EXISTS notes;
+DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS friendships;
 DROP TABLE IF EXISTS quiz_results;
@@ -110,4 +112,32 @@ CREATE TABLE friend_requests
     creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (firstid) REFERENCES users (id),
     FOREIGN KEY (secondid) REFERENCES users (id)
+);
+
+
+CREATE TABLE challenges
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    quizid       INT            NOT NULL,
+    senderid     INT            NOT NULL,
+    recipientid  INT            NOT NULL,
+    bestscore    DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    quiztitle    VARCHAR(255)   NOT NULL,
+    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quizid) REFERENCES quizzes (id),
+    FOREIGN KEY (senderid) REFERENCES users (id),
+    FOREIGN KEY (recipientid) REFERENCES users (id)
+);
+
+
+
+CREATE TABLE notes
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    senderid     INT       NOT NULL,
+    recipientid  INT       NOT NULL,
+    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    text         TEXT      NOT NULL,
+    FOREIGN KEY (senderid) REFERENCES users (id),
+    FOREIGN KEY (recipientid) REFERENCES users (id)
 );
