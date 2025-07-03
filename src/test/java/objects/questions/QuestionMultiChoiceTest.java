@@ -57,7 +57,7 @@ public class QuestionMultiChoiceTest {
         assertEquals(4,jo.getAsJsonArray(CH).size());
         assertEquals(2,jo.getAsJsonArray(CC).size());
 
-        QuestionMultiChoice q2 = new QuestionMultiChoice(1,1,"?","link",jo.getAsJsonArray(CC).size(),jo);
+        QuestionMultiChoice q2 = new QuestionMultiChoice(1,1,"?","link",jo.getAsJsonArray(CC).size(), 1.0,jo);
 
         assertEquals(1,q2.check(new Answer<>(Arrays.asList(1))));
         assertEquals(1,q2.check(new Answer<>(Arrays.asList(2))));
@@ -79,7 +79,7 @@ public class QuestionMultiChoiceTest {
         jaCorrectChoises.add(3);
         jo.add(CC, jaCorrectChoises);
         jo.addProperty(EM, true);
-        q =new QuestionMultiChoice(1,1,"?","link",3,jo);
+        q =new QuestionMultiChoice(1,1,"?","link",3, 1.0,jo);
         assertEquals(3,q.check(new Answer<>(Arrays.asList(1,2,3))));
         assertEquals(0,q.check(new Answer<>(Arrays.asList(1,2))));
         assertEquals(0,q.check(new Answer<>(Arrays.asList(0,3))));

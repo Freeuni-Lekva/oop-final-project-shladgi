@@ -40,8 +40,8 @@ public class QuestionFillInBlanks extends Question{
 
 
     // this is a constructor that constructs the object from database table information.
-    public QuestionFillInBlanks(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json) {
-        super(id,quizId,question,imageLink,maxScore,json, QType.FillInBlanks);
+    public QuestionFillInBlanks(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
+        super(id,quizId,question,imageLink,maxScore, weight,json, QType.FillInBlanks);
     }
 
     public QuestionFillInBlanks() {
