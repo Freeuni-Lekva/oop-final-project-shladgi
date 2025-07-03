@@ -90,7 +90,7 @@ public class DatabaseAdder {
             rs = stmt.getGeneratedKeys(); // get the keys generated
             if(rs.next()){ // set the id of the object to the generated value
                 primaryField.setAccessible(true);
-                primaryField.set(obj, rs.getInt(primaryKeyName));
+                primaryField.set(obj, rs.getInt(1));
             }
         }catch (Exception e){
             throw new RuntimeException("ERROR IN ADD FUNCTION IN DATABASE " + e.getMessage());
