@@ -19,7 +19,24 @@
 
 
 <main>
-    <h1>index</h1>
+    <h1 id="welcomeMsg">Welcome!</h1>
+    <script>
+        fetch("/session-info")
+            .then(response => response.json())
+            .then(data => {
+                const welcome = document.getElementById("welcomeMsg");
+                if (data.username) {
+                    welcome.textContent = `Hello, ${data.username}!`;
+                } else {
+                    welcome.textContent = "Hello, guest!";
+                }
+            })
+            .catch(err => {
+                console.error("Failed to load user session info", err);
+                document.getElementById("welcomeMsg").textContent = "Hello!";
+            });
+    </script>
+
 </main>
 
 <footer></footer>
