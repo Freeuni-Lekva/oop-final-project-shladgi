@@ -27,8 +27,8 @@ public class QuestionFillInChoices extends Question{
     }
 
     // this is a constructor that constructs the object from database table information.
-    public QuestionFillInChoices(int id, int quizId, String question, String imageLink, int maxScore, JsonObject json) {
-        super(id,quizId,question,imageLink,maxScore,json, QType.FillChoices);
+    public QuestionFillInChoices(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
+        super(id,quizId,question,imageLink,maxScore, weight,json, QType.FillChoices);
     }
 
     public QuestionFillInChoices() {

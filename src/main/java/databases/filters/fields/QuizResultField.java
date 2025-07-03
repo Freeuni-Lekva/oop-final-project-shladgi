@@ -5,7 +5,8 @@ public enum QuizResultField implements SqlField{
     QUIZID("quizid"),
     USERID("userid"),
     TOTALSCORE("totalscore"),
-    CREATIONDATE("creationdate");
+    CREATIONDATE("creationdate"),
+    TIMETAKEN("timetaken");
 
     private String columnName;
     QuizResultField(String columnName){
