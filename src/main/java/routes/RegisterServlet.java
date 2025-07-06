@@ -36,8 +36,6 @@ public class RegisterServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        System.out.println("username: " + (username != null ? username : "null"));
-        System.out.println("password: " + (password != null ? password : "null"));
 
         ServletContext context = getServletContext();
 

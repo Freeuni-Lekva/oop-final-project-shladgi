@@ -40,7 +40,6 @@ public class LoginServlet extends HttpServlet {
         List<User> resultSet = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username));
         if(resultSet.isEmpty()
         || !hasher.verifyPassword(password, resultSet.getFirst().getSalt(), resultSet.getFirst().getPassword())){
-            System.out.println("wrong");
             response.setContentType("application/json");
             response.getWriter().write("{\"success\": false, \"error\": \"wrong_username_or_password\"}");
             return;
