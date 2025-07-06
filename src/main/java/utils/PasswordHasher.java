@@ -18,16 +18,23 @@ public class PasswordHasher {
         return salt.toString();
     }
 
-    public String hashPassword(String password, String salt) throws NoSuchAlgorithmException {
+    public String hashPassword(String password, String salt) {
         String passwordSalt = password + salt;
 
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hashedBytes = digest.digest(passwordSalt.getBytes(StandardCharsets.UTF_8));
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
 
-        return hexToString(hashedBytes);
+            byte[] hashedBytes = digest.digest(passwordSalt.getBytes(StandardCharsets.UTF_8));
+
+            return hexToString(hashedBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public boolean verifyPassword(String inputPassword, String salt, String storedHash) throws NoSuchAlgorithmException {
+    public boolean verifyPassword(String inputPassword, String salt, String storedHash) {
         return storedHash.equals(hashPassword(inputPassword, salt));
     }
 

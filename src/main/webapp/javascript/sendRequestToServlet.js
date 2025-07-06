@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("loginForm");
+    const button = document.getElementById("button");
+    const name = button.getAttribute("name");
+    const form = document.getElementById(name + "Form");
+
 
     if (form) {
         form.addEventListener("submit", async function (e) {
@@ -10,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const body = new URLSearchParams(formData);
 
             try {
-                const response = await fetch("/login", {
+                const response = await fetch("/" + name, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
@@ -23,7 +26,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (result.success) {
                     window.location.href = "/home";
                 } else {
-                    alert("Invalid username or password");
+                    const errorDiv = document.getElementById("registerError");
+                    if (result.error === "username_taken") {
+                        errorDiv.textContent = "Username already used. Please choose another.";
+                    }else if (result.error === "wrong_username_or_password"){
+                        errorDiv.textContent = "Either username or password is incorrect.";
+                    } else {
+                        errorDiv.textContent = "Registration failed. Try again.";
+                    }
                 }
             } catch (error) {
                 console.error("Error during login:", error);

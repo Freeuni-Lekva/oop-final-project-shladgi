@@ -18,18 +18,17 @@
 
 
 <main>
-    <h1>login</h1>
+    <h1>register</h1>
     <br>
     <br>
     <div id="registerError" class="text-danger mb-3"></div>
-    <form id="loginForm">
+    <form id="registerForm">
         Username: <input type="text" name="username" required>
         <br><br>
         Password: <input type="password" name="password" required>
         <br><br>
-        <button id="button" type="submit" name="login">Login</button>
+        <button id="button" type="submit" name="register">Register</button>
     </form>
-    <a href="/register">Register if you do not have an account</a>
 
 </main>
 
@@ -41,5 +40,11 @@
 
 
 <script src="javascript/sendRequestToServlet.js"></script>
+<script>
+    const errorParam = new URLSearchParams(window.location.search).get("error");
+    if (errorParam === "name") {
+        document.getElementById("errorMessage").innerText = "name already used";
+    }
+</script>
 </body>
 </html>

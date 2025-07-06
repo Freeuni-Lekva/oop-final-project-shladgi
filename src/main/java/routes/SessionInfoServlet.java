@@ -13,15 +13,15 @@ public class SessionInfoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
 
-        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        Integer userId = (session != null) ? (Integer) session.getAttribute("userid") : null;
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        if (username != null) {
-            response.getWriter().write("{\"username\": \"" + username + "\"}");
+        if (userId != null) {
+            response.getWriter().write("{\"userid\": \"" + userId + "\"}");
         } else {
-            response.getWriter().write("{\"username\": null}");
+            response.getWriter().write("{\"userid\": null}");
         }
     }
 }

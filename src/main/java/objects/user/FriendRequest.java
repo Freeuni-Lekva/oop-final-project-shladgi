@@ -1,6 +1,6 @@
 package objects.user;
 
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
+//import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import databases.annotations.Column;
 import databases.annotations.Table;
 

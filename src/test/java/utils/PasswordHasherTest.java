@@ -14,14 +14,10 @@ public class PasswordHasherTest {
     public void easyTest(){
         PasswordHasher hasher = new PasswordHasher();
         String salt = hasher.generateSalt();
-        try {
-            String hash = hasher.hashPassword("easypass", salt);
-            assertTrue(hasher.verifyPassword("easypass", salt, hash));
-            assertFalse(hasher.verifyPassword("easypasss", salt, hash));
-            assertFalse(hasher.verifyPassword("easypasss", salt, "falsehash"));
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        String hash = hasher.hashPassword("easypass", salt);
+        assertTrue(hasher.verifyPassword("easypass", salt, hash));
+        assertFalse(hasher.verifyPassword("easypasss", salt, hash));
+        assertFalse(hasher.verifyPassword("easypasss", salt, "falsehash"));
 
     }
 
@@ -29,13 +25,9 @@ public class PasswordHasherTest {
     public void hardTest(){
         PasswordHasher hasher = new PasswordHasher();
         String salt = hasher.generateSalt();
-        try {
-            String hash = hasher.hashPassword("Hardpass123..", salt);
-            assertTrue(hasher.verifyPassword("Hardpass123..", salt, hash));
-            assertFalse(hasher.verifyPassword("Hardpass123..", "falsesalt", hash));
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        String hash = hasher.hashPassword("Hardpass123..", salt);
+        assertTrue(hasher.verifyPassword("Hardpass123..", salt, hash));
+        assertFalse(hasher.verifyPassword("Hardpass123..", "falsesalt", hash));
 
     }
 }

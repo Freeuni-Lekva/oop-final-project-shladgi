@@ -25,8 +25,8 @@
             .then(response => response.json())
             .then(data => {
                 const welcome = document.getElementById("welcomeMsg");
-                if (data.username) {
-                    welcome.textContent = `Hello, ${data.username}!`;
+                if (data.userid) {
+                    welcome.textContent = `Hello, ${data.userid}!`;
                 } else {
                     welcome.textContent = "Hello, guest!";
                 }
