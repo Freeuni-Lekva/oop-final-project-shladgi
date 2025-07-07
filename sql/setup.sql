@@ -2,6 +2,7 @@
 USE quizKhana;
 
 -- DROP TABLES
+DROP TABLE IF EXISTS user_answers;
 DROP TABLE IF EXISTS notes;
 DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS friend_requests;
@@ -140,4 +141,26 @@ CREATE TABLE notes
     text         TEXT      NOT NULL,
     FOREIGN KEY (senderid) REFERENCES users (id),
     FOREIGN KEY (recipientid) REFERENCES users (id)
+);
+@Column(name = "id", primary = true)
+    private int id;
+
+    @Column(name = "questionid")
+    private int questionId;
+
+
+    @Column(name = "resultid")
+    private int resultId;
+
+    @Column(name = "isstring")
+    private boolean isString;
+
+CREATE TABLE user_answers
+(
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    questionid INT         NOT NULL,
+    resultid   INT         NOT NULL,
+    isstring   BOOLEAN     NOT NULL,
+    FOREIGN KEY questionid REFERENCES questions (id),
+    FOREIGN KEY resultid REFERENCES results (id)
 );
