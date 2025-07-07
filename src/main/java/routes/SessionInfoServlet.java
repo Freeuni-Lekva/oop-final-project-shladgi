@@ -10,19 +10,22 @@ import java.io.IOException;
 @WebServlet("/session-info")
 public class SessionInfoServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-
-        Integer userId = (session != null) ? (Integer) session.getAttribute("userid") : null;
+        String value = (String)request.getParameter("key");
+        //this might be userid, username or type
+        String answer = null;
+        if(value!=null) answer = (session == null) ? null : session.getAttribute(value).toString();
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        if (userId != null) {
-            response.getWriter().write("{\"userid\": \"" + userId + "\"}");
-        } else {
-            response.getWriter().write("{\"userid\": null}");
+        try {
+            response.getWriter().write("{\"value\": \"" + (answer != null ? answer : "") + "\"}");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
 }
 

@@ -46,6 +46,8 @@ public class LoginServlet extends HttpServlet {
         }
 
         request.getSession().setAttribute("userid", resultSet.getFirst().getId());
+        request.getSession().setAttribute("username", resultSet.getFirst().getUserName());
+        request.getSession().setAttribute("type", resultSet.getFirst().getType());
 
         response.setContentType("application/json");
         response.getWriter().write("{\"success\": true}");

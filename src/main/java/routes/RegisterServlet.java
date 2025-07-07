@@ -24,12 +24,16 @@ public class RegisterServlet extends HttpServlet {
 
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         String error = request.getParameter("error");
         if(error != null){
             request.setAttribute("error", error);
         }
-        request.getRequestDispatcher("/register.html").forward(request, response);
+        try {
+            request.getRequestDispatcher("/register.html").forward(request, response);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -58,6 +62,8 @@ public class RegisterServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         session.setAttribute("userid", newUser.getId());
+        request.getSession().setAttribute("username", newUser.getUserName());
+        request.getSession().setAttribute("type", newUser.getType());
         response.setContentType("application/json");
         response.getWriter().write("{\"success\": true}");
     }
