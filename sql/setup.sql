@@ -1,142 +1,153 @@
 -- create this database if you dont have it
-use quizkhana;
+USE quizKhana;
 
--- drop tables
-drop table if exists user_answers;
-drop table if exists notes;
-drop table if exists challenges;
-drop table if exists friend_requests;
-drop table if exists friendships;
-drop table if exists quiz_results;
-drop table if exists user_achievements;
-drop table if exists achievements;
-drop table if exists questions;
-drop table if exists quizzes;
-drop table if exists users;
+-- DROP TABLES
+DROP TABLE IF EXISTS notes;
+DROP TABLE IF EXISTS challenges;
+DROP TABLE IF EXISTS friend_requests;
+DROP TABLE IF EXISTS friendships;
+DROP TABLE IF EXISTS quiz_results;
+DROP TABLE IF EXISTS user_achievements;
+DROP TABLE IF EXISTS achievements;
+DROP TABLE IF EXISTS questions;
+DROP TABLE IF EXISTS quizzes;
+DROP TABLE IF EXISTS users;
 
--- create tables
-create table users
+-- CREATE TABLES
+CREATE TABLE users
 (
-    id           int primary key auto_increment,
-    username     varchar(50) unique                   not null,
-    salt         varchar(255)                         not null,
-    password     varchar(255)                         not null,
-    type         enum ('admin', 'basic') not null,
-    creationdate timestamp                            not null default current_timestamp
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    username     VARCHAR(50) UNIQUE                   NOT NULL,
+    salt         VARCHAR(255)                         NOT NULL,
+    password     VARCHAR(255)                         NOT NULL,
+    type         ENUM ('Admin', 'Basic') NOT NULL,
+    creationdate TIMESTAMP                            NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-create table quizzes
+CREATE TABLE quizzes
 (
-    id              int primary key auto_increment,
-    title               varchar(255)   not null,
-    userid              int            not null,
-    creationdate        timestamp      not null default current_timestamp,
-    totalscore          decimal(10, 2) not null default 0,
-    totalquestions      int            not null default 0,
-    random            boolean        not null default false,
-    singlepage          boolean        not null default true,
-    immediatecorrection boolean        not null default false,
-    practicemode        boolean        not null default true,
-    timelimit           int            not null default -1, -- in seconds
-    foreign key (userid) references users (id)
-);
-
-
-create table questions
-(
-    id int primary key auto_increment,
-    quizid     int                                                                                                  not null,
-    question   varchar(1000)                                                                                        not null,
-    imagelink  varchar(255),
-    type       enum ('singlechoice', 'multichoice', 'textanswer', 'multitextanswer', 'fillinblanks', 'fillchoices') not null,
-    maxscore   int                                                                                                  not null,
-    weight     double                                                                                               not null,
-    jsondata   json,
-    foreign key (quizid) references quizzes (id)
+    id              INT PRIMARY KEY AUTO_INCREMENT,
+    title               VARCHAR(255)   NOT NULL,
+    userid              INT            NOT NULL,
+    creationdate        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    totalscore          DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    totalquestions      INT            NOT NULL DEFAULT 0,
+    random            BOOLEAN        NOT NULL DEFAULT FALSE,
+    singlepage          BOOLEAN        NOT NULL DEFAULT TRUE,
+    immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,
+    practicemode        BOOLEAN        NOT NULL DEFAULT TRUE,
+    timelimit           INT            NOT NULL DEFAULT -1, -- IN SECONDS
+    FOREIGN KEY (userid) REFERENCES users (id)
 );
 
 
-create table achievements
+CREATE TABLE questions
 (
-    id       int primary key auto_increment,
-    title    varchar(255) not null,
-    description varchar(255),
-    iconlink varchar(255),
-    rarity   enum ('common', 'rare', 'epic', 'legendary') not null
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quizid     INT                                                                                                  NOT NULL,
+    question   VARCHAR(1000)                                                                                        NOT NULL,
+    imagelink  VARCHAR(255),
+    type       ENUM ('SingleChoice', 'MultiChoice', 'TextAnswer', 'MultiTextAnswer', 'FillInBlanks', 'FillChoices') NOT NULL,
+    maxscore   INT                                                                                                  NOT NULL,
+    weight     double                                                                                               NOT NULL,
+    jsondata   JSON,
+    FOREIGN KEY (quizid) REFERENCES quizzes (id)
 );
 
 
-create table user_achievements
+CREATE TABLE achievements
 (
-    id            int primary key auto_increment,
-    userid        int       not null,
-    achievementid int       not null,
-    creationdate  timestamp not null default current_timestamp,
-    foreign key (userid) references users (id),
-    foreign key (achievementid) references achievements (id)
+    id       INT PRIMARY KEY AUTO_INCREMENT,
+    title    VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    iconlink VARCHAR(255),
+    rarity   ENUM ('Common', 'Rare', 'Epic', 'Legendary') NOT NULL
 );
 
 
-create table quiz_results
+CREATE TABLE user_achievements
 (
-    id           int primary key auto_increment,
-    userid       int            not null,
-    quizid       int            not null,
-    creationdate timestamp      not null default current_timestamp,
-    timetaken    int            not null default 0,  -- seconds
-    totalscore   decimal(10, 2) not null default 0,
-    foreign key (userid) references users (id),
-    foreign key (quizid) references quizzes (id)
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    userid        INT       NOT NULL,
+    achievementid INT       NOT NULL,
+    creationdate  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userid) REFERENCES users (id),
+    FOREIGN KEY (achievementid) REFERENCES achievements (id)
 );
 
 
-create table friendships
+CREATE TABLE quiz_results
 (
-    id           int primary key auto_increment,
-    firstid      int       not null,
-    secondid     int       not null,
-    creationdate timestamp not null default current_timestamp,
-    foreign key (firstid) references users (id),
-    foreign key (secondid) references users (id),
-
-    -- ensure no duplicate friendships (regardless of order)
-    constraint unique_friendship unique (firstid, secondid),
-    constraint check_ids check (firstid < secondid)
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    userid       INT            NOT NULL,
+    quizid       INT            NOT NULL,
+    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    timetaken    INT            NOT NULL DEFAULT 0,  -- seconds
+    totalscore   DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    FOREIGN KEY (userid) REFERENCES users (id),
+    FOREIGN KEY (quizid) REFERENCES quizzes (id)
 );
 
 
-create table friend_requests
+CREATE TABLE friendships
 (
-    id           int primary key auto_increment,
-    firstid      int       not null,
-    secondid     int       not null,
-    creationdate timestamp not null default current_timestamp,
-    foreign key (firstid) references users (id),
-    foreign key (secondid) references users (id)
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    firstid      INT       NOT NULL,
+    secondid     INT       NOT NULL,
+    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (firstid) REFERENCES users (id),
+    FOREIGN KEY (secondid) REFERENCES users (id),
+
+    -- Ensure no duplicate friendships (regardless of order)
+    CONSTRAINT unique_friendship UNIQUE (firstid, secondid),
+    CONSTRAINT check_ids CHECK (firstid < secondid)
 );
 
 
-create table challenges
+CREATE TABLE friend_requests
 (
-    id           int primary key auto_increment,
-    quizid       int            not null,
-    senderid     int            not null,
-    recipientid  int            not null,
-    bestscore    decimal(10, 2) not null default 0,
-    quiztitle    varchar(255)   not null,
-    creationdate timestamp      not null default current_timestamp,
-    foreign key (quizid) references quizzes (id),
-    foreign key (senderid) references users (id),
-    foreign key (recipientid) references users (id)
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    firstid      INT       NOT NULL,
+    secondid     INT       NOT NULL,
+    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (firstid) REFERENCES users (id),
+    FOREIGN KEY (secondid) REFERENCES users (id)
 );
 
-create table user_answers
+
+CREATE TABLE challenges
 (
-    id         int primary key auto_increment,
-    questionid int         not null,
-    resultid   int         not null,
-    isstring   boolean     not null,
-    jsondata   json,
-    foreign key (questionid) references questions (id),
-    foreign key (resultid) references quiz_results (id)
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    quizid       INT            NOT NULL,
+    senderid     INT            NOT NULL,
+    recipientid  INT            NOT NULL,
+    bestscore    DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    quiztitle    VARCHAR(255)   NOT NULL,
+    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quizid) REFERENCES quizzes (id),
+    FOREIGN KEY (senderid) REFERENCES users (id),
+    FOREIGN KEY (recipientid) REFERENCES users (id)
+);
+
+
+
+CREATE TABLE notes
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    senderid     INT       NOT NULL,
+    recipientid  INT       NOT NULL,
+    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    text         TEXT      NOT NULL,
+    FOREIGN KEY (senderid) REFERENCES users (id),
+    FOREIGN KEY (recipientid) REFERENCES users (id)
+);
+
+CREATE TABLE user_answers(
+     id         INT PRIMARY KEY AUTO_INCREMENT,
+     questionid INT         NOT NULL,
+     resultid   INT         NOT NULL,
+     isstring   BOOLEAN     NOT NULL,
+     jsondata   JSON,
+     FOREIGN KEY (questionid) REFERENCES questions (id),
+     FOREIGN KEY (resultid) REFERENCES quiz_results (id)
 );
