@@ -1,10 +1,12 @@
 package servlets.userPageServlet;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
 import com.google.gson.Gson;
 
+@WebServlet("/user_friends")
 public class UserFriendsServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
