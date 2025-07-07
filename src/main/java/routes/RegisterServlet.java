@@ -1,5 +1,6 @@
 package routes;
 
+import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.UserField;
@@ -25,10 +26,6 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
-        String error = request.getParameter("error");
-        if(error != null){
-            request.setAttribute("error", error);
-        }
         try {
             request.getRequestDispatcher("/register.html").forward(request, response);
         } catch (ServletException e) {
@@ -48,7 +45,10 @@ public class RegisterServlet extends HttpServlet {
         //if username already exists
         if(!userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username)).isEmpty()){
             response.setContentType("application/json");
-            response.getWriter().write("{\"success\": false, \"error\": \"username_taken\"}");
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "username_taken");
+            response.getWriter().write(json.toString());
             return;
         }
 
@@ -65,6 +65,7 @@ public class RegisterServlet extends HttpServlet {
         request.getSession().setAttribute("username", newUser.getUserName());
         request.getSession().setAttribute("type", newUser.getType());
         response.setContentType("application/json");
+
         response.getWriter().write("{\"success\": true}");
     }
 
