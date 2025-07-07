@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/navFoot.css"/>
     <link rel="stylesheet" href="css/userMenu.css"/>
+    <script src="javascript/userPage/loadFirstTimeName.js"></script>
 </head>
 <body>
 
@@ -16,22 +17,19 @@
 </header>
 
 <div class="menu">
-    <a href="#" class="menu-item" id="userMenuItem">NAME</a>
-    <a href="#" class="menu-item" id="friendsMenuItem">FRIENDS</a>
-    <a href="#" class="menu-item" id="ratingMenuItem">STATISTICS</a>
+    <button id="userMenuItem">NAME</button>
+    <button id="friendsMenuItem">FRIENDS</button>
+    <button href="#" class="menu-item" id="ratingMenuItem">STATISTICS</button>
 </div>
 
 <div id="user">
     <p>Welcome, <span id="usernameDisplay">user</span>!</p>
 </div>
 
-<div id="friends">
-    <h2>Your Friends</h2>
-    <ul>
-        <li>Loading...</li>
-    </ul>
+<div id="friends" style="display: none;">
+    <h2>Friends</h2>
+    <ul id="friendsList"></ul>
 </div>
-
 
 <div id="rating">
     <h2>Statistics</h2>
@@ -44,9 +42,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="javascript/navFoot.js"></script>
-<script src="javascript/LoadFirstTimeName.js"></script>
-<script src="javascript/LoadFriendsSection.js"></script>
-<script src="javascript/LoadUserSection.js"></script>
-<script src="javascript/LoadStatisticsSection.js"></script>
+<script src="javascript/userPage/loadFirstTimeName.js"></script>
+<script src="javascript/userPage/loadFriendsSection.js"></script>
+<script src="javascript/userPage/loadUserSection.js"></script>
+<script src="javascript/userPage/loadStatisticsSection.js"></script>
 </body>
 </html>
