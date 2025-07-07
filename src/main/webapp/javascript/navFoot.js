@@ -17,31 +17,21 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     const navLinks = document.getElementById("links");
 
     if (userType) {
-        navLinks.innerHTML += `
-            <li class="nav-item" id="user">
-                <a class="nav-link" href="user.html">${userName}</a>
-            </li>`;
+        navLinks.innerHTML +=  getLi("notification" , "Notifications");
+        navLinks.innerHTML +=  getLi("user" , userName);
+
         if (userType === "Admin") {
-            navLinks.innerHTML += `
-                <li class="nav-item" id="admin">
-                    <a class="nav-link" href="admin.html">Admin Panel</a>
-                </li>`;
+            navLinks.innerHTML += getLi("admin","Admin Panel");
         }
-        navLinks.innerHTML+=
-            `
-                <li class="nav-item" id="logout">
-                    <a class="nav-link" href="logout.html">Log Out</a>
-                </li>`;
+        navLinks.innerHTML+= '<form action="logout" method="post">\n' +
+            '<button type="submit" class="btn btn-danger">Logout</button></form>';
     } else {
-        navLinks.innerHTML += getLi("login","Log In");
+        navLinks.innerHTML += getLi("login","LogIn");
     }
 });
 
 
 function getLi(id,txt){
     return `<li class="nav-item" id=${id}>
-            <a class="nav-link" href="/login">${txt}</a></li>`
+            <a class="nav-link" href="/${id}">${txt}</a></li>`
 }
-
-
-
