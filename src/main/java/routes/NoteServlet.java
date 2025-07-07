@@ -78,7 +78,8 @@ public class NoteServlet extends HttpServlet {
             return;
         }
 
-        if (!friendshipDB.areFriends(sender.getId(), recipient.getId())) {
+        if (!friendshipDB.areFriends(sender.getId(), recipient.getId())
+        && sender.getId() != recipient.getId()) {
             json.addProperty("success", false);
             json.addProperty("message", "You are not friends with this user.");
             response.getWriter().write(json.toString());
