@@ -1,12 +1,12 @@
 package WebServlets;
 
+import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.UserField;
-import databases.implementations.ChallengeDB;
 import databases.implementations.NoteDB;
 import databases.implementations.UserDB;
-import objects.user.Challenge;
+import databases.implementations.FriendshipDB;
 import objects.user.Note;
 import objects.user.User;
 
@@ -19,58 +19,72 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@WebServlet("/note")
+@WebServlet("/createNote")
 public class NoteServlet extends HttpServlet {
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        JsonObject json = new JsonObject();
+
         String friendUsername = request.getParameter("FriendUsername");
         String message = request.getParameter("Message");
-
-        // es loginisas unda chavagdo sesiashi wesit.
         User sender = (User) request.getSession().getAttribute("user");
 
-        if (friendUsername == null || message == null || message.isBlank() || sender == null) {
-            response.sendRedirect("challengeNote.html");
+
+        if (friendUsername == null || message == null || message.isBlank()) {
+            json.addProperty("success", false);
+            json.addProperty("message", "Missing data.");
+            response.getWriter().write(json.toString());
             return;
         }
 
-        // wamovige DAO-ebi.
+        if (sender == null) {
+            json.addProperty("success", false);
+            json.addProperty("message", "Not logged in.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        // DBs
         UserDB userDB = (UserDB) getServletContext().getAttribute("userDB");
         NoteDB noteDB = (NoteDB) getServletContext().getAttribute("noteDB");
+        FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute("friendshipDB");
 
-        // gadavmowmot friend tu arsebobs
         List<FilterCondition<UserField>> filters = List.of(
                 new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, friendUsername)
         );
         List<User> result = userDB.query(filters);
         User recipient = result.isEmpty() ? null : result.get(0);
 
-        if(recipient == null ){
-            // allert("wrong friend's userName");
-            response.sendRedirect("ChallengeNote.html");
+        if (recipient == null) {
+            json.addProperty("success", false);
+            json.addProperty("message", "User not found.");
+            response.getWriter().write(json.toString());
             return;
-        }else{
-            // tu arsebobs axla gadavamowmot megobroba.
-            // jer vergavige rogoraa chagdebuli bazashi kargad da mere davwer.
-            //TO DO
-
         }
 
-        Note note = new Note(sender.getId(),
-                recipient.getId(),
-                LocalDateTime.now(),
-                message);
+        if (!friendshipDB.areFriends(sender.getId(), recipient.getId())) {
+            json.addProperty("success", false);
+            json.addProperty("message", "You are not friends with this user.");
+            response.getWriter().write(json.toString());
+            return;
+        }
 
+        Note note = new Note(sender.getId(), recipient.getId(), LocalDateTime.now(), message);
         noteDB.add(note);
-        response.sendRedirect("index.html");
+
+        json.addProperty("success", true);
+        json.addProperty("message", "Note sent successfully.");
+        response.getWriter().write(json.toString());
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            request.getRequestDispatcher("createNote.html").forward(request, response);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
