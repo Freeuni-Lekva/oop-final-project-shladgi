@@ -1,5 +1,6 @@
 package routes;
 
+import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.UserField;
@@ -42,7 +43,10 @@ public class LoginServlet extends HttpServlet {
         if(resultSet.isEmpty()
         || !hasher.verifyPassword(password, resultSet.getFirst().getSalt(), resultSet.getFirst().getPassword())){
             response.setContentType("application/json");
-            response.getWriter().write("{\"success\": false, \"error\": \"wrong_username_or_password\"}");
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "wrong_username_or_password");
+            response.getWriter().write(json.toString());
             return;
         }
 
@@ -51,6 +55,8 @@ public class LoginServlet extends HttpServlet {
         request.getSession().setAttribute("type", resultSet.getFirst().getType());
 
         response.setContentType("application/json");
-        response.getWriter().write("{\"success\": true}");
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        response.getWriter().write(json.toString());
     }
 }
