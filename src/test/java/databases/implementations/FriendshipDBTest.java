@@ -81,7 +81,7 @@ public class FriendshipDBTest {
 
     @Test
     @Order(2)
-    public void testQueryDeleteAdd(){
+    public void testQueryDeleteAdd() {
         List<Friendship> friends = friendshipDB.query(allFilter);
         int size = friends.size();
         assertEquals(6, size);
@@ -119,5 +119,15 @@ public class FriendshipDBTest {
         testQueryDeleteAddOnce(size, 2, filters, friendshipDB);
 
         testQueryDeleteAddOnce(size, size, allFilter, friendshipDB);
+
     }
+
+    @Test
+    @Order(3)
+    public void testAreFriends() {
+        assertEquals(true, friendshipDB.areFriends(1, 2));
+        assertEquals(false, friendshipDB.areFriends(1, 1));
+        assertEquals(false, friendshipDB.areFriends(2, 9));
+    }
+
 }

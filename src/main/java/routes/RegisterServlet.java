@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import static utils.Constants.*;
 
 @WebServlet(name = "registerServlet", value = "/register")
 public class RegisterServlet extends HttpServlet {
@@ -43,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
 
         ServletContext context = getServletContext();
 
-        UserDB userDB = (UserDB) context.getAttribute("UserDB");
+        UserDB userDB = (UserDB) context.getAttribute(USERDB);
 
         //if username already exists
         if(!userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username)).isEmpty()){

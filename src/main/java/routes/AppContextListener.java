@@ -1,6 +1,6 @@
 package routes;
 
-import databases.implementations.UserDB;
+import databases.implementations.*;
 
 import javax.naming.Context;
 import javax.servlet.ServletContext;
@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import static utils.Constants.*;
+
 @WebListener
 public class AppContextListener implements ServletContextListener {
 
@@ -19,12 +21,15 @@ public class AppContextListener implements ServletContextListener {
         //TODO
         //initialize necessary items
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizkhana", "root", "root");
-            UserDB userDB = new UserDB(conn);
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizkhana", "root", "2005TiriTiri");
 
             ServletContext context = sce.getServletContext();
-            context.setAttribute("UserDB", userDB);
-
+            context.setAttribute(USERDB, new UserDB(conn));
+            context.setAttribute(CHALLENGEDB, new ChallengeDB(conn));
+            context.setAttribute(NOTEDB, new NoteDB(conn));
+            context.setAttribute(QUIZDB, new QuizDB(conn));
+            context.setAttribute(QUIZRESULTDB, new QuizResultDB(conn));
+            context.setAttribute(FRIENDSHIPDB, new FriendshipDB(conn));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

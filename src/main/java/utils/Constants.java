@@ -1,0 +1,13 @@
+package utils;
+
+public class Constants {
+    public static String USERDB = "USERDB";
+    public static String CHALLENGEDB = "CHALLENGEDB";
+    public static String NOTEDB = "NOTEDB";
+    public static String QUIZDB = "QUIZDB";
+    public static String QUIZRESULTDB = "QUIZRESULTDB";
+    public static String FRIENDSHIPDB = "FRIENDSHIPDB";
+
+
+}
+
