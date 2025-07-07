@@ -6,6 +6,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="css/navFoot.css"/>
+    <link rel="stylesheet" href="css/admin.css"/>
 </head>
 <body>
 <header class="position-relative text-uppercase">
@@ -14,7 +15,33 @@
 
 
 <main>
-    <h1>admin</h1>
+
+    <div class="container">
+        <h2 class="mb-4">Admin Dashboard</h2>
+
+        <!-- Announcements Section -->
+        <div class="mb-5">
+            <h4>Announcements</h4>
+
+            <form id="createForm" class="d-flex gap-2 mb-3">
+                <input type="text" id="announcementText" class="form-control" placeholder="Write announcement" required>
+                <button type="submit" class="btn btn-success btn-sm">Add</button>
+            </form>
+
+            <ul id="announcementList" class="list-group">
+
+            </ul>
+        </div>
+
+        <div>
+            <h4>Website Statistics</h4>
+            <ul class="list-group">
+                <li class="list-group-item">Users: <span id="statUsers">0</span></li>
+                <li class="list-group-item">Total Visits: <span id="statVisits">0</span></li>
+                <li class="list-group-item">Active Sessions: <span id="statSessions">0</span></li>
+            </ul>
+        </div>
+    </div>
 </main>
 
 <footer></footer>
@@ -22,5 +49,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="module" src="javascript/navFoot.js"></script>
+<script type="module" src="javascript/admin.js"></script>
 </body>
 </html>

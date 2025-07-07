@@ -13,6 +13,6 @@ public class LogoutServlet extends HttpServlet {
         req.getSession().setAttribute("userid","");
         req.getSession().setAttribute("username" ,"");
         req.getSession().setAttribute("type", "");
-        res.sendRedirect("index.html");
+        res.sendRedirect("/");
     }
 }
