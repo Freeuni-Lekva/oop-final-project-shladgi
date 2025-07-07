@@ -65,8 +65,9 @@ public class RegisterServlet extends HttpServlet {
         request.getSession().setAttribute("username", newUser.getUserName());
         request.getSession().setAttribute("type", newUser.getType());
         response.setContentType("application/json");
-
-        response.getWriter().write("{\"success\": true}");
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        response.getWriter().write(json.toString());
     }
 
 }

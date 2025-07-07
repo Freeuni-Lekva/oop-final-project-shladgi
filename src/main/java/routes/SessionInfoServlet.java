@@ -1,5 +1,7 @@
 package routes;
 
+import com.google.gson.JsonObject;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +23,9 @@ public class SessionInfoServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            response.getWriter().write("{\"value\": \"" + (answer != null ? answer : "") + "\"}");
+            JsonObject json = new JsonObject();
+            json.addProperty("value", (answer != null ? answer : ""));
+            response.getWriter().write(json.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
