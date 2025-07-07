@@ -17,6 +17,7 @@ import java.util.Map;
 public class UserInfoservlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         try {
             request.getRequestDispatcher("/user.html").forward(request,response);
         } catch (ServletException e) {

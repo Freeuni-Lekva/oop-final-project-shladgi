@@ -5,15 +5,16 @@ function setupUserButtonListener() {
     button.addEventListener("click", (e) => {
         e.preventDefault();
 
-        document.getElementById("friends").style.display = "none";
-        document.getElementById("rating").style.display = "none";
-
+        const friendsDiv = document.getElementById("friends");
+        const statisticsDiv = document.getElementById("statistics");
         const userDiv = document.getElementById("user");
-        userDiv.style.display = "block";
+
+        if (friendsDiv) friendsDiv.style.display = "none";
+        if (statisticsDiv) statisticsDiv.style.display = "none";
+        if (userDiv) userDiv.style.display = "block";
 
         console.log("User section shown");
     });
 }
 
 document.addEventListener("DOMContentLoaded", setupUserButtonListener);
-

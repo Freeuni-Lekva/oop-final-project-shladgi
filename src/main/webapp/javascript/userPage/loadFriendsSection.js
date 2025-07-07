@@ -1,13 +1,17 @@
-async function loadFriendsSection() {
+async function loadFriendsSection(username) {
     try {
         const response = await fetch("/user-friends", {
-            method: "POST"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `username=${encodeURIComponent(username)}`
         });
+
 
         if (!response.ok) {
             throw new Error("Failed to fetch friends: " + response.status);
         }
-
         const friends = await response.json();
 
         const friendsList = document.getElementById("friendsList");
@@ -27,21 +31,17 @@ async function loadFriendsSection() {
 }
 
 function setupFriendsButtonListener() {
+    const username = document.getElementById("userMenuItem").textContent;
     const button = document.getElementById("friendsMenuItem");
     if (!button) return;
 
     button.addEventListener("click", async (e) => {
         e.preventDefault();
+        document.getElementById("user").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("friends").style.display = "block";
 
-        const userSection = document.getElementById("user");
-        const ratingSection = document.getElementById("rating");
-        const friendsSection = document.getElementById("friends");
-
-        if (userSection) userSection.style.display = "none";
-        if (ratingSection) ratingSection.style.display = "none";
-        if (friendsSection) friendsSection.style.display = "block";
-
-        await loadFriendsSection();
+        await loadFriendsSection(username);
     });
 }
 
