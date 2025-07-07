@@ -1,4 +1,4 @@
-package WebServlets;
+package routes;
 
 import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import static utils.Constants.*;
 
 @WebServlet("/createNote")
 public class NoteServlet extends HttpServlet {
@@ -27,9 +28,32 @@ public class NoteServlet extends HttpServlet {
         response.setContentType("application/json");
         JsonObject json = new JsonObject();
 
+        // DBs
+        UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
+        NoteDB noteDB = (NoteDB) getServletContext().getAttribute(NOTEDB);
+        FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute(FRIENDSHIPDB);
+
         String friendUsername = request.getParameter("FriendUsername");
         String message = request.getParameter("Message");
-        User sender = (User) request.getSession().getAttribute("user");
+
+        Integer userId = (Integer) request.getSession().getAttribute("userid");
+        if (userId == null) {
+            json.addProperty("success", false);
+            json.addProperty("message", "Not logged in.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+
+        List<User> curUser = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS, userId));
+        //es arasdros ar unda moxdes rom sesiidan araswori ID amovige
+        if(curUser.isEmpty()){
+            json.addProperty("success", false);
+            json.addProperty("message", "User not found in database.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+        User sender = curUser.get(0);;
 
 
         if (friendUsername == null || message == null || message.isBlank()) {
@@ -39,17 +63,7 @@ public class NoteServlet extends HttpServlet {
             return;
         }
 
-        if (sender == null) {
-            json.addProperty("success", false);
-            json.addProperty("message", "Not logged in.");
-            response.getWriter().write(json.toString());
-            return;
-        }
 
-        // DBs
-        UserDB userDB = (UserDB) getServletContext().getAttribute("userDB");
-        NoteDB noteDB = (NoteDB) getServletContext().getAttribute("noteDB");
-        FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute("friendshipDB");
 
         List<FilterCondition<UserField>> filters = List.of(
                 new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, friendUsername)

@@ -1,4 +1,4 @@
-package WebServlets;
+package routes;
 
 import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import static utils.Constants.*;
 
 @WebServlet("/challenge")
 public class ChallengeServlet extends HttpServlet {
@@ -31,26 +32,40 @@ public class ChallengeServlet extends HttpServlet {
 
         String friendUsername = request.getParameter("FriendUsername");
         String quizTitle = request.getParameter("QuizTitle");
-        User sender = (User) request.getSession().getAttribute("user");
+
+        //DAOs
+        UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
+        ChallengeDB challengeDB = (ChallengeDB) getServletContext().getAttribute(CHALLENGEDB);
+        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
+        QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
+        FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute(FRIENDSHIPDB);
+
+        Integer userId = (Integer) request.getSession().getAttribute("userid");
+        if (userId == null) {
+            json.addProperty("success", false);
+            json.addProperty("message", "Not logged in.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+
+        List<User> curUser = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS, userId));
+        //es arasdros ar unda moxdes rom sesiidan araswori ID amovige
+        if(curUser.isEmpty()){
+            json.addProperty("success", false);
+            json.addProperty("message", "User not found in database.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+        User sender = curUser.get(0);
 
         if (friendUsername == null || quizTitle == null) {
             json.addProperty("success", false);
             json.addProperty("message", "Missing data.");
             response.getWriter().write(json.toString());
             return;
-        }else if(sender == null){
-            json.addProperty("success", false);
-            json.addProperty("message", "not logged in.");
-            response.getWriter().write(json.toString());
-            return;
         }
 
-        // DAOs
-        UserDB userDB = (UserDB) getServletContext().getAttribute("userDB");
-        ChallengeDB challengeDB = (ChallengeDB) getServletContext().getAttribute("challengeDB");
-        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute("quizResultDB");
-        QuizDB quizDB = (QuizDB) getServletContext().getAttribute("quizDB");
-        FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute("friendshipDB");
 
         // Check recipient user exists
         List<FilterCondition<UserField>> recipientFilter = List.of(

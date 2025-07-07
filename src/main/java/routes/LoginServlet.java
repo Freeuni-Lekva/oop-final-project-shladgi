@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import static utils.Constants.*;
 
 @WebServlet(name = "loginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
@@ -33,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         ServletContext context = request.getServletContext();
-        UserDB userDB = (UserDB) context.getAttribute("UserDB");
+        UserDB userDB = (UserDB) context.getAttribute(USERDB);
 
         PasswordHasher hasher = new PasswordHasher();
 
@@ -52,6 +53,4 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("application/json");
         response.getWriter().write("{\"success\": true}");
     }
-
-
 }
