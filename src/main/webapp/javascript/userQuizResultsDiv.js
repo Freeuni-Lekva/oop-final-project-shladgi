@@ -1,3 +1,16 @@
+export function fetchQuizResultData(quizResultId) {
+    return fetch("/quizResult", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `quizResultId=${encodeURIComponent(quizResultId)}`
+    }).then(response => {
+        if (!response.ok) throw new Error("Failed to load result");
+        return response.json();
+    });
+}
+
 
 function userQuizResultsDiv(data) {
     const row = document.createElement("div");
@@ -14,7 +27,7 @@ function userQuizResultsDiv(data) {
     return row;
 }
 
-async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
+export async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
     const listContainer = document.createElement("div");
 
     try {
@@ -30,6 +43,12 @@ async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
         const data = await response.json();
 
         const filteredIds = data.resultIds.filter(id => currentResultId == null || id !== currentResultId);
+
+        if(filteredIds.length === 0){
+            const row = document.createElement("div");
+            row.innerHTML = `<p><strong>No results!</strong></p>`;
+            return row;
+        }
 
         for (const id of filteredIds) {
             try {
