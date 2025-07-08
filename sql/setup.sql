@@ -2,6 +2,7 @@
 USE quizKhana;
 
 -- DROP TABLES
+DROP TABLE IF EXISTS user_answers;
 DROP TABLE IF EXISTS notes;
 DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS friend_requests;

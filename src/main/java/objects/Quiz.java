@@ -96,6 +96,8 @@ public class Quiz {
     public void setImmediateCorrection(boolean immediateCorrection) {this.immediateCorrection = immediateCorrection;}
     public void setPracticeMode(boolean practiceMode) {this.practiceMode = practiceMode;}
     public boolean isPracticeMode() {return this.practiceMode;}
+    public int getTimeLimit() { return timeLimit; }
+    public void setTimeLimit(int timeLimit) { this.timeLimit = timeLimit; }
     public void setDescription(String description) {this.description = description;}
     public String getDescription() {return this.description;}
 }
