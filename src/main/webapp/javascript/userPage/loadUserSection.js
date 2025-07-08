@@ -5,13 +5,9 @@ function setupUserButtonListener() {
     button.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const friendsDiv = document.getElementById("friends");
-        const statisticsDiv = document.getElementById("statistics");
-        const userDiv = document.getElementById("user");
-
-        if (friendsDiv) friendsDiv.style.display = "none";
-        if (statisticsDiv) statisticsDiv.style.display = "none";
-        if (userDiv) userDiv.style.display = "block";
+        document.getElementById("user").style.display = "block";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("friends-container").style.display = "none";
 
         console.log("User section shown");
     });

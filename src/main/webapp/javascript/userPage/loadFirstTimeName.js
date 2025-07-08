@@ -7,11 +7,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Load the session username
     const sessionUsername = await loadSessionValue("username");
 
-    // If no ?username= param, we're viewing our own profile
-    if (!viewedUsername) {
-        viewedUsername = sessionUsername;
-    }
-
     // Set session username on the menu
     const menuItem = document.getElementById("userMenuItem");
     if (menuItem) {

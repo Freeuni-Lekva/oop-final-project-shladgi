@@ -12,5 +12,6 @@ public class Constants {
 
     public static String USERACHIEVEMENTDB = "USERACHIEVEMENTDB";
     public static String ACHIEVEMENTSDB = "ACHIEVEMENTSDB";
+    public static String FRIENDREQUESTDB = "FRIENDREQUESTDB";
 }
 

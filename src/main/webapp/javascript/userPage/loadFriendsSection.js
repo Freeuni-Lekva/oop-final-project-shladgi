@@ -37,6 +37,11 @@ async function loadFriendsSection(username) {
         // Clear previous content
         peopleDiv.innerHTML = "";
 
+        // Add a heading before the list
+        const heading = document.createElement("h4");
+        heading.textContent = "FRIENDS:";
+        peopleDiv.appendChild(heading);
+
         // Add a <div> for each friend
         friends.forEach(friend => {
             const div = document.createElement("div");
@@ -61,7 +66,8 @@ async function loadFriendsSection(username) {
 async function setupFriendsButtonListener() {
     await loadFriendsHTML();  // <-- Load friends HTML first
 
-    const username = document.getElementById("userMenuItem").textContent;
+    const params = new URLSearchParams(window.location.search);
+    let username = params.get("username");
     console.log("username : " + username);
     const button = document.getElementById("friendsMenuItem");
     if (!button) return;
