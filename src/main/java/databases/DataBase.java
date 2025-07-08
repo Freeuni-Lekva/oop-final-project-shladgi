@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Filter;
 
 public abstract class DataBase<T, TField extends SqlField>{
     Connection con;
@@ -76,19 +77,36 @@ public abstract class DataBase<T, TField extends SqlField>{
      * @return List of objects that are included in the filter converted to objects
      */
     public List<T> query(List<FilterCondition<TField>> filterConditions){
-        List<T> list = new ArrayList<>();
-        String filterString = FilterBuilder.buildFilter(filterConditions);
-        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM "+tableName+" WHERE "+filterString)){
+        return query(filterConditions, null, false, null, null);
+    }
+
+    public List<T> query(List<FilterCondition<TField>> filterConditions, TField orderByField, Boolean ascending, Integer limit, Integer offset){
+       List<T> list = new ArrayList<>();
+       String filterString = FilterBuilder.buildFilter(filterConditions);
+       StringBuilder builder = new StringBuilder("SELECT * FROM "+tableName+" WHERE "+filterString);
+       if(orderByField != null){
+           builder.append(" ORDER BY "+orderByField.getColumnName());
+           if(ascending) builder.append(" ASC");
+           else builder.append(" DESC");
+       }
+
+       if(limit != null) builder.append(" LIMIT ").append(limit);
+       if(offset != null) builder.append(" OFFSET ").append(offset);
+
+
+
+       try(PreparedStatement stmt = con.prepareStatement(builder.toString())){
             ResultSet rs = stmt.executeQuery();
 
             // loop over the query result rows and add them to the list
             while(rs.next()) list.add((T) Converter.convert(clazz, rs));
 
             rs.close();
-        }catch (Exception e){
-            throw new RuntimeException("QUERY ERROR \n" + e.getMessage());
-        }
-        return list;
+       }catch (Exception e){
+           throw new RuntimeException("QUERY ERROR \n" + e.getMessage());
+       }
+       return list;
+
     }
 
     // Same Functions but for easier testing
