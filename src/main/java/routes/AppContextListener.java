@@ -30,7 +30,7 @@ public class AppContextListener implements ServletContextListener {
             context.setAttribute(QUIZDB, new QuizDB(conn));
             context.setAttribute(QUIZRESULTDB, new QuizResultDB(conn));
             context.setAttribute(FRIENDSHIPDB, new FriendshipDB(conn));
-
+            context.setAttribute(USERANSWERDB, new UserAnswerDB(conn));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

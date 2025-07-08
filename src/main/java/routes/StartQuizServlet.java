@@ -29,10 +29,7 @@ public class StartQuizServlet extends HttpServlet {
 
         String idStr = request.getParameter("id");
         String practiceStr = request.getParameter("practice");
-        String deleteStr = request.getParameter("delete");
         Integer userId = (Integer) request.getSession().getAttribute("userid");
-
-
 
 
         if (userId == null) {
