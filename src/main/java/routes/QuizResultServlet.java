@@ -38,12 +38,15 @@ public class QuizResultServlet extends HttpServlet {
 
         request.setAttribute("totalscore", quizResult.getTotalScore());
         request.setAttribute("timetaken", quizResult.getTimeTaken());
+        request.setAttribute("creationdate", quizResult.getCreationDate());
 
-        int quizId = quizResult.getQuizId();
 
-        QuestionDB questionDB = (QuestionDB) context.getAttribute(QUESTIONDB);
-
-        List<Question> questions = questionDB.query(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, quizId));
+        //this is for listing questions
+//        int quizId = quizResult.getQuizId();
+//
+//        QuestionDB questionDB = (QuestionDB) context.getAttribute(QUESTIONDB);
+//
+//        List<Question> questions = questionDB.query(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, quizId));
         //TODO
 
         try {
