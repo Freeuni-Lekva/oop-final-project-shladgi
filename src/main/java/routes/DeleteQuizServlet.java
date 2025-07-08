@@ -1,0 +1,90 @@
+package routes;
+
+import com.google.gson.JsonObject;
+import databases.filters.FilterCondition;
+import databases.filters.Operator;
+import databases.filters.fields.QuizField;
+import databases.filters.fields.UserField;
+import databases.implementations.QuizDB;
+import databases.implementations.UserDB;
+import objects.Quiz;
+import objects.user.User;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.List;
+
+import static utils.Constants.*;
+
+@WebServlet("/deleteQuiz")
+public class DeleteQuizServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        JsonObject json = new JsonObject();
+
+        Integer userId = (Integer) request.getSession().getAttribute("userid");
+        // quiz id.
+        String idStr = request.getParameter("id");
+
+        if (userId == null) {
+            json.addProperty("success", false);
+            json.addProperty("message", "User not logged in.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        if (idStr == null) {
+            json.addProperty("success", false);
+            json.addProperty("message", "Missing quiz ID.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        int quizId = Integer.parseInt(idStr);
+
+        QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
+        UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
+
+        List<Quiz> quizzes = quizDB.query(
+                new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
+        );
+        if (quizzes.isEmpty()) {
+            json.addProperty("success", false);
+            json.addProperty("message", "Quiz not found.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        Quiz quiz = quizzes.get(0);
+
+        List<User> users = userDB.query(
+                new FilterCondition<>(UserField.ID, Operator.EQUALS, userId)
+        );
+        if (users.isEmpty()) {
+            json.addProperty("success", false);
+            json.addProperty("message", "User not found.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        User user = users.get(0);
+        boolean isAdmin = user.getType().toString().equalsIgnoreCase("ADMIN");
+
+        if (quiz.getCreatorId() != userId && !isAdmin) {
+            json.addProperty("success", false);
+            json.addProperty("message", "You are not authorized to delete this quiz.");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        quizDB.delete(new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId));
+
+
+
+        json.addProperty("success", true);
+        json.addProperty("message", "Quiz deleted successfully.");
+        response.getWriter().write(json.toString());
+    }
+}

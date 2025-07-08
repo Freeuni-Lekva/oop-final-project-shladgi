@@ -28,7 +28,7 @@ CREATE TABLE quizzes
 (
     id              INT PRIMARY KEY AUTO_INCREMENT,
     title               VARCHAR(255)   NOT NULL,
-    userid              INT            NOT NULL,
+    creatorid              INT            NOT NULL,
     creationdate        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     totalscore          DECIMAL(10, 2) NOT NULL DEFAULT 0,
     totalquestions      INT            NOT NULL DEFAULT 0,
@@ -37,7 +37,8 @@ CREATE TABLE quizzes
     immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,
     practicemode        BOOLEAN        NOT NULL DEFAULT TRUE,
     timelimit           INT            NOT NULL DEFAULT -1, -- IN SECONDS
-    FOREIGN KEY (userid) REFERENCES users (id)
+    description         VARCHAR(100)   NOT NULL,
+    FOREIGN KEY (creatorid) REFERENCES users (id)
 );
 
 

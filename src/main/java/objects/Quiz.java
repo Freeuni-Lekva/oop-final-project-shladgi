@@ -13,8 +13,8 @@ public class Quiz {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "userid")
-    private int userId;
+    @Column(name = "creatorid")
+    private int creatorId;
 
     @Column(name = "creationdate")
     private LocalDateTime creationDate;
@@ -40,11 +40,16 @@ public class Quiz {
     @Column(name = "practicemode")
     private boolean practiceMode;
 
+    @Column(name = "description")
+    private String description;
+
+
+
     public Quiz(){}
 
-    public Quiz(String title, int userId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode) {
+    public Quiz(String title, int creatorId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode, String description) {
         this.title = title;
-        this.userId = userId;
+        this.creatorId = creatorId;
         this.creationDate = creationDate;
         this.totalScore = totalScore;
         this.isRandom = isRandom;
@@ -53,12 +58,13 @@ public class Quiz {
         this.immediateCorrection = isImmediateCorrection;
         this.practiceMode = practiceMode;
         this.timeLimit = timeLimit;
+        this.description = description;
     }
 
-    public Quiz(int id, String title, int userId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode) {
+    public Quiz(int id, String title, int creatorId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode, String description) {
         this.id = id;
         this.title = title;
-        this.userId = userId;
+        this.creatorId = creatorId;
         this.creationDate = creationDate;
         this.totalScore = totalScore;
         this.isRandom = isRandom;
@@ -67,6 +73,7 @@ public class Quiz {
         this.immediateCorrection = isImmediateCorrection;
         this.practiceMode = practiceMode;
         this.timeLimit = timeLimit;
+        this.description = description;
     }
 
     public int getTotalQuestions() {return totalQuestions;}
@@ -75,8 +82,8 @@ public class Quiz {
     public void setId(int id) {this.id = id;}
     public String getTitle() {return title;}
     public void setTitle(String title) {this.title = title;}
-    public int getUserId() {return userId;}
-    public void setUserId(int userId) {this.userId = userId;}
+    public int getCreatorId() {return creatorId;}
+    public void setCreatorId(int userId) {this.creatorId = userId;}
     public LocalDateTime getCreationDate() {return creationDate;}
     public void setCreationDate(LocalDateTime creationDate) {this.creationDate = creationDate;}
     public double getTotalScore() {return totalScore;}
@@ -89,4 +96,6 @@ public class Quiz {
     public void setImmediateCorrection(boolean immediateCorrection) {this.immediateCorrection = immediateCorrection;}
     public void setPracticeMode(boolean practiceMode) {this.practiceMode = practiceMode;}
     public boolean isPracticeMode() {return this.practiceMode;}
+    public void setDescription(String description) {this.description = description;}
+    public String getDescription() {return this.description;}
 }

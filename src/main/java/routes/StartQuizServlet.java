@@ -29,7 +29,11 @@ public class StartQuizServlet extends HttpServlet {
 
         String idStr = request.getParameter("id");
         String practiceStr = request.getParameter("practice");
+        String deleteStr = request.getParameter("delete");
         Integer userId = (Integer) request.getSession().getAttribute("userid");
+
+
+
 
         if (userId == null) {
             json.addProperty("success", false);
@@ -49,7 +53,7 @@ public class StartQuizServlet extends HttpServlet {
         boolean practice = Boolean.parseBoolean(practiceStr);
 
         QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
-
+        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
 
 
         // Check quiz exists
@@ -74,8 +78,6 @@ public class StartQuizServlet extends HttpServlet {
             return;
         }
 
-        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
-
         // Check if user has unfinished quiz
         List<FilterCondition<QuizResultField>> unfinishedFilters = List.of(
                 new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
@@ -91,6 +93,7 @@ public class StartQuizServlet extends HttpServlet {
             return;
         }
 
+        // Start new result entry
         QuizResult newResult = new QuizResult(
                 userId,
                 quizId,
