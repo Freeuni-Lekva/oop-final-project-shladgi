@@ -73,3 +73,10 @@ INSERT INTO notes (senderid, recipientid, text) VALUES
                                                     (4, 5, 'How did you solve question 4 on the Math test?'),
                                                     (5, 4, 'Check out this new geography quiz I created!'),
                                                     (2, 4, 'Your history knowledge is impressive!');
+
+INSERT INTO announcements (imagelink, title, content, author) VALUES
+                                                    ('imglink1.png', 'announcement1', 'very important announcement to see', 'admin1'),
+                                                    ('imglink2.png', 'announcement2', 'very important 222 announcement to see', 'admin1'),
+                                                    ('imglink3.png', 'announcement3', 'very important  333 announcement to see', 'admin1'),
+                                                    ('imglink4.png', 'announcement4', 'very important  4444 announcement to see', 'admin1'),
+                                                    ('imglink5.png', 'announcement5', 'very important  55555 announcement to see', 'admin1');
