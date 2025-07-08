@@ -7,7 +7,7 @@ public class Constants {
     public static String QUIZDB = "QUIZDB";
     public static String QUIZRESULTDB = "QUIZRESULTDB";
     public static String FRIENDSHIPDB = "FRIENDSHIPDB";
-
+    public static String QUESTIONDB = "QUESTIONDB";
 
 }
 
