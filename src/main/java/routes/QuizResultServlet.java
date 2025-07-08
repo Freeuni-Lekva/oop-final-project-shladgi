@@ -3,9 +3,12 @@ package routes;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.QuestionField;
+import databases.filters.fields.QuizField;
 import databases.filters.fields.QuizResultField;
 import databases.implementations.QuestionDB;
+import databases.implementations.QuizDB;
 import databases.implementations.QuizResultDB;
+import objects.Quiz;
 import objects.questions.Question;
 import objects.user.QuizResult;
 
@@ -18,8 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static utils.Constants.QUESTIONDB;
-import static utils.Constants.QUIZRESULTDB;
+import static utils.Constants.*;
 
 @WebServlet(name = "quizResultServlet", value = "/quizResult")
 public class QuizResultServlet extends HttpServlet {
@@ -40,14 +42,14 @@ public class QuizResultServlet extends HttpServlet {
         request.setAttribute("timetaken", quizResult.getTimeTaken());
         request.setAttribute("creationdate", quizResult.getCreationDate());
 
+        int quizId = quizResult.getQuizId();
 
-        //this is for listing questions
-//        int quizId = quizResult.getQuizId();
-//
-//        QuestionDB questionDB = (QuestionDB) context.getAttribute(QUESTIONDB);
-//
-//        List<Question> questions = questionDB.query(new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, quizId));
-        //TODO
+        QuizDB quizDB = (QuizDB) context.getAttribute(QUIZDB);
+
+        List<Quiz> quizzes = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId));
+        Quiz quiz = quizzes.getFirst();
+        request.setAttribute("title", quiz.getTitle());
+
 
         try {
             request.getRequestDispatcher("/quizResultsPage.html").forward(request, response);
