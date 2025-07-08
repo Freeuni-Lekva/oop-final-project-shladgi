@@ -28,9 +28,12 @@ public class Challenge {
     @Column(name = "creationdate")
     private LocalDateTime creationDate;
 
+    @Column(name = "viewed")
+    private boolean isViewed;
+
     public Challenge(){}
 
-    public Challenge(int id, int quizId, int senderId, int recipientId, double bestScore, String quizTitle, LocalDateTime creationDate) {
+    public Challenge(int id, int quizId, int senderId, int recipientId, double bestScore, String quizTitle, LocalDateTime creationDate, boolean isViewed) {
         this.id = id;
         this.quizId = quizId;
         this.senderId = senderId;
@@ -38,14 +41,16 @@ public class Challenge {
         this.bestScore = bestScore;
         this.quizTitle = quizTitle;
         this.creationDate = creationDate;
+        this.isViewed = isViewed;
     }
-    public Challenge(int quizId, int senderId, int recipientId, double bestScore, String quizTitle, LocalDateTime creationDate) {
+    public Challenge(int quizId, int senderId, int recipientId, double bestScore, String quizTitle, LocalDateTime creationDate, boolean isViewed) {
         this.quizId = quizId;
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.bestScore = bestScore;
         this.quizTitle = quizTitle;
         this.creationDate = creationDate;
+        this.isViewed = isViewed;
     }
 
     public int getId() { return id; }
@@ -61,4 +66,8 @@ public class Challenge {
     public String getQuizTitle() { return quizTitle; }
     public void setQuizTitle(String quizTitle) { this.quizTitle = quizTitle; }
     public LocalDateTime getCreationDate() { return creationDate; }
+    public void setViewed(boolean isViewed) { this.isViewed = isViewed; }
+    public boolean isViewed() { return isViewed; }
+
+
 }

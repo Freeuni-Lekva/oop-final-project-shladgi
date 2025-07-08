@@ -86,7 +86,7 @@ public class NoteServlet extends HttpServlet {
             return;
         }
 
-        Note note = new Note(sender.getId(), recipient.getId(), LocalDateTime.now(), message);
+        Note note = new Note(sender.getId(), recipient.getId(), LocalDateTime.now(), message, false);
         noteDB.add(note);
 
         json.addProperty("success", true);

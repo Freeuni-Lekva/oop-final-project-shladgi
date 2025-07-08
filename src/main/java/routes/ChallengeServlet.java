@@ -119,7 +119,8 @@ public class ChallengeServlet extends HttpServlet {
                 recipient.getId(),
                 maxScore,
                 quizTitle,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                false
         );
         challengeDB.add(challenge);
 

@@ -77,6 +77,9 @@ public class QuizResultTest {
         assertEquals(5, quizResultDB.query(allFilter).size());
         quizResultDB.add(r6);
         assertEquals(6, quizResultDB.query(allFilter).size());
+
+        assertEquals(1, quizResultDB.query("WHERE userid = 2").size());
+        assertEquals(4, quizResultDB.query("WHERE quizid <= 5 OR quizid >= 8").size());
     }
 
     @Test

@@ -1,15 +1,12 @@
 package databases.filters.fields;
 
-public enum NoteField implements SqlField{
+public enum UserAnswerField implements SqlField{
     ID("id"),
-    SENDERID("senderid"),
-    RECIPIENTID("recipientid"),
-    CREATIONDATE("creationdate"),
-    TEXT("text"),
-    VIEWED("viewed");
+    QUESTIONID("questionid"),
+    RESULTID("resultid");
 
     private final String columnName;
-    NoteField(String columnName){
+    UserAnswerField(String columnName){
         this.columnName = columnName;
     }
 

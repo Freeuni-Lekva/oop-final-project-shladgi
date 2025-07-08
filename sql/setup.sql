@@ -2,6 +2,7 @@
 USE quizKhana;
 
 -- DROP TABLES
+DROP TABLE IF EXISTS user_answers;
 DROP TABLE IF EXISTS notes;
 DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS friend_requests;
@@ -97,7 +98,7 @@ CREATE TABLE friendships
     creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (firstid) REFERENCES users (id),
     FOREIGN KEY (secondid) REFERENCES users (id),
-    
+
     -- Ensure no duplicate friendships (regardless of order)
     CONSTRAINT unique_friendship UNIQUE (firstid, secondid),
     CONSTRAINT check_ids CHECK (firstid < secondid)
@@ -124,6 +125,7 @@ CREATE TABLE challenges
     bestscore    DECIMAL(10, 2) NOT NULL DEFAULT 0,
     quiztitle    VARCHAR(255)   NOT NULL,
     creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    viewed       BOOLEAN   NOT NULL,
     FOREIGN KEY (quizid) REFERENCES quizzes (id),
     FOREIGN KEY (senderid) REFERENCES users (id),
     FOREIGN KEY (recipientid) REFERENCES users (id)
@@ -138,6 +140,17 @@ CREATE TABLE notes
     recipientid  INT       NOT NULL,
     creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     text         TEXT      NOT NULL,
+    viewed       BOOLEAN   NOT NULL,
     FOREIGN KEY (senderid) REFERENCES users (id),
     FOREIGN KEY (recipientid) REFERENCES users (id)
+);
+
+CREATE TABLE user_answers(
+     id         INT PRIMARY KEY AUTO_INCREMENT,
+     questionid INT         NOT NULL,
+     resultid   INT         NOT NULL,
+     isstring   BOOLEAN     NOT NULL,
+     jsondata   JSON,
+     FOREIGN KEY (questionid) REFERENCES questions (id),
+     FOREIGN KEY (resultid) REFERENCES quiz_results (id)
 );
