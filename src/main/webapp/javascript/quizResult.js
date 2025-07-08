@@ -13,7 +13,7 @@ function fetchQuizResultData(quizResultId) {
 
 
 // After loading current result
-const quizResultId = parseInt(new URLSearchParams(window.location.search).get("quizResultId"));
+const quizResultId = parseInt(new URLSearchParams(window.location.search).get("id"));
 
 fetchQuizResultData(quizResultId)
     .then(async data => {
@@ -26,7 +26,8 @@ fetchQuizResultData(quizResultId)
         const userId = data.userid;
         const quizId = data.quizid;
         const previousResults = document.getElementById("quiz-result-list");
-        const newDiv = await userQuizResultsDiv(userId, quizId, quizResultId);
+        const newDiv = await getUserQuizResultsDiv(userId, quizId, quizResultId);
+        console.log(newDiv);
         previousResults.replaceWith(newDiv);
     });
 

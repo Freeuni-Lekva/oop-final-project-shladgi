@@ -59,17 +59,17 @@ INSERT INTO friend_requests (firstid, secondid) VALUES
                                                     (5, 2);  -- user4 requests user1 (they're not friends yet)
 
 -- Insert challenges (5 entries)
-INSERT INTO challenges (quizid, senderid, recipientid, bestscore, quiztitle) VALUES
-                                                                                 (1, 2, 3, 75, 'General Knowledge Quiz'),
-                                                                                 (2, 3, 4, 100, 'Science Trivia'),
-                                                                                 (3, 4, 5, 50, 'History Challenge'),
-                                                                                 (4, 5, 2, 40, 'Math Quick Test'),
-                                                                                 (5, 2, 4, 90, 'Geography Quiz');
+INSERT INTO challenges (quizid, senderid, recipientid, bestscore, quiztitle, viewed) VALUES
+                                                                                 (1, 2, 3, 75, 'General Knowledge Quiz', false),
+                                                                                 (2, 3, 4, 100, 'Science Trivia', false),
+                                                                                 (3, 4, 5, 50, 'History Challenge', false),
+                                                                                 (4, 5, 2, 40, 'Math Quick Test', false),
+                                                                                 (5, 2, 4, 90, 'Geography Quiz', false);
 
 -- Insert notes (5 entries)
-INSERT INTO notes (senderid, recipientid, text) VALUES
-                                                    (2, 3, 'Great job on the Science Trivia quiz!'),
-                                                    (3, 2, 'Thanks for the challenge, let me know when you want a rematch!'),
-                                                    (4, 5, 'How did you solve question 4 on the Math test?'),
-                                                    (5, 4, 'Check out this new geography quiz I created!'),
-                                                    (2, 4, 'Your history knowledge is impressive!');
+INSERT INTO notes (senderid, recipientid, text, viewed) VALUES
+                                                    (2, 3, 'Great job on the Science Trivia quiz!', false),
+                                                    (3, 2, 'Thanks for the challenge, let me know when you want a rematch!', false),
+                                                    (4, 5, 'How did you solve question 4 on the Math test?', false),
+                                                    (5, 4, 'Check out this new geography quiz I created!', false),
+                                                    (2, 4, 'Your history knowledge is impressive!', false);

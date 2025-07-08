@@ -1,20 +1,8 @@
-function fetchQuizResultData(quizResultId) {
-    return fetch("/quizResult", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `quizResultId=${encodeURIComponent(quizResultId)}`
-    }).then(response => {
-        if (!response.ok) throw new Error("Failed to load result");
-        return response.json();
-    });
-}
 
 function userQuizResultsDiv(data) {
     const row = document.createElement("div");
     row.className = "border rounded p-3 mb-3";
-
+    console.log(data.title);
     row.innerHTML = `
         <p><strong>Quiz:</strong> ${data.title}</p>
         <p><strong>Score:</strong> ${data.totalscore}</p>
@@ -39,8 +27,7 @@ async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
         });
 
         if (!response.ok) throw new Error("Failed to load previous result IDs");
-
-        const data = await response.json(); // { resultIds: [...] }
+        const data = await response.json();
 
         const filteredIds = data.resultIds.filter(id => currentResultId == null || id !== currentResultId);
 
