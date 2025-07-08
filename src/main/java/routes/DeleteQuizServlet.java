@@ -48,6 +48,7 @@ public class DeleteQuizServlet extends HttpServlet {
         QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
         UserAnswerDB userAnswerDB = (UserAnswerDB) getServletContext().getAttribute(USERANSWERDB);
         ChallengeDB challengeDB = (ChallengeDB) getServletContext().getAttribute(CHALLENGEDB);
+        QuestionDB questionDB = (QuestionDB) getServletContext().getAttribute(QUESTIONDB);
 
         List<Quiz> quizzes = quizDB.query(
                 new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
@@ -99,6 +100,11 @@ public class DeleteQuizServlet extends HttpServlet {
         // Delete related challenges
         challengeDB.delete(List.of(
                 new FilterCondition<>(ChallengeField.QUIZID, Operator.EQUALS, quizId)
+        ));
+
+        // DELETE QUESTION'S OF THIS QUIZ.
+        questionDB.delete(List.of(
+                new FilterCondition<>(QuestionField.QUIZID, Operator.EQUALS, quizId)
         ));
 
         // Delete the quiz itself
