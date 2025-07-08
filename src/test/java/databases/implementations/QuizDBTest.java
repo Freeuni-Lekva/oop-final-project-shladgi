@@ -36,7 +36,7 @@ public class QuizDBTest {
                 "(\n" +
                 "    id              INT PRIMARY KEY AUTO_INCREMENT,\n" +
                 "    title               VARCHAR(255)   NOT NULL,\n" +
-                "    creatorid              INT            NOT NULL,\n" +
+                "    userid              INT            NOT NULL,\n" +
                 "    creationdate        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 "    totalscore          DECIMAL(10, 2) NOT NULL DEFAULT 0,\n" +
                 "    totalquestions      INT            NOT NULL DEFAULT 0,\n" +
@@ -100,19 +100,19 @@ public class QuizDBTest {
         assertEquals(6, size);
 
         List<FilterCondition<QuizField>> filters = List.of(
-         new FilterCondition<>(QuizField.CREATORID, Operator.EQUALS, 1)
+         new FilterCondition<>(QuizField.USERID, Operator.EQUALS, 1)
         );
         testQueryDeleteAddOnce(size, 2, filters, userAchDB);
 
 
         filters = List.of(
-                new FilterCondition<>(QuizField.CREATORID, Operator.LESSEQ, 2),
+                new FilterCondition<>(QuizField.USERID, Operator.LESSEQ, 2),
                 new FilterCondition<>(QuizField.TITLE, Operator.EQUALS, "quiz1")
         );
         testQueryDeleteAddOnce(size, 1, filters, userAchDB);
 
         filters = List.of(
-                new FilterCondition<>(QuizField.CREATORID, Operator.MORE, 2),
+                new FilterCondition<>(QuizField.USERID, Operator.MORE, 2),
                 new FilterCondition<>(QuizField.TITLE, Operator.EQUALS, "quiz1")
         );
         testQueryDeleteAddOnce(size, 0, filters, userAchDB);

@@ -3,7 +3,7 @@ package databases.filters.fields;
 public enum QuizField implements SqlField{
     ID("id"),
     TITLE("title"),
-    CREATORID("creatorid"),
+    USERID("userid"),
     CREATIONDATE("creationdate"),
     TIMELIMIT("timelimit"),
     TOTALSCORE("totalscore"),

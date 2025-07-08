@@ -85,7 +85,7 @@ public class QuizInfoServlet extends HttpServlet {
         json.addProperty("practiceAvailable", quiz.isPracticeMode());
 
         // Creator Info
-        List<User> creators = userDB.query(List.of(new FilterCondition<>(UserField.ID, Operator.EQUALS, quiz.getCreatorId())));
+        List<User> creators = userDB.query(List.of(new FilterCondition<>(UserField.ID, Operator.EQUALS, quiz.getUserId())));
         if (!creators.isEmpty()) {
             User creator = creators.get(0);
             json.addProperty("creatorName", creator.getUserName());
@@ -93,7 +93,7 @@ public class QuizInfoServlet extends HttpServlet {
         }
 
         // Authorization Info
-        if (userId != null && userId == quiz.getCreatorId()) {
+        if (userId != null && userId == quiz.getUserId()) {
             json.addProperty("isOwner", true);
         } else {
             json.addProperty("isOwner", false);

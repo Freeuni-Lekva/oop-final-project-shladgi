@@ -76,7 +76,7 @@ public class DeleteQuizServlet extends HttpServlet {
         User user = users.get(0);
         boolean isAdmin = user.getType().toString().equalsIgnoreCase("ADMIN");
 
-        if (quiz.getCreatorId() != userId && !isAdmin) {
+        if (quiz.getUserId() != userId && !isAdmin) {
             json.addProperty("success", false);
             json.addProperty("message", "You are not authorized to delete this quiz.");
             response.getWriter().write(json.toString());
