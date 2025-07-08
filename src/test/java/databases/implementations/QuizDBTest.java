@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QuizDBTest {
     private static Connection conn;
-    private static QuizDB userAchDB;
+    private static QuizDB quizDB;
     private static List<FilterCondition<QuizField>> allFilter;
 
 
@@ -47,7 +47,7 @@ public class QuizDBTest {
                 "    timelimit           INT            NOT NULL DEFAULT -1 -- IN SECONDS\n" +
                 "  --  FOREIGN KEY (userid) REFERENCES users (id)\n" +
                 ");");
-        userAchDB = new QuizDB(conn);
+        quizDB = new QuizDB(conn);
     }
 
     public void testQueryDeleteAddOnce(int startSize, int affected, List<FilterCondition<QuizField>> filters, QuizDB db) {
@@ -75,78 +75,83 @@ public class QuizDBTest {
         Quiz q6 = new Quiz("quiz6", 3, LocalDateTime.of(2025, 4, 25, 13, 40), -1,
                 88.5, 18, true, false, true, true);
 
-        assertEquals(0, userAchDB.query(allFilter).size());
-        userAchDB.add(q1);
-        assertEquals(1, userAchDB.query(allFilter).size());
-        userAchDB.add(q2);
-        assertEquals(2, userAchDB.query(allFilter).size());
-        userAchDB.add(q3);
-        assertEquals(3, userAchDB.query(allFilter).size());
-        userAchDB.add(q4);
-        assertEquals(4, userAchDB.query(allFilter).size());
-        userAchDB.add(q5);
-        assertEquals(5, userAchDB.query(allFilter).size());
-        userAchDB.add(q6);
-        assertEquals(6, userAchDB.query(allFilter).size());
+        assertEquals(0, quizDB.query(allFilter).size());
+        quizDB.add(q1);
+        assertEquals(1, quizDB.query(allFilter).size());
+        quizDB.add(q2);
+        assertEquals(2, quizDB.query(allFilter).size());
+        quizDB.add(q3);
+        assertEquals(3, quizDB.query(allFilter).size());
+        quizDB.add(q4);
+        assertEquals(4, quizDB.query(allFilter).size());
+        quizDB.add(q5);
+        assertEquals(5, quizDB.query(allFilter).size());
+        quizDB.add(q6);
+        assertEquals(6, quizDB.query(allFilter).size());
+
+        List<Quiz> ls = quizDB.query(allFilter, QuizField.TIMELIMIT, true, 2, 2);
+        assertEquals(2, ls.size());
+        assertEquals(10, ls.get(0).getTimeLimit());
+        assertEquals(30, ls.get(1).getTimeLimit());
     }
     
     @Test
     @Order(2)
     public void testQueryDeleteAdd() {
-        List<Quiz> results = userAchDB.query(allFilter);
+        List<Quiz> results = quizDB.query(allFilter);
         int size = results.size();
         assertEquals(6, size);
 
         List<FilterCondition<QuizField>> filters = List.of(
          new FilterCondition<>(QuizField.USERID, Operator.EQUALS, 1)
         );
-        testQueryDeleteAddOnce(size, 2, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 2, filters, quizDB);
 
 
         filters = List.of(
                 new FilterCondition<>(QuizField.USERID, Operator.LESSEQ, 2),
                 new FilterCondition<>(QuizField.TITLE, Operator.EQUALS, "quiz1")
         );
-        testQueryDeleteAddOnce(size, 1, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 1, filters, quizDB);
 
         filters = List.of(
                 new FilterCondition<>(QuizField.USERID, Operator.MORE, 2),
                 new FilterCondition<>(QuizField.TITLE, Operator.EQUALS, "quiz1")
         );
-        testQueryDeleteAddOnce(size, 0, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 0, filters, quizDB);
 
         filters = List.of(
                 new FilterCondition<>(QuizField.CREATIONDATE, Operator.MORE, LocalDateTime.of(2020, 3, 1, 0, 0).toString()),
                 new FilterCondition<>(QuizField.TOTALSCORE, Operator.MOREEQ, 95.5)
         );
-        testQueryDeleteAddOnce(size, 1, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 1, filters, quizDB);
 
         filters = List.of(
                 new FilterCondition<>(QuizField.RANDOM, Operator.EQUALS, true),
                 new FilterCondition<>(QuizField.SINGLEPAGE, Operator.EQUALS, false)
         );
-        testQueryDeleteAddOnce(size, 2, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 2, filters, quizDB);
 
         filters = List.of(
                 new FilterCondition<>(QuizField.RANDOM, Operator.EQUALS, true),
                 new FilterCondition<>(QuizField.SINGLEPAGE, Operator.EQUALS, false),
                 new FilterCondition<>(QuizField.TOTALQUESTIONS, Operator.MORE, 14)
         );
-        testQueryDeleteAddOnce(size, 1, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 1, filters, quizDB);
 
         filters = List.of(
                 new FilterCondition<>(QuizField.TIMELIMIT, Operator.MOREEQ, 50)
         );
-        testQueryDeleteAddOnce(size, 2, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 2, filters, quizDB);
 
         filters = List.of(
             new FilterCondition<>(QuizField.TIMELIMIT, Operator.LESS, 50),
             new FilterCondition<>(QuizField.TIMELIMIT, Operator.MORE, 0),
             new FilterCondition<>(QuizField.PRACTICEMODE, Operator.EQUALS, true)
         );
-        testQueryDeleteAddOnce(size, 1, filters, userAchDB);
+        testQueryDeleteAddOnce(size, 1, filters, quizDB);
 
-        testQueryDeleteAddOnce(size, size, allFilter, userAchDB);
+        testQueryDeleteAddOnce(size, size, allFilter, quizDB);
 
     }
         
