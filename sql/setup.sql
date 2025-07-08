@@ -125,6 +125,7 @@ CREATE TABLE challenges
     bestscore    DECIMAL(10, 2) NOT NULL DEFAULT 0,
     quiztitle    VARCHAR(255)   NOT NULL,
     creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    viewed       BOOLEAN   NOT NULL,
     FOREIGN KEY (quizid) REFERENCES quizzes (id),
     FOREIGN KEY (senderid) REFERENCES users (id),
     FOREIGN KEY (recipientid) REFERENCES users (id)
@@ -139,6 +140,7 @@ CREATE TABLE notes
     recipientid  INT       NOT NULL,
     creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     text         TEXT      NOT NULL,
+    viewed       BOOLEAN   NOT NULL,
     FOREIGN KEY (senderid) REFERENCES users (id),
     FOREIGN KEY (recipientid) REFERENCES users (id)
 );
