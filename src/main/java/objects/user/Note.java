@@ -22,20 +22,27 @@ public class Note {
     @Column(name = "text")
     private String text;
 
+    @Column(name = "viewed")
+    private boolean viewed = false;
+
+
+
     public Note(){}
 
-    public Note(int senderId, int recipientId, LocalDateTime creationDate, String text) {
+    public Note(int senderId, int recipientId, LocalDateTime creationDate, String text, boolean isViewed) {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.creationDate = creationDate;
         this.text = text;
+        this.viewed = isViewed;
     }
-    public Note (int id, int senderId, int recipientId,LocalDateTime creationDate, String text) {
+    public Note (int id, int senderId, int recipientId,LocalDateTime creationDate, String text, boolean isViewed) {
         this.id = id;
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.creationDate = creationDate;
         this.text = text;
+        this.viewed = isViewed;
     }
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
@@ -44,4 +51,6 @@ public class Note {
     public int getFriendId() {return recipientId;}
     public void setFriendId(int recipientId) {this.recipientId = recipientId;}
     public LocalDateTime getCreationDate() {return creationDate;}
+    public void setViewed(boolean viewed) {this.viewed = viewed;}
+    public boolean isViewed() {return viewed;}
 }

@@ -5,7 +5,8 @@ public enum ChallengeField implements SqlField{
     QUIZID("quizid"),
     SENDERID("senderid"),
     RECIPIENTID("recipientid"),
-    CREATIONDATE("creationdate");
+    CREATIONDATE("creationdate"),
+    VIEWED("viewed");
 
     private final String columnName;
     ChallengeField(String columnName){
