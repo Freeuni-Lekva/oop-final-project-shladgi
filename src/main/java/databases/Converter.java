@@ -64,11 +64,19 @@ public class Converter {
                 }
             }
 
+            // set fields that have the column annotation
+            for(Field f : fields){
+                Column a = f.getAnnotation(Column.class);
+                if(a == null) continue;
+                setField(f, obj, rs, a.name());
+            }
+
             // if the object had HasJson annotation, then save the json data in the ibject
             // the object must alse implement ObjectWithJson interface or an error will be thrown
             if(jsonColumnName != null){
-                if(!ObjectWithJson.class.isAssignableFrom(clazz))
+                if(!ObjectWithJson.class.isAssignableFrom(clazz)) {
                     throw new RuntimeException("Class " + clazz.getName() + " does not implement ObjectWithJson While it has a json column annotation");
+                }
 
                 String jsonData = rs.getString(jsonColumnName);
 
@@ -78,12 +86,6 @@ public class Converter {
                 ((ObjectWithJson) obj).putData(json);
             }
 
-            // set fields that have the column annotation
-            for(Field f : fields){
-                Column a = f.getAnnotation(Column.class);
-                if(a == null) continue;
-                setField(f, obj, rs, a.name());
-            }
             return obj;
         }catch (Exception e){
             throw new RuntimeException("ERROR IN CONVERT FUNCTION IN DATABASE " + e.getMessage());
