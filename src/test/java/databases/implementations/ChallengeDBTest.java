@@ -4,8 +4,10 @@ import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.ChallengeField;
 import databases.filters.fields.FriendRequestField;
+import databases.filters.fields.NoteField;
 import objects.user.Challenge;
 import objects.user.FriendRequest;
+import objects.user.Note;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -40,6 +42,7 @@ public class ChallengeDBTest {
                 "    recipientid  INT            NOT NULL,\n" +
                 "    bestscore    DECIMAL(10, 2) NOT NULL DEFAULT 0,\n" +
                 "    quiztitle    VARCHAR(255)   NOT NULL,\n" +
+                " viewed       BOOLEAN   NOT NULL,"+
                 "    creationdate TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP\n" +
                 "    -- FOREIGN KEY (quizid) REFERENCES quizzes (id),\n" +
                 "    -- FOREIGN KEY (senderid) REFERENCES users (id),\n" +
@@ -60,12 +63,12 @@ public class ChallengeDBTest {
     @Test
     @Order(1)
     public void testAdding(){
-        Challenge c1 = new Challenge(1, 1, 2, 10.0, "Quiz 1", LocalDateTime.of(2024, 1, 1, 10, 0));
-        Challenge c2 = new Challenge(2, 1, 3, 15.5, "Quiz 2", LocalDateTime.of(2024, 1, 5, 11, 30));
-        Challenge c3 = new Challenge(2, 3, 4, 20.0, "Quiz 3", LocalDateTime.of(2024, 1, 10, 12, 0));    
-        Challenge c4 = new Challenge(3, 3, 4, 25.5, "Quiz 4", LocalDateTime.of(2024, 1, 15, 13, 15));    
-        Challenge c5 = new Challenge(3, 5, 6, 30.0, "Quiz 5", LocalDateTime.of(2024, 1, 20, 14, 45));    
-        Challenge c6 = new Challenge(6, 6, 7, 35.5, "Quiz 6", LocalDateTime.of(2024, 2, 1, 9, 0));
+        Challenge c1 = new Challenge(1, 1, 2, 10.0, "Quiz 1", LocalDateTime.of(2024, 1, 1, 10, 0), false);
+        Challenge c2 = new Challenge(2, 1, 3, 15.5, "Quiz 2", LocalDateTime.of(2024, 1, 5, 11, 30),false);
+        Challenge c3 = new Challenge(2, 3, 4, 20.0, "Quiz 3", LocalDateTime.of(2024, 1, 10, 12, 0),false);
+        Challenge c4 = new Challenge(3, 3, 4, 25.5, "Quiz 4", LocalDateTime.of(2024, 1, 15, 13, 15),false);
+        Challenge c5 = new Challenge(3, 5, 6, 30.0, "Quiz 5", LocalDateTime.of(2024, 1, 20, 14, 45),false);
+        Challenge c6 = new Challenge(6, 6, 7, 35.5, "Quiz 6", LocalDateTime.of(2024, 2, 1, 9, 0),false);
 
         challengeDB.add(c1);
         assertEquals(1, challengeDB.query(allFilter).size());
@@ -122,5 +125,24 @@ public class ChallengeDBTest {
         testQueryDeleteAddOnce(size, 3, filters, challengeDB);
 
         testQueryDeleteAddOnce(size, size, allFilter, challengeDB);
+    }
+
+    @Test
+    @Order(3)
+    public void testWithViewed() {
+        Challenge c7 =  new Challenge(7, 7, 7, 35.5, "Quiz 6", LocalDateTime.of(2024, 2, 1, 9, 0),true);
+        Challenge c8 =  new Challenge(8, 7, 7, 35.5, "Quiz 6", LocalDateTime.of(2024, 2, 1, 9, 0),true);
+        challengeDB.add(c7);
+
+        assertEquals(1, challengeDB.query(new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, true)).size());
+        assertEquals(6, challengeDB.query(new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, false)).size());
+        challengeDB.add(c8);
+        assertEquals(2, challengeDB.query(new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, true)).size());
+        challengeDB.delete(new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, true));
+        assertEquals(6, challengeDB.query(new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, false)).size());
+        assertEquals(0, challengeDB.query(new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, true)).size());
+
+
+
     }
 }

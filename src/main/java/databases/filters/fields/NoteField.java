@@ -5,7 +5,8 @@ public enum NoteField implements SqlField{
     SENDERID("senderid"),
     RECIPIENTID("recipientid"),
     CREATIONDATE("creationdate"),
-    TEXT("text");
+    TEXT("text"),
+    VIEWED("viewed");
 
     private final String columnName;
     NoteField(String columnName){
