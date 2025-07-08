@@ -1,9 +1,13 @@
+import { getTopPerformers } from './getTopPerformers.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     const titleEl = document.getElementById("quizTitle");
     const totalQuestionsEl = document.getElementById("totalQuestions");
     const totalScoreEl = document.getElementById("totalScore");
     const practiceModeSection = document.getElementById("practiceModeSection");
     const statusDiv = document.getElementById("quizStatus");
+
+    const leaderboardContainer = document.getElementById("leaderboard-container");
 
     const quizId = new URLSearchParams(window.location.search).get("id");
 
@@ -28,13 +32,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 creatorLink.textContent = data.creatorName;
 
                 renderList("userAttemptsList", data.userAttempts, true);
-                renderList("topPerformersList", data.topPerformers);
-                renderList("recentTopPerformersList", data.recentTopPerformers);
+
+                // Use the new getTopPerformers function
+
+
+                getTopPerformers(quizId, null, 10).then(div => {
+                    document.getElementById("topPerformersList").parentNode.replaceChild(div, document.getElementById("topPerformersList"));
+                    div.id = "topPerformersList";
+                });
+
+                getTopPerformers(quizId, 24, 10).then(div => {
+                    document.getElementById("recentTopPerformersList").parentNode.replaceChild(div, document.getElementById("recentTopPerformersList"));
+                    div.id = "recentTopPerformersList";
+                });
+
                 renderList("recentTakersList", data.recentTakers, true);
 
                 document.getElementById("avgScore").textContent = data.averageScore.toFixed(2);
-
-
 
                 if (data.practiceAvailable) {
                     practiceModeSection.style.display = "block";
@@ -75,7 +89,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             alert("❌ Server error while trying to delete quiz.");
                         });
                 });
-
 
             } else {
                 titleEl.textContent = "❌ " + data.message;
@@ -130,5 +143,3 @@ function renderList(id, data, detailed = false) {
         ul.appendChild(li);
     }
 }
-
-

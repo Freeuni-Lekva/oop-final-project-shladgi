@@ -135,7 +135,7 @@ public class QuizInfoServlet extends HttpServlet {
 
 
 
-        // 2. Highest performers of all time (sorted by score descending)
+  /*      // 2. Highest performers of all time (sorted by score descending)
         List<FilterCondition<QuizResultField>> topPerfFilter = List.of(
                 new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
                 new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MORE, -1)
@@ -176,7 +176,7 @@ public class QuizInfoServlet extends HttpServlet {
             recentTopPerformersJson.add(o);
         }
         json.add("recentTopPerformers", recentTopPerformersJson);
-
+*/
 
         // 4. Recent test takers (sorted by date descending)
         List<FilterCondition<QuizResultField>> recentTakersFilter = List.of(
