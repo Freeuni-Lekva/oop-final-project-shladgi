@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 renderList("recentTakersList", data.recentTakers, true);
 
                 document.getElementById("avgScore").textContent = data.averageScore.toFixed(2);
-                document.getElementById("completionRate").textContent = (data.completionRate * 100).toFixed(1) + "%";
 
 
 

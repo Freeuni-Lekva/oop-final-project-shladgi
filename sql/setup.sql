@@ -38,7 +38,7 @@ CREATE TABLE quizzes
     immediatecorrection BOOLEAN        NOT NULL DEFAULT FALSE,
     practicemode        BOOLEAN        NOT NULL DEFAULT TRUE,
     timelimit           INT            NOT NULL DEFAULT -1, -- IN SECONDS
-    description         VARCHAR(100)   NOT NULL,
+    description         VARCHAR(1000)   NOT NULL,
     FOREIGN KEY (userid) REFERENCES users (id)
 );
 

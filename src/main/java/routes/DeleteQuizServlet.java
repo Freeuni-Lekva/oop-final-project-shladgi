@@ -3,9 +3,7 @@ package routes;
 import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
-import databases.filters.fields.QuizField;
-import databases.filters.fields.QuizResultField;
-import databases.filters.fields.UserField;
+import databases.filters.fields.*;
 import databases.implementations.*;
 import objects.Quiz;
 import objects.user.*;
@@ -84,18 +82,29 @@ public class DeleteQuizServlet extends HttpServlet {
         }
 
         // Delete from user_answers
-        /*List<FilterCondition<QuizResultField>> resultFilter = List.of(
+        List<FilterCondition<QuizResultField>> resultFilter = List.of(
                 new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId)
         );
         List<objects.user.QuizResult> results = quizResultDB.query(resultFilter);
 
         for (objects.user.QuizResult qr : results) {
             userAnswerDB.delete(List.of(
-                    new FilterCondition<>(UserAnswerField.QUIZRESULTID, Operator.EQUALS, qr.getId())
+                    new FilterCondition<>(UserAnswerField.RESULTID, Operator.EQUALS, qr.getId())
             ));
-        }*/
+        }
 
+        // Delete related quiz results
+        quizResultDB.delete(resultFilter);
 
+        // Delete related challenges
+        challengeDB.delete(List.of(
+                new FilterCondition<>(ChallengeField.QUIZID, Operator.EQUALS, quizId)
+        ));
+
+        // Delete the quiz itself
+        quizDB.delete(List.of(
+                new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
+        ));
 
         quizDB.delete(new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId));
 

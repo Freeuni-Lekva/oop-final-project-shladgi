@@ -20,7 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static utils.Constants.*;
 
 @WebServlet("/quizInfo")
@@ -111,11 +114,14 @@ public class QuizInfoServlet extends HttpServlet {
         }
 
 
-        // Unsorted User Attempts, vinc shemosulia imena magis.
-        List<QuizResult> userResults = (userId == null) ? List.of() : quizResultDB.query(List.of(
-                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId)
-        ));
+
+        // 1. User's past performance (sorted by date descending)
+        List<FilterCondition<QuizResultField>> userResFilter = List.of(
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId)
+        );
+        List<QuizResult> userResults = userId == null ? List.of() :
+                quizResultDB.query(userResFilter, QuizResultField.CREATIONDATE, false, null, null);
 
         JsonArray userAttemptsJson = new JsonArray();
         for (QuizResult qr : userResults) {
@@ -129,58 +135,86 @@ public class QuizInfoServlet extends HttpServlet {
 
 
 
-        // All-time top performers (unsorted)
-        List<QuizResult> allTime = quizResultDB.query(List.of(
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId)
-        ));
-
-        JsonArray topPerformers = new JsonArray();
-        for (QuizResult qr : allTime) {
-            JsonObject o = new JsonObject();
-            o.addProperty("userId", qr.getUserId());
-            o.addProperty("score", qr.getTotalScore());
-            topPerformers.add(o);
-        }
-        json.add("topPerformers", topPerformers);
-
-
-        // Top performers in the last 24 hours
-        LocalDateTime lastDay = LocalDateTime.now().minusDays(1);
-        List<QuizResult> recent = quizResultDB.query(List.of(
+        // 2. Highest performers of all time (sorted by score descending)
+        List<FilterCondition<QuizResultField>> topPerfFilter = List.of(
                 new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
-                new FilterCondition<>(QuizResultField.CREATIONDATE, Operator.MOREEQ, lastDay.toString())
-        ));
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MORE, -1)
+        );
+        List<QuizResult> topPerformers = quizResultDB.query(
+                topPerfFilter, QuizResultField.TOTALSCORE, false, 10, null);
 
-        JsonArray topLastDay = new JsonArray();
-        for (QuizResult qr : recent) {
-            JsonObject o = new JsonObject();
-            o.addProperty("userId", qr.getUserId());
-            o.addProperty("score", qr.getTotalScore());
-            topLastDay.add(o);
-        }
-        json.add("recentTopPerformers", topLastDay);
-
-
-        // Recent takers (any performance)
-        // es igivea rac zeda all time, drois shezgudvaa dasamatebeli prosta.
-        JsonArray recentTakers = new JsonArray();
-        for (QuizResult qr : allTime) {
+        JsonArray topPerformersJson = new JsonArray();
+        for (QuizResult qr : topPerformers) {
             JsonObject o = new JsonObject();
             o.addProperty("userId", qr.getUserId());
             o.addProperty("score", qr.getTotalScore());
             o.addProperty("timeTaken", qr.getTimeTaken());
             o.addProperty("date", qr.getCreationDate().toString());
-            recentTakers.add(o);
+            topPerformersJson.add(o);
         }
-        json.add("recentTakers", recentTakers);
+        json.add("topPerformers", topPerformersJson);
+
+
+        // 3. Top performers in the last day (sorted by score descending)
+        LocalDateTime lastDay = LocalDateTime.now().minusDays(1);
+        List<FilterCondition<QuizResultField>> recentTopFilter = List.of(
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                new FilterCondition<>(QuizResultField.CREATIONDATE, Operator.MOREEQ, lastDay.toString()),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MORE, -1)
+        );
+        List<QuizResult> recentTopPerformers = quizResultDB.query(
+                recentTopFilter, QuizResultField.TOTALSCORE, false, 10, null);
+
+
+        JsonArray recentTopPerformersJson = new JsonArray();
+        for (QuizResult qr : recentTopPerformers) {
+            JsonObject o = new JsonObject();
+            o.addProperty("userId", qr.getUserId());
+            o.addProperty("score", qr.getTotalScore());
+            o.addProperty("timeTaken", qr.getTimeTaken());
+            o.addProperty("date", qr.getCreationDate().toString());
+            recentTopPerformersJson.add(o);
+        }
+        json.add("recentTopPerformers", recentTopPerformersJson);
+
+
+        // 4. Recent test takers (sorted by date descending)
+        List<FilterCondition<QuizResultField>> recentTakersFilter = List.of(
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MORE, -1)
+        );
+        List<QuizResult> recentTakers = quizResultDB.query(
+                recentTakersFilter, QuizResultField.CREATIONDATE, false, 20, null);
+
+        JsonArray recentTakersJson = new JsonArray();
+        for (QuizResult qr : recentTakers) {
+            JsonObject o = new JsonObject();
+            o.addProperty("userId", qr.getUserId());
+            o.addProperty("score", qr.getTotalScore());
+            o.addProperty("timeTaken", qr.getTimeTaken());
+            o.addProperty("date", qr.getCreationDate().toString());
+            recentTakersJson.add(o);
+        }
+        json.add("recentTakers", recentTakersJson);
+
+
 
 
         // Stats
-        double avg = allTime.stream().mapToDouble(QuizResult::getTotalScore).average().orElse(0);
-        long finished = allTime.stream().filter(q -> q.getTimeTaken() != -1).count();
 
-        json.addProperty("averageScore", avg);
-        json.addProperty("completionRate", (allTime.size() == 0) ? 0 : (double) finished / allTime.size());
+        // Get all results for this quiz to calculate statistics
+        List<QuizResult> allResults = quizResultDB.query(List.of(
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId)
+        ));
+
+        // Calculate statistics using streams
+        double avgScore = allResults.stream()
+                .filter(qr -> qr.getTimeTaken() != -1)  // Only completed attempts
+                .mapToDouble(QuizResult::getTotalScore)
+                .average()
+                .orElse(0);
+
+        json.addProperty("averageScore", avgScore);
 
         response.getWriter().write(json.toString());
     }
