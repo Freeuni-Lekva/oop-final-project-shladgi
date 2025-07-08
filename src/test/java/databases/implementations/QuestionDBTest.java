@@ -68,6 +68,18 @@ public class QuestionDBTest {
         assertEquals(4, questionDB.query(allFilter).size());
         questionDB.add(q5);
         assertEquals(5, questionDB.query(allFilter).size());
+
+        List<Question> questions = questionDB.query(allFilter, QuestionField.QUIZID, false, null, 1);
+        assertEquals(4, questions.size());
+        assertEquals(4, questions.get(0).getQuizId());
+        assertEquals(3, questions.get(1).getQuizId());
+        assertEquals(2, questions.get(2).getQuizId());
+        assertEquals(1, questions.get(3).getQuizId());
+
+        questions = questionDB.query(allFilter, QuestionField.QUIZID, true, 2, null);
+        assertEquals(2, questions.size());
+        assertEquals(1, questions.get(0).getQuizId());
+        assertEquals(2, questions.get(1).getQuizId());
     }
 
     @Test
