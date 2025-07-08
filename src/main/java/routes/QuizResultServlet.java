@@ -1,5 +1,6 @@
 package routes;
 
+import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.QuestionField;
@@ -28,39 +29,42 @@ public class QuizResultServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        int quizResultId = Integer.parseInt(request.getParameter("quizResultId"));
-
-        ServletContext context = getServletContext();
-
-        QuizResultDB quizResultDB = (QuizResultDB) context.getAttribute(QUIZRESULTDB);
-
-        List<QuizResult> quizResults = quizResultDB.query(new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizResultId));
-
-        QuizResult quizResult = quizResults.getFirst();
-
-        request.setAttribute("totalscore", quizResult.getTotalScore());
-        request.setAttribute("timetaken", quizResult.getTimeTaken());
-        request.setAttribute("creationdate", quizResult.getCreationDate());
-
-        int quizId = quizResult.getQuizId();
-
-        QuizDB quizDB = (QuizDB) context.getAttribute(QUIZDB);
-
-        List<Quiz> quizzes = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId));
-        Quiz quiz = quizzes.getFirst();
-        request.setAttribute("title", quiz.getTitle());
-
-
         try {
             request.getRequestDispatcher("/quizResultsPage.html").forward(request, response);
-        } catch (ServletException | IOException e) {
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int quizResultId = Integer.parseInt(request.getParameter("quizResultId"));
+        ServletContext context = getServletContext();
+        QuizResultDB quizResultDB = (QuizResultDB) context.getAttribute(QUIZRESULTDB);
 
+        List<QuizResult> quizResults = quizResultDB.query(
+                new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, quizResultId));
+        QuizResult quizResult = quizResults.getFirst();
+
+        int quizId = quizResult.getQuizId();
+
+        QuizDB quizDB = (QuizDB) context.getAttribute(QUIZDB);
+        List<Quiz> quizzes = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId));
+        Quiz quiz = quizzes.getFirst();
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        JsonObject json = new JsonObject();
+        json.addProperty("title", quiz.getTitle());
+        json.addProperty("totalscore", quizResult.getTotalScore());
+        json.addProperty("timetaken", quizResult.getTimeTaken());
+        json.addProperty("creationdate", quizResult.getCreationDate().toString());
+        json.addProperty("userid", quizResult.getUserId());
+        json.addProperty("quizid", quizResult.getQuizId());
+        response.getWriter().write(json.toString());
 
     }
 
