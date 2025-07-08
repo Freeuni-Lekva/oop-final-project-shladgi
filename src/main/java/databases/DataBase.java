@@ -80,6 +80,15 @@ public abstract class DataBase<T, TField extends SqlField>{
         return query(filterConditions, null, false, null, null);
     }
 
+    /**
+     * Stronger version of basic query, @param = null means it should not be used
+     * @param filterConditions Condition for the rows
+     * @param orderByField Field it should order by
+     * @param ascending If it should be ascending or not
+     * @param limit Max amount of rows selected
+     * @param offset Offset no the rows
+     * @return List of affected rows
+     */
     public List<T> query(List<FilterCondition<TField>> filterConditions, TField orderByField, Boolean ascending, Integer limit, Integer offset){
        List<T> list = new ArrayList<>();
        String filterString = FilterBuilder.buildFilter(filterConditions);
@@ -106,6 +115,29 @@ public abstract class DataBase<T, TField extends SqlField>{
            throw new RuntimeException("QUERY ERROR \n" + e.getMessage());
        }
        return list;
+
+    }
+
+    /**
+     * Used for custom logic after SELECT * FROM table_name. Use this if you cant use other functions.
+      * @param afterSelect what will be added after "SELECT * FROM table_name ";
+     * @return affected rows in table
+     */
+    public List<T> query(String afterSelect){
+        List<T> list = new ArrayList<>();
+        String sql = "SELECT * FROM "+tableName + " " + afterSelect;
+
+        try(PreparedStatement stmt = con.prepareStatement(sql)){
+            ResultSet rs = stmt.executeQuery();
+
+            // loop over the query result rows and add them to the list
+            while(rs.next()) list.add((T) Converter.convert(clazz, rs));
+
+            rs.close();
+        }catch (Exception e){
+            throw new RuntimeException("QUERY ERROR \n" + e.getMessage());
+        }
+        return list;
 
     }
 
