@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             e.preventDefault();
             document.getElementById("user").style.display = "none";
             document.getElementById("statistics").style.display = "block";
-            document.getElementById("friends").style.display = "none";
+            document.getElementById("friends-container").style.display = "none";
 
         });
     }

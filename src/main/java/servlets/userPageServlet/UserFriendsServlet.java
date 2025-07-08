@@ -45,7 +45,7 @@ public class UserFriendsServlet extends HttpServlet {
         for(Integer i : friendsListId) {
             List<User> user = userDB.query(Collections.singletonList(new FilterCondition<>(UserField.ID, Operator.EQUALS, i)));
             User friend = user.get(0);
-            friend.getUserName();
+            System.out.println(friend.getUserName());
             friendsList.add(friend.getUserName());
         }
 
@@ -56,5 +56,4 @@ public class UserFriendsServlet extends HttpServlet {
         String json = new Gson().toJson(friendsList);
         response.getWriter().write(json);
     }
-
 }

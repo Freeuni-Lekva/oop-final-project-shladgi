@@ -1,5 +1,19 @@
+async function loadFriendsHTML() {
+    try {
+        const response = await fetch("userDivSmall.html");
+        if (!response.ok) {
+            throw new Error("Failed to load friends.html: " + response.status);
+        }
+        const html = await response.text();
+        document.getElementById("friends-container").innerHTML = html;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function loadFriendsSection(username) {
     try {
+        console.log(username);
         const response = await fetch("/user-friends", {
             method: "POST",
             headers: {
@@ -8,21 +22,34 @@ async function loadFriendsSection(username) {
             body: `username=${encodeURIComponent(username)}`
         });
 
-
         if (!response.ok) {
             throw new Error("Failed to fetch friends: " + response.status);
         }
+
         const friends = await response.json();
 
-        const friendsList = document.getElementById("friendsList");
-        if (!friendsList) return;
+        const peopleDiv = document.getElementById("people");
+        if (!peopleDiv) return;
 
-        friendsList.innerHTML = ""; // Clear old list
+        // Show it if it's hidden
+        peopleDiv.style.display = "block";
 
+        // Clear previous content
+        peopleDiv.innerHTML = "";
+
+        // Add a <div> for each friend
         friends.forEach(friend => {
-            const li = document.createElement("li");
-            li.textContent = friend;
-            friendsList.appendChild(li);
+            const div = document.createElement("div");
+            div.className = "friend-box";
+            console.log(friend);
+            // Create a link to the friend's account
+            const link = document.createElement("a");
+            link.href = `/profile?username=${encodeURIComponent(friend)}`;
+            link.textContent = friend;
+            link.className = "friend-link";
+
+            div.appendChild(link);
+            peopleDiv.appendChild(div);
         });
 
     } catch (error) {
@@ -30,8 +57,12 @@ async function loadFriendsSection(username) {
     }
 }
 
-function setupFriendsButtonListener() {
+
+async function setupFriendsButtonListener() {
+    await loadFriendsHTML();  // <-- Load friends HTML first
+
     const username = document.getElementById("userMenuItem").textContent;
+    console.log("username : " + username);
     const button = document.getElementById("friendsMenuItem");
     if (!button) return;
 
@@ -39,7 +70,7 @@ function setupFriendsButtonListener() {
         e.preventDefault();
         document.getElementById("user").style.display = "none";
         document.getElementById("statistics").style.display = "none";
-        document.getElementById("friends").style.display = "block";
+        document.getElementById("friends-container").style.display = "block";
 
         await loadFriendsSection(username);
     });

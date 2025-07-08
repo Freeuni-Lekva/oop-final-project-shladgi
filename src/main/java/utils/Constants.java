@@ -10,5 +10,7 @@ public class Constants {
     public static String USERANSWERDB = "USERANSWERDB";
     public static String QUESTIONDB = "QUESTIONDB";
 
+    public static String USERACHIEVEMENTDB = "USERACHIEVEMENTDB";
+    public static String ACHIEVEMENTSDB = "ACHIEVEMENTSDB";
 }
 

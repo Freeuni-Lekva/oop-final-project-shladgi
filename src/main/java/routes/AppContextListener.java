@@ -1,6 +1,7 @@
 package routes;
 
 import databases.implementations.*;
+import objects.user.Achievement;
 
 import javax.naming.Context;
 import javax.servlet.ServletContext;
@@ -24,6 +25,8 @@ public class AppContextListener implements ServletContextListener {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizkhana", "root", "root");
 
             ServletContext context = sce.getServletContext();
+            context.setAttribute(USERACHIEVEMENTDB, new UserAchievementDB(conn));
+            context.setAttribute(ACHIEVEMENTSDB, new AchievementDB(conn));
             context.setAttribute(USERDB, new UserDB(conn));
             context.setAttribute(CHALLENGEDB, new ChallengeDB(conn));
             context.setAttribute(NOTEDB, new NoteDB(conn));
