@@ -41,8 +41,5 @@ public class AppContextListener implements ServletContextListener {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
-
     }
 }
