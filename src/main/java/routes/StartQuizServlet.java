@@ -29,7 +29,8 @@ public class StartQuizServlet extends HttpServlet {
 
         String idStr = request.getParameter("id");
         String practiceStr = request.getParameter("practice");
-        Integer userId = (Integer) request.getSession().getAttribute("userid");
+        String userIdStr = request.getSession().getAttribute("userid")==null?null:request.getSession().getAttribute("userid").toString();
+        Integer userId = userIdStr==null?null:Integer.parseInt(userIdStr);
 
 
         if (userId == null) {

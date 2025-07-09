@@ -15,20 +15,20 @@ const QType = {
 };
 
 
-function getQuizCreationDiv(type){
+function saveQuestion(type){
     switch (type){
         case QType.SingleChoice:
-            return getSingleChoiceDiv();
+            return saveSingleChoiceQuestion();
         case QType.MultiChoice:
-            return getMultiChoiceDiv();
+            return saveMultiChoiceQuestion();
         case QType.TextAnswer:
-            return gettextAnswerDiv();
+            return saveTextAnswerQuestion();
         case QType.MultiTextAnswer:
-            return getMultiTextAnswerDiv();
+            return saveMultiTextAnswerQuestion();
         case QType.FillInBlanks:
-            return getFillInBlanksDiv();
+            return saveFillInBlanksQuestion();
         case QType.FillChoices:
-            return getFillInChoicesDiv();
+            return saveFillInChoicesQuestion();
     }
 
 

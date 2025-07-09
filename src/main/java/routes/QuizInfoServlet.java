@@ -35,7 +35,8 @@ public class QuizInfoServlet extends HttpServlet {
 
 
         String quizIdStr = request.getParameter("id");
-        Integer userId = (Integer) request.getSession().getAttribute("userid");
+        String userIdStr = request.getSession().getAttribute("userid")==null?null:request.getSession().getAttribute("userid").toString();
+        Integer userId = userIdStr==null?null:Integer.parseInt(userIdStr);
 
         if (quizIdStr == null) {
             json.addProperty("success", false);
