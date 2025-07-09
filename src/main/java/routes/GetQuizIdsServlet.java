@@ -6,7 +6,9 @@ import databases.filters.Operator;
 import databases.filters.fields.*;
 import databases.implementations.*;
 import objects.Quiz;
+import objects.questions.QType;
 import objects.user.User;
+import objects.user.UserType;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,12 +26,11 @@ import static utils.Constants.*;
 public class GetQuizIdsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //String type = (String)request.getSession().getAttribute("type");
-        //System.out.println(type);
-        /*if(!type.equals("admin")){
+        UserType type = (UserType) request.getSession().getAttribute("type");
+        if(!type.toString().equals("Admin")){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
-        }*/
+        }
 
         try {
             UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);

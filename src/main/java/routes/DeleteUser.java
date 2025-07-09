@@ -28,6 +28,7 @@ public class DeleteUser extends HttpServlet {
             NoteDB noteDB = (NoteDB) getServletContext().getAttribute(NOTEDB);
             FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute(FRIENDSHIPDB);
             FriendRequestDB friendRequestDB = (FriendRequestDB) getServletContext().getAttribute(FRIENDREQUESTDB);
+            UserAchievementDB userAchievementDB = (UserAchievementDB)  getServletContext().getAttribute(USERACHIEVEMENTDB);
 
             if (userDB == null) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database not initialized");
@@ -47,22 +48,16 @@ public class DeleteUser extends HttpServlet {
             }
 
             User user = l.get(0);
-            System.out.println("1");
+
             friendshipDB.delete(new FilterCondition<>(FriendshipField.FIRSTID, Operator.EQUALS, user.getId()));
-            System.out.println("2");
             friendshipDB.delete(new FilterCondition<>(FriendshipField.SECONDID, Operator.EQUALS, user.getId()));
-            System.out.println("3");
             friendRequestDB.delete(new FilterCondition<>(FriendRequestField.FIRSTID, Operator.EQUALS, user.getId()));
-            System.out.println("4");
             friendRequestDB.delete(new FilterCondition<>(FriendRequestField.SECONDID, Operator.EQUALS, user.getId()));
-            System.out.println("5");
             noteDB.delete(new FilterCondition<>(NoteField.SENDERID, Operator.EQUALS, user.getId()));
-            System.out.println("6");
             noteDB.delete(new FilterCondition<>(NoteField.RECIPIENTID, Operator.EQUALS, user.getId()));
-            System.out.println("7");
             challengeDB.delete(new FilterCondition<>(ChallengeField.SENDERID, Operator.EQUALS, user.getId()));
             challengeDB.delete(new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, user.getId()));
-            System.out.println("8");
+            userAchievementDB.delete(new FilterCondition<>(UserAchievementField.USERID, Operator.EQUALS, user.getId()));
             userDB.delete(new FilterCondition<>(UserField.ID, Operator.EQUALS, user.getId()));
 
             response.setStatus(HttpServletResponse.SC_OK);

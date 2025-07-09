@@ -13,7 +13,7 @@ async function loadFriendsHTML() {
     }
 }
 
-async function loadFriendsSection(username) {
+export async function loadFriendsSection(username) {
     try {
         const response = await fetch("/user-friends", {
             method: "POST",
@@ -60,7 +60,7 @@ async function setupFriendsButtonListener() {
 
     button.addEventListener("click", async (e) => {
         e.preventDefault();
-        console.log("Aqaa");
+
         document.getElementById("user").style.display = "none";
         document.getElementById("statistics").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none";

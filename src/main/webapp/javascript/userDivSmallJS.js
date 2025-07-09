@@ -1,4 +1,6 @@
 import { loadSessionValue } from './getSessionInfo.js';
+import { loadRequests } from './userPage/loadFriendRequests.js';
+import { loadFriendsSection } from './userPage/loadFriendsSection.js';
 
 function addAdminButton(admin, senderUsername, btnGroup) {
     if (admin === "Admin") {
@@ -21,7 +23,7 @@ function addAdminButton(admin, senderUsername, btnGroup) {
                     const res2 = await fetch("/deleteQuiz", {
                         method: "POST",
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: `username=${encodeURIComponent(senderUsername)}`
+                        body: `id=${encodeURIComponent(id)}`
                     });
                     if (!res2.ok) throw new Error("Failed to delete quiz");
                 }
@@ -33,8 +35,6 @@ function addAdminButton(admin, senderUsername, btnGroup) {
                 });
 
                 if(!res3.ok) throw new Error("Failed");
-
-                alert("User and quizzes removed successfully");
                 location.reload();
 
             } catch (err) {
@@ -86,9 +86,9 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-remove", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `target=${encodeURIComponent(senderUsername)}}`
+                    body: `target=${encodeURIComponent(senderUsername)}`
                 });
-                if (res.ok) location.reload();
+                if (res.ok) await loadFriendsSection(senderUsername);
                 else alert("Failed to remove friend");
             } catch {
                 alert("Error removing friend");
@@ -107,9 +107,9 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-request/accept", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `target=${encodeURIComponent(senderUsername)}}`
+                    body: `target=${encodeURIComponent(senderUsername)}`
                 });
-                if (res.ok) location.reload();
+                if (res.ok)await loadRequests();
                 else alert("Failed to accept friend request");
             } catch {
                 alert("Error accepting friend request");
@@ -126,9 +126,9 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-request/reject", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `target=${encodeURIComponent(senderUsername)}}`
+                    body: `target=${encodeURIComponent(senderUsername)}`
                 });
-                if (res.ok) location.reload();
+                if (res.ok) await loadRequests();
                 else alert("Failed to reject friend request");
             } catch {
                 alert("Error rejecting friend request");

@@ -2,6 +2,25 @@ import { loadSessionValue } from "../getSessionInfo.js";
 import { getAchievementDiv } from "../achievementDivGetter.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const ids = [
+        "user",
+        "friends-container",
+        "friend-requests-container",
+        "statistics"
+    ];
+
+    const info = {};
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            // Get computed display style
+            const display = window.getComputedStyle(el).display;
+            info[id] = (display !== "none");
+        } else {
+            info[id] = null; // if the element is missing
+        }
+    });
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
 

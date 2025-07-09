@@ -1,6 +1,6 @@
 import { getUserDiv } from '../userDivSmallJS.js';
 
-async function loadRequests() {
+export async function loadRequests() {
     const params = new URLSearchParams(window.location.search);
     const username = params.get("username");
 
