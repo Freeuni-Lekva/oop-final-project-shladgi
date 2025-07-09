@@ -1,4 +1,4 @@
-package servlets.userPageServlet;
+package routes;
 
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;

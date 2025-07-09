@@ -1,4 +1,4 @@
-package servlets.userPageServlet;
+package routes;
 
 import com.google.gson.Gson;
 import databases.filters.FilterCondition;
@@ -23,7 +23,7 @@ import java.util.List;
 import static utils.Constants.FRIENDREQUESTDB;
 import static utils.Constants.USERDB;
 
-@WebServlet("user-friend-request")
+@WebServlet("/user-friend-request")
 public class UserFriendRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,17 +31,15 @@ public class UserFriendRequestServlet extends HttpServlet {
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
 
         String username = request.getParameter("username");
-
-        List<User> users = userDB.query(Collections.singletonList(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username)));
+        List<User> users = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username));
         User u = users.get(0);
-
         List<FriendRequest> friendRequest = friendRequestDB.query(new FilterCondition<>(FriendRequestField.SECONDID, Operator.EQUALS, u.getId()));
 
         List<String> list =  new ArrayList<>();
 
         for (FriendRequest f : friendRequest) {
-            List<User> us = userDB.query(Collections.singletonList(new FilterCondition<>(UserField.ID, Operator.EQUALS, f.getFirstId())));
-            User u1 = users.get(0);
+            List<User> us = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS, f.getFirstId()));
+            User u1 = us.get(0);
             list.add(u1.getUserName());
         }
 

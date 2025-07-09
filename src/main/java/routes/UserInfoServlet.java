@@ -1,4 +1,4 @@
-package servlets.userPageServlet;
+package routes;
 
 import com.google.gson.Gson;
 import databases.filters.FilterCondition;
@@ -44,13 +44,13 @@ public class UserInfoServlet extends HttpServlet {
         AchievementDB achievementDB = (AchievementDB) getServletContext().getAttribute(ACHIEVEMENTSDB);
         String username = request.getParameter("username");
 
-        List<User> users = userDB.query(Collections.singletonList(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username)));
+        List<User> users = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username));
         User u = users.get(0);
         int userId = u.getId();
 
-        List<UserAchievement> userAchievements = userAchievementDB.query(new FilterCondition<>(UserAchievementField.ID, Operator.EQUALS, userId));
-        List<Integer> achievementIds = new ArrayList<>();
+        List<UserAchievement> userAchievements = userAchievementDB.query(new FilterCondition<>(UserAchievementField.USERID, Operator.EQUALS, userId));
 
+        List<Integer> achievementIds = new ArrayList<>();
         for (UserAchievement us : userAchievements) {
             achievementIds.add(us.getAchievementId());
         }
@@ -61,15 +61,6 @@ public class UserInfoServlet extends HttpServlet {
             achievements.addAll(achievementstmp);
         }
 
-        for (int i = 0; i < 3; i++) {
-            achievements.add(new Achievement(
-                    i + 1,
-                    "Title " + (i + 1),
-                    "Description of achievement " + (i + 1),
-                    "https://example.com/icon" + (i + 1) + ".png",
-                    AchievementRarity.values()[i % AchievementRarity.values().length]
-            ));
-        }
         Gson gson = new Gson();
         String json = gson.toJson(achievements);
         response.setContentType("application/json");

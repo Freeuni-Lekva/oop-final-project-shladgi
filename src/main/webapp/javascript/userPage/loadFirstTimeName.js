@@ -4,35 +4,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
 
-    // Load the session username
     const sessionUsername = await loadSessionValue("username");
 
-    // Set session username on the menu
     const menuItem = document.getElementById("userMenuItem");
-    if (menuItem) {
+    if (menuItem && viewedUsername) {
         menuItem.textContent = viewedUsername;
     }
 
-    // Show/hide buttons based on profile ownership
     if (viewedUsername !== sessionUsername) {
         const friendMenu = document.getElementById("friendRequestMenuItem");
         if (friendMenu) friendMenu.remove();
     }
 
-    // Show user section by default
     const userSection = document.getElementById("user");
     const friendsContainer = document.getElementById("friends-container");
     const statisticsSection = document.getElementById("statistics");
+    const friendRequest = document.getElementById("friend-requests-container");
 
-    if (userSection) {
+    if (userSection && viewedUsername) {
         userSection.style.display = "block";
 
-        // Display the username
+        const oldUsernameDisplay = userSection.querySelector(".username-display");
+        if (oldUsernameDisplay) oldUsernameDisplay.remove();
+
         const usernameDisplay = document.createElement("p");
         usernameDisplay.textContent = `Username: ${viewedUsername}`;
+        usernameDisplay.classList.add("username-display");
         userSection.appendChild(usernameDisplay);
 
-        // Fetch and display achievements
         try {
             const response = await fetch("/user", {
                 method: "POST",
@@ -46,6 +45,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const achievements = await response.json();
 
+            const oldAchTitle = userSection.querySelector("h4");
+            if (oldAchTitle) oldAchTitle.remove();
+            const oldAchList = userSection.querySelector("ul");
+            if (oldAchList) oldAchList.remove();
+            const oldNoAch = userSection.querySelector(".no-achievements");
+            if (oldNoAch) oldNoAch.remove();
+
             if (achievements.length > 0) {
                 const achTitle = document.createElement("h4");
                 achTitle.textContent = "Achievements:";
@@ -54,13 +60,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const achList = document.createElement("ul");
                 for (const achievement of achievements) {
                     const li = document.createElement("li");
-                    li.textContent = `${achievement.name} - ${achievement.description}`;
+                    li.textContent = `${achievement.title} - ${achievement.description}`;
                     achList.appendChild(li);
                 }
                 userSection.appendChild(achList);
             } else {
                 const noAch = document.createElement("p");
                 noAch.textContent = "No achievements yet.";
+                noAch.classList.add("no-achievements");
                 userSection.appendChild(noAch);
             }
         } catch (error) {
@@ -68,6 +75,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    if (friendsContainer) friendsContainer.style.display = "none";
-    if (statisticsSection) statisticsSection.style.display = "none";
+    try {
+
+    }catch (error){
+
+    }
+
+    friendsContainer.style.display = "none";
+    statisticsSection.style.display = "block";
+    friendRequest.style.display = "none";
 });
+

@@ -1,7 +1,6 @@
 package routes;
 
 import databases.implementations.*;
-import objects.user.Achievement;
 
 import javax.naming.Context;
 import javax.servlet.ServletContext;
