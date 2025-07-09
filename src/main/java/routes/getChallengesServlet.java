@@ -83,8 +83,11 @@ public class getChallengesServlet extends HttpServlet {
             }
             JsonArray ja = new JsonArray();
             for(Challenge n : unseenChals){
-                User sender = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS,n.getSenderId() )).getFirst();
-                Quiz quiz = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, n.getQuizId())).getFirst();
+               List<User> users = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS,n.getSenderId() ));
+               List<Quiz> quizzes= quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, n.getQuizId()));
+                if(!quizzes.isEmpty() && !users.isEmpty()){
+                User sender = users.get(0);
+                Quiz quiz = quizzes.get(0);
                 JsonObject j = new JsonObject();
                 j.addProperty("id", n.getId());
                 j.addProperty("viewed", n.isViewed());
@@ -95,6 +98,7 @@ public class getChallengesServlet extends HttpServlet {
                 j.addProperty("quizTitle", quiz.getTitle());
                 j.addProperty("score",n.getBestScore());
                 ja.add(j);
+            }
             }
 
             JsonObject jo = new JsonObject();

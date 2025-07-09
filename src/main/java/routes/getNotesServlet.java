@@ -78,7 +78,9 @@ public class getNotesServlet extends HttpServlet {
 
             JsonArray ja = new JsonArray();
             for(Note n : unseenNotes){
-                User sender = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS,n.getSenderId() )).getFirst();
+                List<User> users = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS,n.getSenderId() ));
+                if(!users.isEmpty()){
+                User sender = users.get(0);
                 JsonObject j = new JsonObject();
                 j.addProperty("id", n.getId());
                 j.addProperty("viewed", n.isViewed());
@@ -87,6 +89,7 @@ public class getNotesServlet extends HttpServlet {
                 j.addProperty("senderName", sender.getUserName());
                 j.addProperty("senderId", sender.getId());
                 ja.add(j);
+                }
             }
 
             JsonObject jo = new JsonObject();
