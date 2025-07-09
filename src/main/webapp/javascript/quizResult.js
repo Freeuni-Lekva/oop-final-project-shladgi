@@ -8,6 +8,11 @@ const quizResultId = parseInt(new URLSearchParams(window.location.search).get("i
 
 fetchQuizResultData(quizResultId)
     .then(async data => {
+        if(data.success === false){
+                document.getElementById("resultHeader").textContent = data.message;
+                document.getElementById("result-container").remove();
+                return;
+        }
         document.getElementById("title").textContent = data.title;
         document.getElementById("totalscore").textContent = data.totalscore;
         document.getElementById("timetaken").textContent = data.timetaken;

@@ -44,8 +44,19 @@ public class QuizResultServlet extends HttpServlet {
         ServletContext context = getServletContext();
         QuizResultDB quizResultDB = (QuizResultDB) context.getAttribute(QUIZRESULTDB);
 
+
+
         List<QuizResult> quizResults = quizResultDB.query(
-                new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, quizResultId));
+                new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, quizResultId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MOREEQ, 0));
+
+        if(quizResults.isEmpty()){
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("message", "Quiz result not found");
+            response.getWriter().write(json.toString());
+            return;
+        }
         QuizResult quizResult = quizResults.getFirst();
 
         int quizId = quizResult.getQuizId();
