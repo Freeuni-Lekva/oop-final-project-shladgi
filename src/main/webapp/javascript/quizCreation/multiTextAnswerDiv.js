@@ -2,6 +2,7 @@
  * Creates a multi-text-answer question div with UI components.
  * @returns {HTMLDivElement} DOM element for multi-text-answer question creation.
  */
+//gio
 export function getMultiTextAnswerDiv() {
     const container = document.createElement('div');
     container.className = 'multi-text-answer-container';
