@@ -1,6 +1,6 @@
 import {getSingleChoiceDiv} from "./singleChoiceDiv.js";
 import {getMultiChoiceDiv} from "./multiChoiceDiv.js";
-import {gettextAnswerDiv} from "./textAnswerDiv.js";
+import {getTextAnswerDiv} from "./textAnswerDiv.js";
 import {getMultiTextAnswerDiv} from "./multiTextAnswerDiv.js";
 import {getFillInBlanksDiv} from "./fillInBlanksDiv.js";
 import {getFillInChoicesDiv} from "./fillInChoicesDiv.js";
@@ -22,7 +22,7 @@ export function getQuizCreationDiv(type){
         case QType.MultiChoice:
             return getMultiChoiceDiv();
         case QType.TextAnswer:
-            return gettextAnswerDiv();
+            return getTextAnswerDiv();
         case QType.MultiTextAnswer:
             return getMultiTextAnswerDiv();
         case QType.FillInBlanks:
