@@ -19,11 +19,13 @@ public class QuizResult {
     @Column(name = "creationdate")
     private LocalDateTime creationDate;
 
+    // time taken -1 means that it is not finished yet and is in progress
     @Column(name = "timetaken")
     private int timeTaken; // seconds
 
     @Column(name = "totalscore")
     private double totalScore;
+
 
     public QuizResult(){}
 

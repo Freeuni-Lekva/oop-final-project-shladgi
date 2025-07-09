@@ -1,0 +1,116 @@
+/* Main container */
+main {
+    max-width: 700px;
+    margin: 3rem auto;
+    padding: 1rem;
+}
+
+/* Quiz Info Section */
+.quiz-info {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+}
+
+.quiz-info h2 {
+    color: #0382f1;
+    font-size: 1.75rem;
+    margin-bottom: 1.2rem;
+}
+
+.quiz-info p {
+    font-size: 1.1rem;
+    margin: 0.6rem 0;
+    color: #333;
+}
+
+/* Practice Mode Checkbox */
+#practiceModeSection {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+#practiceMode {
+    margin-right: 0.5rem;
+}
+
+#practiceModeSection label {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #444;
+}
+
+/* Start Button */
+#startQuizButton {
+    margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #0382f1;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#startQuizButton:hover {
+    background-color: #0266c8;
+}
+
+/* Status Message */
+#quizStatus {
+    margin-top: 1.5rem;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .quiz-info {
+        padding: 1.5rem;
+    }
+
+    .quiz-info h2 {
+        font-size: 1.4rem;
+    }
+
+    #startQuizButton {
+        width: 100%;
+    }
+}
+
+/* Header */
+header h1 {
+    text-align: center;
+    color: #0382f1;
+    font-size: 2rem;
+    margin-top: 2rem;
+}
+
+/* Footer Consistency */
+footer {
+    background-color: #0382f1;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.label {
+    font-weight: bold;
+    color: #444;
+}
+
+
+
+
+

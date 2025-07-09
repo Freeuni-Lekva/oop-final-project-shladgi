@@ -40,9 +40,14 @@ public class Quiz {
     @Column(name = "practicemode")
     private boolean practiceMode;
 
+    @Column(name = "description")
+    private String description;
+
+
+
     public Quiz(){}
 
-    public Quiz(String title, int userId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode) {
+    public Quiz(String title, int userId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode, String description) {
         this.title = title;
         this.userId = userId;
         this.creationDate = creationDate;
@@ -53,9 +58,10 @@ public class Quiz {
         this.immediateCorrection = isImmediateCorrection;
         this.practiceMode = practiceMode;
         this.timeLimit = timeLimit;
+        this.description = description;
     }
 
-    public Quiz(int id, String title, int userId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode) {
+    public Quiz(int id, String title, int userId, LocalDateTime creationDate, int timeLimit, double totalScore, int totalQuestions, boolean isRandom, boolean isSinglePage, boolean isImmediateCorrection, boolean practiceMode, String description) {
         this.id = id;
         this.title = title;
         this.userId = userId;
@@ -67,6 +73,7 @@ public class Quiz {
         this.immediateCorrection = isImmediateCorrection;
         this.practiceMode = practiceMode;
         this.timeLimit = timeLimit;
+        this.description = description;
     }
 
     public int getTotalQuestions() {return totalQuestions;}
@@ -91,4 +98,6 @@ public class Quiz {
     public boolean isPracticeMode() {return this.practiceMode;}
     public int getTimeLimit() { return timeLimit; }
     public void setTimeLimit(int timeLimit) { this.timeLimit = timeLimit; }
+    public void setDescription(String description) {this.description = description;}
+    public String getDescription() {return this.description;}
 }

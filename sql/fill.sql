@@ -9,12 +9,12 @@ INSERT INTO users (username, salt, password, type) VALUES
                                                        ('user4', 'salt5', 'hashed_password5', 'Basic');
 
 -- Insert quizzes (5 entries)
-INSERT INTO quizzes (title, userid, totalscore, totalquestions, random, singlepage, immediatecorrection, practicemode, timelimit) VALUES
-                                                                                                                                      ('General Knowledge Quiz', 2, 100, 10, FALSE, TRUE, TRUE, TRUE, 600),
-                                                                                                                                      ('Science Trivia', 3, 150, 15, TRUE, FALSE, FALSE, TRUE, 900),
-                                                                                                                                      ('History Challenge', 2, 75, 5, FALSE, TRUE, TRUE, FALSE, 300),
-                                                                                                                                      ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300),
-                                                                                                                                      ('Geography Quiz', 3, 120, 12, TRUE, FALSE, TRUE, TRUE, 720);
+INSERT INTO quizzes (title, userid, totalscore, totalquestions, random, singlepage, immediatecorrection, practicemode, timelimit, description) VALUES
+                                                                                                                                      ('General Knowledge Quiz', 2, 100, 10, FALSE, TRUE, TRUE, TRUE, 600, "a"),
+                                                                                                                                      ('Science Trivia', 3, 150, 15, TRUE, FALSE, FALSE, TRUE, 900, "aba"),
+                                                                                                                                      ('History Challenge', 2, 75, 5, FALSE, TRUE, TRUE, FALSE, 300, "desc"),
+                                                                                                                                      ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                      ('Geography Quiz', 3, 120, 12, TRUE, FALSE, TRUE, TRUE, 720, "1234");
 
 
 
@@ -42,7 +42,7 @@ INSERT INTO quiz_results (userid, quizid, timetaken, totalscore) VALUES
                                                                      (4, 4, 90, 45),
                                                                      (5, 5, 300, 110);
 
--INSERT INTO friendships (firstid, secondid) VALUES
+INSERT INTO friendships (firstid, secondid) VALUES
 (2, 3),
 (2, 4),
 (3, 5),
