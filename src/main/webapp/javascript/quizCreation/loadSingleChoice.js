@@ -1,4 +1,4 @@
-import { createSingleChoiceDiv, saveSingleChoiceQuestion } from './singleChoiceDiv.js';
+import { getSingleChoiceDiv, saveSingleChoiceQuestion } from './singleChoiceDiv.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('question-area');
@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Create single question form
-    const questionDiv = createSingleChoiceDiv();
+    const questionDiv = getSingleChoiceDiv();
+
     root.appendChild(questionDiv);
 
     // Create submit button
