@@ -1,6 +1,6 @@
 import {addQuestion} from "./questionAdd.js"
 import {saveQuestion} from "./qustionSaving.js";
-import {deleteQuestions} from "./questionDeletion.js";
+import {deleteQuiz} from "./quizDeletion.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const addButton = document.getElementById("addQuestion");
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             if(answer.success === false){
                                 const error = document.getElementById("errorText");
                                 error.textContent = answer.message;
-                                deleteQuestions(quizid);
+                                deleteQuiz(quizid);
                                 failedSaving = true;
                                 break;
                             }

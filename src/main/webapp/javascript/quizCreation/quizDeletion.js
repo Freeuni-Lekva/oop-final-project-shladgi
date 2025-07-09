@@ -1,12 +1,12 @@
 
 
-export function deleteQuestions(quizId){
-    fetch("/deleteQuestions", {
+export function deleteQuiz(quizId){
+    fetch("/deleteQuiz", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `quizid=${encodeURIComponent(quizId)}`
+        body: `id=${encodeURIComponent(quizId)}`
     }).catch(error => {
             console.error("Network error while deleting questions:", error);
         });
