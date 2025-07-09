@@ -20,12 +20,20 @@ public class SessionInfoServlet extends HttpServlet {
         String value = (String)request.getParameter("key");
         //this might be userid, username or type
         String answer = null;
+        if(session == null){
+            JsonObject json = new JsonObject();
+            json.addProperty("value", answer);
+            try {
+                response.getWriter().write(json.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
         if(session.getAttribute(value) != null){
             answer = session.getAttribute(value).toString();
         }
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        System.out.println(answer);
+
         try {
             JsonObject json = new JsonObject();
             json.addProperty("value", answer);

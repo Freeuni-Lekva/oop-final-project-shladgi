@@ -12,16 +12,27 @@ export function fetchQuizResultData(quizResultId) {
 }
 
 
-function userQuizResultsDiv(data) {
+function userQuizResultsDiv(data, wantTitle = false) {
     const row = document.createElement("div");
     row.className = "border rounded p-3 mb-3";
-    console.log(data.title);
+
+    if(wantTitle){
+        row.innerHTML = `
+        <p><strong>Title:</strong> ${data.title}</p>
+        <p><strong>Score:</strong> ${data.totalscore}</p>
+        <p><strong>Time Taken:</strong> ${data.timetaken}</p>
+        <p><strong>Date:</strong> ${data.creationdate}</p>
+        <a href="/quizResult?id=${data.quizResultId}">View Details</a>
+    `;
+    }else{
     row.innerHTML = `
         <p><strong>Score:</strong> ${data.totalscore}</p>
         <p><strong>Time Taken:</strong> ${data.timetaken}</p>
         <p><strong>Date:</strong> ${data.creationdate}</p>
         <a href="/quizResult?id=${data.quizResultId}">View Details</a>
     `;
+    }
+
 
     return row;
 }

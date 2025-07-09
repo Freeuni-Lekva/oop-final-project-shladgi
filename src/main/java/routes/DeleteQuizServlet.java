@@ -23,7 +23,8 @@ public class DeleteQuizServlet extends HttpServlet {
         response.setContentType("application/json");
         JsonObject json = new JsonObject();
 
-        Integer userId = (Integer) request.getSession().getAttribute("userid");
+        String userIdStr = request.getSession().getAttribute("userid")==null?null:request.getSession().getAttribute("userid").toString();
+        Integer userId = userIdStr==null?null:Integer.parseInt(userIdStr);
         // quiz id.
         String idStr = request.getParameter("id");
 
