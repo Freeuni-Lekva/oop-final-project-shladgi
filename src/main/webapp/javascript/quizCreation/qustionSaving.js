@@ -1,5 +1,6 @@
 import {saveSingleChoiceQuestion} from "./singleChoiceDiv.js";
-
+import {saveMultiChoiceQuestion} from "./multiChoiceDiv.js";
+import {saveFillInBlanksQuestion} from "./fillInBlanksDiv.js";
 
 const QType = {
     SingleChoice: "SingleChoice",
