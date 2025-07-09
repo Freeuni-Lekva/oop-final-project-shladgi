@@ -24,6 +24,7 @@ public class QuestionFillInBlanks extends Question{
         type = QType.FillInBlanks;
         this.question = question;
 
+        //  amas awi agar viyenebt.
         // deep copy of blankIdx
         this.blankIdx = new ArrayList<>(blankIdx);
 
@@ -35,6 +36,28 @@ public class QuestionFillInBlanks extends Question{
         this.exactMatch = exactMatch;
 
         maxScore = this.blankIdx.size();
+    }
+
+
+    public QuestionFillInBlanks(int quizId, String question, List<Integer> blankIdx, List<List<String>> correctAnswers, boolean exactMatch, String photoUrl, double weight){
+        type = QType.FillInBlanks;
+        this.question = question;
+
+        // deep copy of blankIdx
+        this.blankIdx = new ArrayList<>(blankIdx);
+
+        this.correctAnswers = new ArrayList<>();
+        for(List<String> arr : correctAnswers){
+            this.correctAnswers.add(new ArrayList<>(arr)); // copy inner list
+        }
+
+        this.exactMatch = exactMatch;
+
+        maxScore = this.correctAnswers.size();
+
+        this.quizId = quizId;
+        this.imageLink = photoUrl;
+        this.weight = weight;
     }
 
 

@@ -14,13 +14,32 @@ public class QuestionMultiTextAnswer extends Question{
     public QuestionMultiTextAnswer(String question, List<List<String>> correctAnswers, boolean exactMatch, boolean ordered){
         this.question = question;
         this.ordered = ordered;
-
+        this.type = QType.MultiTextAnswer;
         this.correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswers.size(); i++){
             this.correctAnswers.add(new ArrayList<>(correctAnswers.get(i)));
         }
         this.exactMatch = exactMatch;
     }
+
+
+    public QuestionMultiTextAnswer(int quizId, String question, List<List<String>> correctAnswers, boolean exactMatch, boolean ordered, String imageLink, double weight){
+        this.question = question;
+        this.ordered = ordered;
+
+        this.type = QType.MultiTextAnswer;
+
+        this.correctAnswers = new ArrayList<>();
+        for(int i = 0; i < correctAnswers.size(); i++){
+            this.correctAnswers.add(new ArrayList<>(correctAnswers.get(i)));
+        }
+        this.exactMatch = exactMatch;
+
+        this.quizId = quizId;
+        this.imageLink = imageLink;
+        this.weight = weight;
+    }
+
 
     // this is a constructor that constructs the object from database table information.
     public QuestionMultiTextAnswer(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
