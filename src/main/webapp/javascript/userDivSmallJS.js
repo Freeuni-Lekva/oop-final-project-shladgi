@@ -1,3 +1,51 @@
+import { loadSessionValue } from './getSessionInfo.js';
+
+function addAdminButton(admin, senderUsername, btnGroup) {
+    if (admin === "Admin") {
+        const adminBtn = document.createElement("button");
+        adminBtn.className = "btn btn-warning btn-sm";
+        adminBtn.textContent = "Remove User";
+        adminBtn.addEventListener("click", async () => {
+            try {
+                const res1 = await fetch("/get-quiz-ids", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `username=${encodeURIComponent(senderUsername)}`
+                });
+
+                if (!res1.ok) throw new Error("Failed to remove user");
+
+                const ids = await res1.json();
+
+                for(const id of ids){
+                    const res2 = await fetch("/deleteQuiz", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `username=${encodeURIComponent(senderUsername)}`
+                    });
+                    if (!res2.ok) throw new Error("Failed to delete quiz");
+                }
+
+                const res3 = await fetch("/remove-user", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `username=${encodeURIComponent(senderUsername)}`
+                });
+
+                if(!res3.ok) throw new Error("Failed");
+
+                alert("User and quizzes removed successfully");
+                location.reload();
+
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+        btnGroup.appendChild(adminBtn);
+    }
+}
+
+
 export async function getUserDiv(senderUsername) {
     // Create main div container
     const div = document.createElement("div");
@@ -26,6 +74,7 @@ export async function getUserDiv(senderUsername) {
     }
 
     const status = await response.json();
+    const admin = await loadSessionValue("type");
 
     if (status === "friends") {
         // Remove Friend button
@@ -46,6 +95,7 @@ export async function getUserDiv(senderUsername) {
             }
         });
         btnGroup.appendChild(removeBtn);
+        addAdminButton(admin, senderUsername, btnGroup);
 
     } else if (status === "requested") {
         // Accept button
@@ -85,7 +135,7 @@ export async function getUserDiv(senderUsername) {
             }
         });
         btnGroup.appendChild(rejectBtn);
-
+        addAdminButton(admin, senderUsername, btnGroup);
     } else if (status === "request") {
         // Remove Request button
         const removeRequestBtn = document.createElement("button");
@@ -105,7 +155,7 @@ export async function getUserDiv(senderUsername) {
             }
         });
         btnGroup.appendChild(removeRequestBtn);
-
+        addAdminButton(admin, senderUsername, btnGroup);
 
     } else {
         // Send Friend Request button
@@ -126,6 +176,7 @@ export async function getUserDiv(senderUsername) {
             }
         });
         btnGroup.appendChild(sendReqBtn);
+        addAdminButton(admin, senderUsername, btnGroup);
     }
 
     div.appendChild(btnGroup);

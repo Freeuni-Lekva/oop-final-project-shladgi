@@ -45,6 +45,12 @@ public class UserInfoServlet extends HttpServlet {
         String username = request.getParameter("username");
 
         List<User> users = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username));
+
+        if (users.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         User u = users.get(0);
         int userId = u.getId();
 

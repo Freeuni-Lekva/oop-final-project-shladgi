@@ -29,8 +29,13 @@ public class UserFriendsServlet extends HttpServlet {
         System.out.println("username: " + username);
 
         List<User> users = userDB.query(Collections.singletonList(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username)));
+
+        if (users.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         User u = users.get(0);
-        System.out.println("user id: " + u.getId());
         if (u == null) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("[]");
@@ -43,6 +48,12 @@ public class UserFriendsServlet extends HttpServlet {
 
         for(Integer i : friendsListId) {
             List<User> user = userDB.query(Collections.singletonList(new FilterCondition<>(UserField.ID, Operator.EQUALS, i)));
+
+            if (user.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
             User friend = user.get(0);
             friendsList.add(friend.getUserName());
         }

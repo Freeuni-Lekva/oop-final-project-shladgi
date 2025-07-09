@@ -37,6 +37,11 @@ public class UserFriendRemove extends HttpServlet {
         User us1 = u1.get(0);
         User us2 = u2.get(0);
 
+        if (u1.isEmpty() || u2.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         friendship.delete(new FilterCondition<>(FriendshipField.FIRSTID, Operator.EQUALS, us1.getId()), new FilterCondition<>(FriendshipField.SECONDID, Operator.EQUALS, us2.getId()));
     }
 }

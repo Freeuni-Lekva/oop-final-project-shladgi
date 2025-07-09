@@ -49,7 +49,6 @@ async function loadRequests() {
 
         const usernames = await response.json();
         peopleDiv.innerHTML = "";
-        console.log("shevida");
 
         if (!Array.isArray(usernames) || usernames.length === 0) {
             peopleDiv.textContent = "No friend requests.";
@@ -61,7 +60,6 @@ async function loadRequests() {
             const userDiv = await getUserDiv(senderUsername);
             peopleDiv.appendChild(userDiv);
         }
-        console.log("gamovida");
 
     } catch (error) {
         console.error("Error loading requests:", error);

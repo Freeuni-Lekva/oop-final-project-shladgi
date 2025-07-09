@@ -29,13 +29,17 @@ public class UserFriendAcceptServlet extends HttpServlet {
             UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
             FriendRequestDB friendRequestDB = (FriendRequestDB) getServletContext().getAttribute(FRIENDREQUESTDB);
             FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute(FRIENDSHIPDB);
-            if(friendshipDB == null){
+
+            if (friendshipDB == null) {
                 System.out.println("friendshipDB is null");
             }
-            String sender = (String) request.getSession().getAttribute("username");
-            String receiver = request.getParameter("target");
-            System.out.println(sender + " " + receiver);
-            if (sender == null || receiver == null) {
+
+            String receiver = (String) request.getSession().getAttribute("username");
+            String sender = request.getParameter("target");
+
+            System.out.println(sender + " -> " + receiver);
+
+            if (receiver == null || sender == null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
@@ -50,24 +54,27 @@ public class UserFriendAcceptServlet extends HttpServlet {
 
             User user1 = u1.get(0);
             User user2 = u2.get(0);
-            System.out.println(user1.getUserName() + " " + user2.getUserName());
+
             int id1 = user1.getId();
             int id2 = user2.getId();
             int firstId = Math.min(id1, id2);
             int secondId = Math.max(id1, id2);
 
+            // Add friendship
             Friendship f1 = new Friendship(firstId, secondId, LocalDateTime.now());
             friendshipDB.add(f1);
 
+            // Delete friend request
             friendRequestDB.delete(
                     new FilterCondition<>(FriendRequestField.FIRSTID, Operator.EQUALS, user1.getId()),
                     new FilterCondition<>(FriendRequestField.SECONDID, Operator.EQUALS, user2.getId())
             );
 
-            response.setStatus(HttpServletResponse.SC_OK); // Let client JS know to refresh
+            response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }
+

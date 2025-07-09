@@ -1,4 +1,5 @@
 import { loadSessionValue } from "../getSessionInfo.js";
+import { getAchievementDiv } from "../achievementDivGetter.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (userSection && viewedUsername) {
         userSection.style.display = "block";
 
+        // Clear old username display
         const oldUsernameDisplay = userSection.querySelector(".username-display");
         if (oldUsernameDisplay) oldUsernameDisplay.remove();
 
@@ -45,25 +47,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const achievements = await response.json();
 
-            const oldAchTitle = userSection.querySelector("h4");
-            if (oldAchTitle) oldAchTitle.remove();
-            const oldAchList = userSection.querySelector("ul");
-            if (oldAchList) oldAchList.remove();
-            const oldNoAch = userSection.querySelector(".no-achievements");
-            if (oldNoAch) oldNoAch.remove();
+            // Remove old elements
+            userSection.querySelectorAll(".achievement-title, .achievement-container, .no-achievements")
+                .forEach(el => el.remove());
 
             if (achievements.length > 0) {
                 const achTitle = document.createElement("h4");
                 achTitle.textContent = "Achievements:";
+                achTitle.classList.add("achievement-title");
                 userSection.appendChild(achTitle);
 
-                const achList = document.createElement("ul");
+                const achContainer = document.createElement("div");
+                achContainer.classList.add("achievement-container");
+                userSection.appendChild(achContainer);
+
                 for (const achievement of achievements) {
-                    const li = document.createElement("li");
-                    li.textContent = `${achievement.title} - ${achievement.description}`;
-                    achList.appendChild(li);
+                    const div = await getAchievementDiv(achievement.id);
+                    achContainer.appendChild(div);
                 }
-                userSection.appendChild(achList);
             } else {
                 const noAch = document.createElement("p");
                 noAch.textContent = "No achievements yet.";
@@ -74,8 +75,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error loading achievements:", error);
         }
     }
+
     friendsContainer.style.display = "none";
     statisticsSection.style.display = "none";
     friendRequest.style.display = "none";
 });
-
