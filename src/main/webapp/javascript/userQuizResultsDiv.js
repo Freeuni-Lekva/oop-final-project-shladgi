@@ -17,7 +17,6 @@ function userQuizResultsDiv(data) {
     row.className = "border rounded p-3 mb-3";
     console.log(data.title);
     row.innerHTML = `
-        <p><strong>Quiz:</strong> ${data.title}</p>
         <p><strong>Score:</strong> ${data.totalscore}</p>
         <p><strong>Time Taken:</strong> ${data.timetaken}</p>
         <p><strong>Date:</strong> ${data.creationdate}</p>
