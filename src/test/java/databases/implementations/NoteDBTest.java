@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NoteDBTest {
@@ -37,7 +38,8 @@ public class NoteDBTest {
                 "    senderid     INT       NOT NULL,\n" +
                 "    recipientid  INT       NOT NULL,\n" +
                 "    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                "    text         TEXT      NOT NULL\n" +
+                "    text         TEXT      NOT NULL,\n" +
+                " viewed       BOOLEAN   NOT NULL"+
                 "    -- FOREIGN KEY (senderid) REFERENCES users (id),\n" +
                 "    -- FOREIGN KEY (recipientid) REFERENCES users (id)\n" +
                 ");");
@@ -56,12 +58,12 @@ public class NoteDBTest {
     @Test
     @Order(1)
     public void testAdding(){
-        Note n1 = new Note(1, 2, LocalDateTime.of(2024, 1, 1, 10, 0), "Quiz 1");
-        Note n2 = new Note(2, 3, LocalDateTime.of(2024, 1, 5, 11, 30), "Quiz 2");
-        Note n3 = new Note(2, 1, LocalDateTime.of(2020, 2, 10, 12, 0), "Quiz 2");
-        Note n4 = new Note(3, 4, LocalDateTime.of(2019, 2, 15, 13, 15), "Quiz 1");
-        Note n5 = new Note(3, 4, LocalDateTime.of(2019, 3, 20, 14, 45), "Quiz 3");
-        Note n6 = new Note(4, 2, LocalDateTime.of(2024, 4, 1, 9, 0), "Quiz 3");
+        Note n1 = new Note(1, 2, LocalDateTime.of(2024, 1, 1, 10, 0), "Quiz 1", false);
+        Note n2 = new Note(2, 3, LocalDateTime.of(2024, 1, 5, 11, 30), "Quiz 2",false);
+        Note n3 = new Note(2, 1, LocalDateTime.of(2020, 2, 10, 12, 0), "Quiz 2",false);
+        Note n4 = new Note(3, 4, LocalDateTime.of(2019, 2, 15, 13, 15), "Quiz 1",false);
+        Note n5 = new Note(3, 4, LocalDateTime.of(2019, 3, 20, 14, 45), "Quiz 3",false);
+        Note n6 = new Note(4, 2, LocalDateTime.of(2024, 4, 1, 9, 0), "Quiz 3",false);
 
         noteDB.add(n1);
         assertEquals(1, noteDB.query(allFilter).size());
@@ -84,6 +86,9 @@ public class NoteDBTest {
         List<Note> results = noteDB.query(allFilter);
         int size = results.size();
         assertEquals(6, size);
+
+
+
 
         List<FilterCondition<NoteField>> filters = List.of(
                 new FilterCondition<>(NoteField.SENDERID, Operator.EQUALS, 2),
@@ -112,4 +117,25 @@ public class NoteDBTest {
 
         testQueryDeleteAddOnce(size, size, allFilter, noteDB);
     }
+
+    @Test
+    @Order(3)
+    public void testWithViewed() {
+        Note n7 = new Note(5, 2, LocalDateTime.of(2024, 4, 1, 9, 0), "Quiz 3", true);
+        Note n8 = new Note(5, 2, LocalDateTime.of(2024, 4, 1, 9, 0), "Quiz 3", true);
+
+
+        noteDB.add(n7);
+        assertEquals(1, noteDB.query(new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, true)).size());
+        assertEquals(6, noteDB.query(new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, false)).size());
+        noteDB.add(n8);
+        assertEquals(2, noteDB.query(new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, true)).size());
+        noteDB.delete(new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, true));
+        assertEquals(6, noteDB.query(new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, false)).size());
+        assertEquals(0, noteDB.query(new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, true)).size());
+
+
+
+    }
+
 }
