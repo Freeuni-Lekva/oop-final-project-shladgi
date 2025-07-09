@@ -121,7 +121,7 @@ export async function saveSingleChoiceQuestion(div, quizId) {
     // Validate question
     const question = questionInput?.value?.trim();
     if (!question) {
-        alert("Please enter a question text.");
+        //alert("Please enter a question text.");
         questionInput.focus();
         return {success:false, message:"Missing fields"};
     }
@@ -129,14 +129,14 @@ export async function saveSingleChoiceQuestion(div, quizId) {
     // Validate points
     const points = parseInt(pointsInput?.value) || 1;
     if (points < 1) {
-        alert("Points must be at least 1.");
+        //alert("Points must be at least 1.");
         pointsInput.focus();
         return {success:false, message:"Points must be at least 1."};
     }
 
     // Validate options
     if (answerOptions.length < 2) {
-        alert("At least 2 answer options are required.");
+        //alert("At least 2 answer options are required.");
         return {success:false, message:"At least 2 answer options are required."};
     }
 
@@ -151,7 +151,7 @@ export async function saveSingleChoiceQuestion(div, quizId) {
         const isChecked = radioInput?.checked;
 
         if (!text) {
-            alert("Please fill in all answer options.");
+            //alert("Please fill in all answer options.");
             textInput.focus();
             return {success:false, message:"Please fill in all answer options."};
         }
@@ -161,7 +161,7 @@ export async function saveSingleChoiceQuestion(div, quizId) {
     });
 
     if (correctIndex === -1) {
-        alert("Please select the correct answer.");
+        //alert("Please select the correct answer.");
         return {success:false, message:"Pleare select the correct answer"};
     }
 
@@ -195,7 +195,7 @@ export async function saveSingleChoiceQuestion(div, quizId) {
         return result;
     } catch (error) {
         console.error('Submission error:', error);
-        alert(`Error: ${error.message}`);
+        //alert(`Error: ${error.message}`);
         return {success:false, message:error.message};
     }
 }

@@ -2,7 +2,7 @@
  * Creates a multi-choice question div with UI components.
  * @returns {HTMLDivElement} DOM element for multi-choice question creation.
  */
-export function createMultiChoiceDiv() {
+export function getMultiChoiceDiv() {
     const container = document.createElement('div');
     container.className = 'multi-choice-container';
     container.dataset.qtype = "MultiChoice";
@@ -14,6 +14,11 @@ export function createMultiChoiceDiv() {
     deleteBtn.onclick = () => {
         if (confirm('Are you sure you want to delete this question?')) {
             container.remove();
+            // If the last question is deleted, you might want to adjust UI
+            if (document.querySelectorAll('.multi-choice-container').length === 0) {
+                // Optionally add a placeholder or re-enable "add question" if all deleted
+                console.log("All multi-choice questions removed.");
+            }
         }
     };
     container.appendChild(deleteBtn);
@@ -78,7 +83,7 @@ export function createMultiChoiceDiv() {
         input.required = true;
 
         const deleteOptionBtn = document.createElement('button');
-        deleteOptionBtn.textContent = 'Delete';
+        deleteOptionBtn.textContent = 'Delete Option'; // Changed text for clarity
         deleteOptionBtn.className = 'delete-option-btn';
         deleteOptionBtn.onclick = () => {
             if (answersDiv.children.length > 2) { // At least 2 options required
@@ -98,11 +103,11 @@ export function createMultiChoiceDiv() {
     addAnswerOption();
     addAnswerOption();
 
-    // Add option button
-    const addBtn = document.createElement('button');
-    addBtn.textContent = 'Add Option';
-    addBtn.onclick = addAnswerOption;
-    container.appendChild(addBtn);
+    // Add option button for individual question
+    const addOptionBtn = document.createElement('button'); // Renamed to avoid conflict
+    addOptionBtn.textContent = 'Add Answer Option';
+    addOptionBtn.onclick = addAnswerOption;
+    container.appendChild(addOptionBtn);
 
     return container;
 }
@@ -124,7 +129,7 @@ export async function saveMultiChoiceQuestion(div, quizId) {
     // Validate question
     const question = questionInput?.value?.trim();
     if (!question) {
-        alert("Please enter a question text.");
+        //alert("Please enter a question text.");
         questionInput.focus();
         return {success: false, message: "Missing question text"};
     }
@@ -132,14 +137,14 @@ export async function saveMultiChoiceQuestion(div, quizId) {
     // Validate points
     const points = parseInt(pointsInput?.value) || 1;
     if (points < 1) {
-        alert("Points must be at least 1.");
+        //alert("Points must be at least 1.");
         pointsInput.focus();
         return {success: false, message: "Points must be at least 1."};
     }
 
     // Validate options
     if (answerOptions.length < 2) {
-        alert("At least 2 answer options are required.");
+        //alert("At least 2 answer options are required.");
         return {success: false, message: "At least 2 answer options are required."};
     }
 
@@ -167,12 +172,12 @@ export async function saveMultiChoiceQuestion(div, quizId) {
     });
 
     if (!allOptionsFilled) {
-        alert("Please fill in all answer options.");
+        //alert("Please fill in all answer options.");
         return {success: false, message: "Please fill in all answer options."};
     }
 
     if (correctIndexes.length === 0) {
-        alert("Please select at least one correct answer.");
+        //alert("Please select at least one correct answer.");
         return {success: false, message: "Please select at least one correct answer."};
     }
 
@@ -209,36 +214,10 @@ export async function saveMultiChoiceQuestion(div, quizId) {
         return result;
     } catch (error) {
         console.error('Submission error:', error);
-        alert(`Error: ${error.message}`);
+        //alert(`Error: ${error.message}`);
         return {success: false, message: error.message};
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const root = document.getElementById('question-area');
-    if (!root) {
-        console.error("Missing question-area element");
-        return;
-    }
+//window.saveMultiChoiceQuestion = saveMultiChoiceQuestion;
 
-    // Create multi-choice question form
-    const questionDiv = createMultiChoiceDiv();
-    root.appendChild(questionDiv);
-
-    // Create submit button
-    const submitBtn = document.createElement('button');
-    submitBtn.textContent = 'Submit Multi-Choice Question';
-    submitBtn.className = 'submit-btn';
-
-    submitBtn.onclick = async () => {
-        const quizId = 1; // Replace with actual quiz ID
-        const msg = await saveMultiChoiceQuestion(questionDiv, quizId);
-
-        if (msg.success) {
-            alert("Multi-Choice Question saved successfully!");
-            // Optional: Reset form or redirect
-        }
-    };
-
-    root.appendChild(submitBtn);
-});
