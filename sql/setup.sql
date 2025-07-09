@@ -2,6 +2,7 @@
 USE quizKhana;
 
 -- DROP TABLES
+DROP TABLE IF EXISTS announcements;
 DROP TABLE IF EXISTS user_answers;
 DROP TABLE IF EXISTS notes;
 DROP TABLE IF EXISTS challenges;
@@ -154,3 +155,13 @@ CREATE TABLE user_answers(
      FOREIGN KEY (questionid) REFERENCES questions (id),
      FOREIGN KEY (resultid) REFERENCES quiz_results (id)
 );
+
+CREATE TABLE announcements(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    imagelink    VARCHAR(1000),
+    title        VARCHAR(255) NOT NULL,
+    content      VARCHAR(6500) NOT NUll,
+    author       VARCHAR(255) NOT NULL,
+    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author) REFERENCES users (username)
+)

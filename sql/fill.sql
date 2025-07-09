@@ -66,7 +66,14 @@ INSERT INTO challenges (quizid, senderid, recipientid, bestscore, quiztitle, vie
                                                                                  (4, 5, 2, 40, 'Math Quick Test', false),
                                                                                  (5, 2, 4, 90, 'Geography Quiz', false);
 
--- Insert notes (5 entries)
+
+INSERT INTO announcements (imagelink, title, content, author) VALUES
+                                                    ('imglink1.png', 'announcement1', 'very important announcement to see', 'admin1'),
+                                                    ('imglink2.png', 'announcement2', 'very important 222 announcement to see', 'admin1'),
+                                                    ('imglink3.png', 'announcement3', 'very important  333 announcement to see', 'admin1'),
+                                                    ('imglink4.png', 'announcement4', 'very important  4444 announcement to see', 'admin1'),
+                                                    ('imglink5.png', 'announcement5', 'very important  55555 announcement to see', 'admin1');
+                                                    
 INSERT INTO notes (senderid, recipientid, text, viewed) VALUES
                                                     (2, 3, 'Great job on the Science Trivia quiz!', false),
                                                     (3, 2, 'Thanks for the challenge, let me know when you want a rematch!', false),
