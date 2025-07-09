@@ -11,6 +11,7 @@ import databases.implementations.QuizDB;
 import objects.Quiz;
 import objects.questions.QType;
 import objects.questions.QuestionSingleChoice;
+import objects.questions.QuestionTextAnswer;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -35,8 +36,8 @@ public class SaveQuestionServlet extends HttpServlet {
             handleSingleChoice(out, body,  response);
         }else if(QType.MultiChoice.name().equals(type)){
 
-        }else{
-
+        }else if (QType.TextAnswer.name().equals(type)){
+            handleTextAnswer(out, body,  response);
         }
 
 
@@ -102,6 +103,78 @@ public class SaveQuestionServlet extends HttpServlet {
             out.flush();
         }
     }
+
+    private void handleTextAnswer(PrintWriter out, JsonObject body, HttpServletResponse response) {
+        JsonObject jsonResponse = new JsonObject();
+
+        try {
+            QuestionDB questionDB = (QuestionDB) getServletContext().getAttribute(QUESTIONDB);
+            QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
+
+            int quizId = body.get("quizid").getAsInt();
+
+            List<Quiz> quizzes = quizDB.query(
+                    new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
+            );
+
+            // Check if quiz exists
+            if (quizzes.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Invalid quiz ID: " + quizId);
+                out.print(jsonResponse);
+                return;
+            }
+
+            // Parse and validate fields
+            String question = body.get("question").getAsString();
+            String imageLink = body.has("imageLink") && !body.get("imageLink").isJsonNull()
+                    ? body.get("imageLink").getAsString()
+                    : null;
+            int points = body.has("points") ? body.get("points").getAsInt() : 1;
+            boolean exactMatch = body.has("exactMatch") && body.get("exactMatch").getAsBoolean();
+
+            JsonArray correctAnswersJson = body.getAsJsonArray("correctAnswers");
+            List<String> correctAnswers = new ArrayList<>();
+            for (int i = 0; i < correctAnswersJson.size(); i++) {
+                String answer = correctAnswersJson.get(i).getAsString().trim();
+                if (!answer.isEmpty()) {
+                    correctAnswers.add(answer);
+                }
+            }
+
+            // Validation
+            if (question == null || question.isEmpty() ||
+                    correctAnswers.isEmpty() ||
+                    points < 1) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Invalid question format");
+            } else {
+                QuestionTextAnswer q = new QuestionTextAnswer(
+                        quizId,
+                        imageLink,
+                        question,
+                        correctAnswers,
+                        exactMatch,
+                        points
+                );
+                questionDB.add(q);
+                jsonResponse.addProperty("success", true);
+                jsonResponse.addProperty("message", "TextAnswer question saved successfully.");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            jsonResponse.addProperty("success", false);
+            jsonResponse.addProperty("message", "Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            response.setContentType("application/json");
+            out.print(jsonResponse);
+            out.flush();
+        }
+    }
+
 }
 
 

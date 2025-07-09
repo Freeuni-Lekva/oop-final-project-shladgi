@@ -122,7 +122,7 @@ export async function saveTextAnswerDiv(div, quizid) {
 
     // Step 3: Prepare data
     const payload = {
-        quizid,
+        quizid: quizid,
         type: "TextAnswer",
         question: questionText,
         imageLink,
@@ -133,7 +133,7 @@ export async function saveTextAnswerDiv(div, quizid) {
 
     // Step 4: Send POST request to servlet
     try {
-        const response = await fetch("/AddQuestionServlet", {
+        const response = await fetch("/saveQuestion", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -160,3 +160,6 @@ export async function saveTextAnswerDiv(div, quizid) {
         };
     }
 }
+
+
+window.saveTextAnswerDiv = saveTextAnswerDiv;
