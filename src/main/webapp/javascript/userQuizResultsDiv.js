@@ -4,7 +4,7 @@ export function fetchQuizResultData(quizResultId) {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `quizResultId=${encodeURIComponent(quizResultId)}`
+        body: `id=${encodeURIComponent(quizResultId)}`
     }).then(response => {
         if (!response.ok) throw new Error("Failed to load result");
         return response.json();
@@ -20,7 +20,7 @@ function userQuizResultsDiv(data) {
         <p><strong>Score:</strong> ${data.totalscore}</p>
         <p><strong>Time Taken:</strong> ${data.timetaken}</p>
         <p><strong>Date:</strong> ${data.creationdate}</p>
-        <a href="quizResultsPage.html?quizResultId=${data.quizResultId}">View Details</a>
+        <a href="/quizResult?id=${data.quizResultId}">View Details</a>
     `;
 
     return row;

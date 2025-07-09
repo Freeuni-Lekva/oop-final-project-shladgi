@@ -33,7 +33,9 @@ public class GetQuizResultIdsServlet extends HttpServlet {
 
         List<FilterCondition<QuizResultField>> filter = List.of(
                 new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId)
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MOREEQ, 0)
+
         );
 
 

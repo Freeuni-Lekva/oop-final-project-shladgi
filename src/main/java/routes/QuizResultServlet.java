@@ -40,12 +40,23 @@ public class QuizResultServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int quizResultId = Integer.parseInt(request.getParameter("quizResultId"));
+        int quizResultId = Integer.parseInt(request.getParameter("id"));
         ServletContext context = getServletContext();
         QuizResultDB quizResultDB = (QuizResultDB) context.getAttribute(QUIZRESULTDB);
 
+
+
         List<QuizResult> quizResults = quizResultDB.query(
-                new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, quizResultId));
+                new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, quizResultId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MOREEQ, 0));
+
+        if(quizResults.isEmpty()){
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("message", "Quiz result not found");
+            response.getWriter().write(json.toString());
+            return;
+        }
         QuizResult quizResult = quizResults.getFirst();
 
         int quizId = quizResult.getQuizId();
@@ -64,6 +75,7 @@ public class QuizResultServlet extends HttpServlet {
         json.addProperty("creationdate", quizResult.getCreationDate().toString());
         json.addProperty("userid", quizResult.getUserId());
         json.addProperty("quizid", quizResult.getQuizId());
+        json.addProperty("ok", true);
         response.getWriter().write(json.toString());
 
     }
