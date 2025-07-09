@@ -12,7 +12,7 @@ export function fetchQuizResultData(quizResultId) {
 }
 
 
-function userQuizResultsDiv(data, wantTitle = false) {
+export function userQuizResultsDiv(data, wantTitle = false) {
     const row = document.createElement("div");
     row.className = "border rounded p-3 mb-3";
 

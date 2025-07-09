@@ -6,7 +6,7 @@ function setupUserButtonListener() {
         e.preventDefault();
 
         document.getElementById("user").style.display = "block";
-        document.getElementById("statistics").style.display = "block";
+        document.getElementById("statistics").style.display = "none";
         document.getElementById("friends-container").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none"
         console.log("User section shown");

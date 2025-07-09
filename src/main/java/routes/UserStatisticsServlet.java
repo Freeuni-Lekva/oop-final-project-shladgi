@@ -27,7 +27,6 @@ public class UserStatisticsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
-        QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
         String username = request.getParameter("username");
 
         List<User> u = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, username));
@@ -35,12 +34,10 @@ public class UserStatisticsServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             return;
         }
-
         User user = u.get(0);
 
         List<QuizResult> quizResults = quizResultDB.query(
-                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, user.getId()),
-                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, -1)
+                new FilterCondition<>(QuizResultField.USERID, Operator.MOREEQ, user.getId())
         );
 
         List<Integer> ids = new ArrayList<>();

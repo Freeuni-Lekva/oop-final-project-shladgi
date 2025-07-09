@@ -32,7 +32,7 @@ public class CheckWhoIsForUser extends HttpServlet {
         FriendRequestDB friendRequestDB = (FriendRequestDB) getServletContext().getAttribute(FRIENDREQUESTDB); // fix this key
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
 
-        String username = request.getParameter("username");
+        String username = (String)request.getSession().getAttribute("username");
         String target = request.getParameter("target");
 
         if (username == null || target == null) {
@@ -55,7 +55,6 @@ public class CheckWhoIsForUser extends HttpServlet {
                 new FilterCondition<>(FriendshipField.SECONDID, Operator.EQUALS, u2.getId())
         );
         if (friends.isEmpty()) {
-            // try other way around
             friends = friendshipDB.query(
                     new FilterCondition<>(FriendshipField.FIRSTID, Operator.EQUALS, u2.getId()),
                     new FilterCondition<>(FriendshipField.SECONDID, Operator.EQUALS, u1.getId())

@@ -32,8 +32,8 @@ public class UserFriendAcceptServlet extends HttpServlet {
             if(friendshipDB == null){
                 System.out.println("friendshipDB is null");
             }
-            String sender = request.getParameter("senderUsername");
-            String receiver = request.getParameter("receiverUsername");
+            String sender = (String) request.getSession().getAttribute("username");
+            String receiver = request.getParameter("target");
             System.out.println(sender + " " + receiver);
             if (sender == null || receiver == null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

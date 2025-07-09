@@ -40,7 +40,7 @@ async function loadFriendsSection(username) {
         peopleDiv.appendChild(heading);
 
         for (const friend of friends) {
-            const friendDiv = await getUserDiv(friend);  // Use your shared component function
+            const friendDiv = await getUserDiv(friend);
             peopleDiv.appendChild(friendDiv);
         }
 

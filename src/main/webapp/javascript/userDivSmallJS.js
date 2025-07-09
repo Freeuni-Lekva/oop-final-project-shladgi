@@ -1,13 +1,8 @@
 export async function getUserDiv(senderUsername) {
-    const params = new URLSearchParams(window.location.search);
-    const currentUser = params.get("username");
-    if (!currentUser) throw new Error("Current user not found in URL");
-
     // Create main div container
     const div = document.createElement("div");
     div.className = "user-div alert alert-info d-flex align-items-center justify-content-between mb-2 p-2";
 
-    // Username link (instead of plain text)
     const userLink = document.createElement("a");
     userLink.href = `/user.html?username=${encodeURIComponent(senderUsername)}`;
     userLink.textContent = senderUsername;
@@ -23,7 +18,7 @@ export async function getUserDiv(senderUsername) {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `username=${encodeURIComponent(currentUser)}&target=${encodeURIComponent(senderUsername)}`
+        body: `target=${encodeURIComponent(senderUsername)}`
     });
 
     if (!response.ok) {
@@ -42,7 +37,7 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-remove", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `friendUsername=${encodeURIComponent(senderUsername)}&currentUser=${encodeURIComponent(currentUser)}`
+                    body: `target=${encodeURIComponent(senderUsername)}}`
                 });
                 if (res.ok) location.reload();
                 else alert("Failed to remove friend");
@@ -62,7 +57,7 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-request/accept", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderUsername=${encodeURIComponent(senderUsername)}&receiverUsername=${encodeURIComponent(currentUser)}`
+                    body: `target=${encodeURIComponent(senderUsername)}}`
                 });
                 if (res.ok) location.reload();
                 else alert("Failed to accept friend request");
@@ -81,7 +76,7 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-request/reject", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderUsername=${encodeURIComponent(senderUsername)}&receiverUsername=${encodeURIComponent(currentUser)}`
+                    body: `target=${encodeURIComponent(senderUsername)}}`
                 });
                 if (res.ok) location.reload();
                 else alert("Failed to reject friend request");
@@ -92,12 +87,25 @@ export async function getUserDiv(senderUsername) {
         btnGroup.appendChild(rejectBtn);
 
     } else if (status === "request") {
-        // Request Sent - disabled button
-        const pendingBtn = document.createElement("button");
-        pendingBtn.className = "btn btn-secondary btn-sm";
-        pendingBtn.textContent = "Request Sent";
-        pendingBtn.disabled = true;
-        btnGroup.appendChild(pendingBtn);
+        // Remove Request button
+        const removeRequestBtn = document.createElement("button");
+        removeRequestBtn.className = "btn btn-warning btn-sm";
+        removeRequestBtn.textContent = "Remove Request";
+        removeRequestBtn.addEventListener("click", async () => {
+            try {
+                const res = await fetch("/sent-request", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `target=${encodeURIComponent(senderUsername)}`
+                });
+                if (res.ok) location.reload();
+                else alert("Failed to remove friend request");
+            } catch {
+                alert("Error removing friend request");
+            }
+        });
+        btnGroup.appendChild(removeRequestBtn);
+
 
     } else {
         // Send Friend Request button
@@ -109,7 +117,7 @@ export async function getUserDiv(senderUsername) {
                 const res = await fetch("/friend-request/send", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderUsername=${encodeURIComponent(currentUser)}&receiverUsername=${encodeURIComponent(senderUsername)}`
+                    body: `target=${encodeURIComponent(senderUsername)}`
                 });
                 if (res.ok) location.reload();
                 else alert("Failed to send friend request");

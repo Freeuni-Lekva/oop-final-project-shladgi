@@ -74,15 +74,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error loading achievements:", error);
         }
     }
-
-    try {
-
-    }catch (error){
-
-    }
-
     friendsContainer.style.display = "none";
-    statisticsSection.style.display = "block";
+    statisticsSection.style.display = "none";
     friendRequest.style.display = "none";
 });
 

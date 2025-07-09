@@ -26,8 +26,8 @@ public class UserFriendRejectServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
         FriendRequestDB friendRequestDB = (FriendRequestDB) getServletContext().getAttribute(FRIENDREQUESTDB);
-        String sender = request.getParameter("senderUsername");
-        String receiver =  request.getParameter("receiverUsername");
+        String sender = (String) request.getSession().getAttribute("username");
+        String receiver =  request.getParameter("target");
 
         List<User> u1 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, sender));
         List<User> u2 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, receiver));

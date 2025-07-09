@@ -28,8 +28,8 @@ public class UserFriendRemove extends HttpServlet {
         FriendshipDB friendship = (FriendshipDB) getServletContext().getAttribute(FRIENDSHIPDB);
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
 
-        String user1 = request.getParameter("friendUsername");
-        String user2 = request.getParameter("currentUser");
+        String user1 = (String) request.getSession().getAttribute("username");
+        String user2 = request.getParameter("target");
         System.out.println("user1: " + user1);
         System.out.println("user2: " + user2);
         List<User> u1 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, user1));
