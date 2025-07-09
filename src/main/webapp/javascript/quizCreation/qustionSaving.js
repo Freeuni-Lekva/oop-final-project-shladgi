@@ -1,6 +1,6 @@
 import {getSingleChoiceDiv} from "./singleChoiceDiv.js";
 import {getMultiChoiceDiv} from "./multiChoiceDiv.js";
-import {getTextAnswerDiv} from "./textAnswerDiv.js";
+import {gettextAnswerDiv} from "./textAnswerDiv.js";
 import {getMultiTextAnswerDiv} from "./multiTextAnswerDiv.js";
 import {getFillInBlanksDiv} from "./fillInBlanksDiv.js";
 import {getFillInChoicesDiv} from "./fillInChoicesDiv.js";
@@ -15,20 +15,20 @@ const QType = {
 };
 
 
-function getQuizCreationDiv(type){
+function saveQuestion(type){
     switch (type){
         case QType.SingleChoice:
-            return getSingleChoiceDiv();
+            return saveSingleChoiceQuestion();
         case QType.MultiChoice:
-            return getMultiChoiceDiv();
+            return saveMultiChoiceQuestion();
         case QType.TextAnswer:
-            return getTextAnswerDiv();
+            return saveTextAnswerQuestion();
         case QType.MultiTextAnswer:
-            return getMultiTextAnswerDiv();
+            return saveMultiTextAnswerQuestion();
         case QType.FillInBlanks:
-            return getFillInBlanksDiv();
+            return saveFillInBlanksQuestion();
         case QType.FillChoices:
-            return getFillInChoicesDiv();
+            return saveFillInChoicesQuestion();
     }
 
 

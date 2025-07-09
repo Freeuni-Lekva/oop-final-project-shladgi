@@ -27,6 +27,19 @@ public class QuestionSingleChoice extends Question{
     }
 
     // this is a constructor that constructs the object from database table information.
+    public QuestionSingleChoice(int quizId, String question, int correctId, List<String> choices, String imageLink, double weight) {
+        this.type = QType.SingleChoice;
+        this.maxScore = 1;
+        this.question = question;
+        this.correctId = correctId;
+        this.choices = new ArrayList<>(choices);
+        this.quizId = quizId;
+        this.imageLink = imageLink;
+        this.weight = weight;
+    }
+
+
+    // this is a constructor that constructs the object from database table information.
     public QuestionSingleChoice(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
         super(id,quizId,question,imageLink,maxScore, weight,json, QType.SingleChoice);
     }
