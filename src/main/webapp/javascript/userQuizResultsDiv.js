@@ -4,7 +4,7 @@ export function fetchQuizResultData(quizResultId) {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `quizResultId=${encodeURIComponent(quizResultId)}`
+        body: `id=${encodeURIComponent(quizResultId)}`
     }).then(response => {
         if (!response.ok) throw new Error("Failed to load result");
         return response.json();

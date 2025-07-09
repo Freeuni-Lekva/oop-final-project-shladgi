@@ -40,7 +40,7 @@ public class QuizResultServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int quizResultId = Integer.parseInt(request.getParameter("quizResultId"));
+        int quizResultId = Integer.parseInt(request.getParameter("id"));
         ServletContext context = getServletContext();
         QuizResultDB quizResultDB = (QuizResultDB) context.getAttribute(QUIZRESULTDB);
 
@@ -64,6 +64,7 @@ public class QuizResultServlet extends HttpServlet {
         json.addProperty("creationdate", quizResult.getCreationDate().toString());
         json.addProperty("userid", quizResult.getUserId());
         json.addProperty("quizid", quizResult.getQuizId());
+        json.addProperty("ok", true);
         response.getWriter().write(json.toString());
 
     }
