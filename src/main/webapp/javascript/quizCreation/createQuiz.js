@@ -1,4 +1,10 @@
+import {addQuestion} from "./questionAdd.js"
 document.addEventListener("DOMContentLoaded", () => {
+    const addButton = document.getElementById("addQuestin");
+    addButton.addEventListener('click', addQuestion);
+
+
+
     const form = document.getElementById("quizForm");
 
     form.addEventListener("submit", function (e) {
