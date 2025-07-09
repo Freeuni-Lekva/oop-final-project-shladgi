@@ -47,6 +47,11 @@ public class QuestionMultiChoice extends Question{
     }
 
     @Override
+    public void hideAnswers() {
+        correctChoices = null;
+    }
+
+    @Override
     public JsonObject getData() {
         JsonObject jo = new JsonObject();
 

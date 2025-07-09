@@ -52,6 +52,11 @@ public class QuestionSingleChoice extends Question{
     }
 
     @Override
+    public void hideAnswers() {
+        correctId = -1;
+    }
+
+    @Override
     public JsonObject getData() {
         JsonObject jsonObject = new JsonObject();
 

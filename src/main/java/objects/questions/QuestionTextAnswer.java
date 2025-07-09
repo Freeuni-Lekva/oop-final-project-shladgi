@@ -38,6 +38,11 @@ public class QuestionTextAnswer extends Question {
     }
 
     @Override
+    public void hideAnswers() {
+        correctAnswers = null;
+    }
+
+    @Override
     public JsonObject getData() {
         JsonObject json = new JsonObject();
         JsonArray jsonArray = new JsonArray();

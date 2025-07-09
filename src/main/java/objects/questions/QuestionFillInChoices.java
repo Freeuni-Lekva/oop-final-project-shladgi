@@ -46,6 +46,11 @@ public class QuestionFillInChoices extends Question{
     }
 
     @Override
+    public void hideAnswers() {
+        correctIndexes = null;
+    }
+
+    @Override
     public JsonObject getData() {
         JsonObject jsonObject = new JsonObject();
 

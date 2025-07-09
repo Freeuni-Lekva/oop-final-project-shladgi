@@ -67,6 +67,11 @@ public class QuestionMultiTextAnswer extends Question{
         return points;
     }
 
+    @Override
+    public void hideAnswers() {
+        correctAnswers = null;
+    }
+
     private int orderedCheck(Answer<?> answer) {
         if (!(answer.get(0) instanceof String)) return 0;
 
