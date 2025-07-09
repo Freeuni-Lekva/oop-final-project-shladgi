@@ -60,19 +60,14 @@ public class CreateQuizServlet extends HttpServlet {
         int immediateCorrection = Integer.parseInt(request.getParameter("immediatecorrection"));
         int practiceMode = Integer.parseInt(request.getParameter("practicemode"));
         int timeLimit = Integer.parseInt(request.getParameter("timelimit"));
-        System.out.println("title: " + title);
-        System.out.println("desc: " + description);
-        System.out.println("random: " + random);
-        System.out.println("singlepage: " + singlePage);
-        System.out.println("immediate: " + immediateCorrection);
-        System.out.println("practivemode: " + practiceMode);
-        System.out.println("timelimit: " + timeLimit);
+        int totalQuestions = Integer.parseInt(request.getParameter("totalquestions"));
+        int totalPoints = Integer.parseInt(request.getParameter("totalpoints"));
 
         QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
 
         Quiz newQuiz = new Quiz(title, Integer.parseInt(userIdStr), LocalDateTime.now(),
-                timeLimit==0?-1:timeLimit, 10,
-                12, random==1,
+                timeLimit==0?-1:timeLimit, totalPoints,
+                totalQuestions, random==1,
                 singlePage==1, immediateCorrection==1,
                 practiceMode==1, description);
 
