@@ -34,6 +34,7 @@ public class getChallengesServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try {
+
             int userId = Integer.parseInt(req.getParameter("userid"));
             int interval =Integer.parseInt(req.getParameter("interval"));
             ServletContext context = req.getServletContext();
@@ -48,7 +49,6 @@ public class getChallengesServlet extends HttpServlet {
                     10,
                     0
             );
-
             List<Challenge> seenChals = List.of();
             if(10 > unseenChals.size() && !unseenChals.isEmpty()){
                 seenChals = chalDB.query((List<FilterCondition<ChallengeField>>) List.of(
@@ -61,7 +61,6 @@ public class getChallengesServlet extends HttpServlet {
                 );
 
             }
-
 
             for(Challenge c : unseenChals){
                 chalDB.delete(new FilterCondition<>(ChallengeField.ID, Operator.EQUALS, c.getId()));
@@ -79,38 +78,34 @@ public class getChallengesServlet extends HttpServlet {
                         (interval -1)*10
                 );
             }
-
             for(Challenge c : seenChals){
                 unseenChals.add(c);
             }
-
             JsonArray ja = new JsonArray();
             for(Challenge n : unseenChals){
                 User sender = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS,n.getSenderId() )).getFirst();
-                Quiz quiz = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, n.getQuizId())).get(0);
+                Quiz quiz = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.EQUALS, n.getQuizId())).getFirst();
                 JsonObject j = new JsonObject();
                 j.addProperty("id", n.getId());
                 j.addProperty("viewed", n.isViewed());
                 j.addProperty("createDate", String.valueOf(n.getCreationDate()));
                 j.addProperty("senderName", sender.getUserName());
                 j.addProperty("senderId", sender.getId());
+                j.addProperty("quizId", quiz.getId());
+                j.addProperty("quizTitle", quiz.getTitle());
+                j.addProperty("score",n.getBestScore());
                 ja.add(j);
             }
-
 
             JsonObject jo = new JsonObject();
             res.setContentType("application/json");
             jo.addProperty("success", true );
             jo.add("info", ja);
-
             PrintWriter out = res.getWriter();
             out.write(jo.toString());
             out.flush();
-
         }catch (Exception e){
-            System.out.println(555);
             System.out.println(e.getMessage());
-            System.out.println(555);
         }
     }
 }

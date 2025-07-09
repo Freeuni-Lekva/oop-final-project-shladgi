@@ -54,8 +54,6 @@ public class getNotesServlet extends HttpServlet {
                 );
 
             }
-            System.out.println(unseenNotes.size());
-            System.out.println(seenNotes.size());
 
             for(Note note : unseenNotes){
                 noteDB.delete(new FilterCondition<>(NoteField.ID, Operator.EQUALS, note.getId()));
@@ -91,7 +89,6 @@ public class getNotesServlet extends HttpServlet {
                 ja.add(j);
             }
 
-
             JsonObject jo = new JsonObject();
             res.setContentType("application/json");
             jo.addProperty("success", true );
@@ -102,9 +99,8 @@ public class getNotesServlet extends HttpServlet {
             out.flush();
 
         }catch (Exception e){
-            System.out.println(555);
             System.out.println(e.getMessage());
-            System.out.println(555);
+
         }
 
 

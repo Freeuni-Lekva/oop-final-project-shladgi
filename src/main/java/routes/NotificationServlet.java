@@ -70,8 +70,7 @@ public class NotificationServlet extends HttpServlet {
         JsonObject jo = new JsonObject();
         res.setContentType("application/json");
         jo.addProperty("success", true );
-        System.out.println("notes "+notes.size());
-        System.out.println("chal"+challenges.size());
+
         jo.addProperty("hasUnseen",notes.size()>0 || challenges.size()>0 );
         res.getWriter().write(jo.toString());
 
