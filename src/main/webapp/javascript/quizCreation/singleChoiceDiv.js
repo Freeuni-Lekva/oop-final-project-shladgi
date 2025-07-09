@@ -2,7 +2,7 @@
  * Creates a single choice question div with UI components.
  * @returns {HTMLDivElement} DOM element for question creation.
  */
-export function createSingleChoiceDiv() {
+export function getSingleChoiceDiv() {
     const container = document.createElement('div');
     container.className = 'single-choice-container';
     container.dataset.qtype = "SingleChoice";
