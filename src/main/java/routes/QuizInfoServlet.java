@@ -103,6 +103,7 @@ public class QuizInfoServlet extends HttpServlet {
         }
 
         if (userId != null) {
+            json.addProperty("userId", userId);
             List<User> userList = userDB.query(List.of(new FilterCondition<>(UserField.ID, Operator.EQUALS, userId)));
             if (!userList.isEmpty() && userList.get(0).getType().toString().equalsIgnoreCase("ADMIN")) {
                 json.addProperty("isAdmin", true);
@@ -115,68 +116,6 @@ public class QuizInfoServlet extends HttpServlet {
 
 
 
-        // 1. User's past performance (sorted by date descending)
-        List<FilterCondition<QuizResultField>> userResFilter = List.of(
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
-                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId)
-        );
-        List<QuizResult> userResults = userId == null ? List.of() :
-                quizResultDB.query(userResFilter, QuizResultField.CREATIONDATE, false, null, null);
-
-        JsonArray userAttemptsJson = new JsonArray();
-        for (QuizResult qr : userResults) {
-            JsonObject o = new JsonObject();
-            o.addProperty("score", qr.getTotalScore());
-            o.addProperty("timeTaken", qr.getTimeTaken());
-            o.addProperty("date", qr.getCreationDate().toString());
-            userAttemptsJson.add(o);
-        }
-        json.add("userAttempts", userAttemptsJson);
-
-
-
-  /*      // 2. Highest performers of all time (sorted by score descending)
-        List<FilterCondition<QuizResultField>> topPerfFilter = List.of(
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
-                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MORE, -1)
-        );
-        List<QuizResult> topPerformers = quizResultDB.query(
-                topPerfFilter, QuizResultField.TOTALSCORE, false, 10, null);
-
-        JsonArray topPerformersJson = new JsonArray();
-        for (QuizResult qr : topPerformers) {
-            JsonObject o = new JsonObject();
-            o.addProperty("userId", qr.getUserId());
-            o.addProperty("score", qr.getTotalScore());
-            o.addProperty("timeTaken", qr.getTimeTaken());
-            o.addProperty("date", qr.getCreationDate().toString());
-            topPerformersJson.add(o);
-        }
-        json.add("topPerformers", topPerformersJson);
-
-
-        // 3. Top performers in the last day (sorted by score descending)
-        LocalDateTime lastDay = LocalDateTime.now().minusDays(1);
-        List<FilterCondition<QuizResultField>> recentTopFilter = List.of(
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
-                new FilterCondition<>(QuizResultField.CREATIONDATE, Operator.MOREEQ, lastDay.toString()),
-                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.MORE, -1)
-        );
-        List<QuizResult> recentTopPerformers = quizResultDB.query(
-                recentTopFilter, QuizResultField.TOTALSCORE, false, 10, null);
-
-
-        JsonArray recentTopPerformersJson = new JsonArray();
-        for (QuizResult qr : recentTopPerformers) {
-            JsonObject o = new JsonObject();
-            o.addProperty("userId", qr.getUserId());
-            o.addProperty("score", qr.getTotalScore());
-            o.addProperty("timeTaken", qr.getTimeTaken());
-            o.addProperty("date", qr.getCreationDate().toString());
-            recentTopPerformersJson.add(o);
-        }
-        json.add("recentTopPerformers", recentTopPerformersJson);
-*/
 
         // 4. Recent test takers (sorted by date descending)
         List<FilterCondition<QuizResultField>> recentTakersFilter = List.of(

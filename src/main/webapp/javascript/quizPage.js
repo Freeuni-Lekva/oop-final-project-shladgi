@@ -1,4 +1,5 @@
 import { getTopPerformers } from './getTopPerformers.js';
+import { getUserQuizResultsDiv } from './userQuizResultsDiv.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     const titleEl = document.getElementById("quizTitle");
@@ -31,11 +32,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 creatorLink.href = "/user?id=" + data.creatorId;
                 creatorLink.textContent = data.creatorName;
 
-                renderList("userAttemptsList", data.userAttempts, true);
+
+                // get my past results.
+                getUserQuizResultsDiv(data.userId, quizId, null).then(userResultsDiv => {
+                    const container = document.getElementById("userAttemptsList");
+                    container.innerHTML = ""; // Optional
+                    container.appendChild(userResultsDiv);
+                });
 
                 // Use the new getTopPerformers function
-
-
                 getTopPerformers(quizId, null, 10).then(div => {
                     document.getElementById("topPerformersList").parentNode.replaceChild(div, document.getElementById("topPerformersList"));
                     div.id = "topPerformersList";
