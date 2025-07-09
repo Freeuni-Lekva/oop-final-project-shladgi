@@ -15,6 +15,7 @@ import objects.questions.QuestionFillInBlanks;
 import objects.questions.QuestionMultiChoice;
 import objects.questions.QuestionSingleChoice;
 import objects.questions.QuestionTextAnswer;
+import objects.questions.QuestionMultiTextAnswer;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -43,8 +44,97 @@ public class SaveQuestionServlet extends HttpServlet {
             handleFillInBlanks(out, body, response);
         }else if (QType.TextAnswer.name().equals(type)){
             handleTextAnswer(out, body,  response);
+        } else if (QType.MultiTextAnswer.name().equals(type)) {
+            handleMultiTextAnswer(out, body, response);
+        }else{
+
         }
 
+    }
+
+    private void handleMultiTextAnswer(PrintWriter out, JsonObject body, HttpServletResponse response) {
+        JsonObject jsonResponse = new JsonObject();
+        try {
+            QuestionDB questionDB = (QuestionDB) getServletContext().getAttribute(QUESTIONDB);
+            QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
+
+            int quizId = body.get("quizId").getAsInt();
+
+            List<Quiz> quizzes = quizDB.query(
+                    new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
+            );
+
+            if (quizzes.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Invalid quiz ID: " + quizId);
+                out.print(jsonResponse);
+                return;
+            }
+
+            String question = body.get("question").getAsString();
+            boolean exactMatch = body.get("exactMatch").getAsBoolean();
+            boolean ordered = body.get("ordered").getAsBoolean();
+            String photoUrl = body.has("photoUrl") && !body.get("photoUrl").isJsonNull()
+                    ? body.get("photoUrl").getAsString() : null;
+            int points = body.has("points") ? body.get("points").getAsInt() : 1;
+
+            JsonArray correctAnswersArray = body.getAsJsonArray("correctAnswers");
+            List<List<String>> correctAnswers = new ArrayList<>();
+            for (JsonElement answerGroupElement : correctAnswersArray) {
+                JsonArray answerGroupArray = answerGroupElement.getAsJsonArray();
+                List<String> answerGroup = new ArrayList<>();
+                for (JsonElement answerElement : answerGroupArray) {
+                    answerGroup.add(answerElement.getAsString());
+                }
+                correctAnswers.add(answerGroup);
+            }
+
+            // Validation
+            if (question == null || question.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Question text cannot be empty");
+            } else if (correctAnswers.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "At least one answer group is required");
+            } else if (correctAnswers.stream().anyMatch(List::isEmpty)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Each answer group must contain at least one answer");
+            } else if (correctAnswers.stream().flatMap(List::stream).anyMatch(String::isEmpty)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Answer texts cannot be empty");
+            } else if (points < 1) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Points value must be at least 1");
+            } else {
+                QuestionMultiTextAnswer q = new QuestionMultiTextAnswer(
+                        quizId,
+                        question,
+                        correctAnswers,
+                        exactMatch,
+                        ordered,
+                        photoUrl,
+                        points
+                );
+                questionDB.add(q);
+                jsonResponse.addProperty("success", true);
+                jsonResponse.addProperty("message", "Multi-Text Answer Question saved successfully.");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            jsonResponse.addProperty("success", false);
+            jsonResponse.addProperty("message", "Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            response.setContentType("application/json");
+            out.print(jsonResponse);
+            out.flush();
+        }
     }
 
     private void handleFillInBlanks(PrintWriter out, JsonObject body, HttpServletResponse response) {

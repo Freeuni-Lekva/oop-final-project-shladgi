@@ -39,7 +39,7 @@ public class QuestionFillInBlanks extends Question{
     }
 
 
-    public QuestionFillInBlanks(int quizId, String question, List<Integer> blankIdx, List<List<String>> correctAnswers, boolean exactMatch, String photoUrl, int points){
+    public QuestionFillInBlanks(int quizId, String question, List<Integer> blankIdx, List<List<String>> correctAnswers, boolean exactMatch, String photoUrl, double weight){
         type = QType.FillInBlanks;
         this.question = question;
 
@@ -57,7 +57,7 @@ public class QuestionFillInBlanks extends Question{
 
         this.quizId = quizId;
         this.imageLink = photoUrl;
-        this.weight = points;
+        this.weight = weight;
     }
 
 
