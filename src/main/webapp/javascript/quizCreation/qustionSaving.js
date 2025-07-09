@@ -1,9 +1,5 @@
-import {getSingleChoiceDiv} from "./singleChoiceDiv.js";
-import {getMultiChoiceDiv} from "./multiChoiceDiv.js";
-import {gettextAnswerDiv} from "./textAnswerDiv.js";
-import {getMultiTextAnswerDiv} from "./multiTextAnswerDiv.js";
-import {getFillInBlanksDiv} from "./fillInBlanksDiv.js";
-import {getFillInChoicesDiv} from "./fillInChoicesDiv.js";
+import {saveSingleChoiceQuestion} from "./singleChoiceDiv.js";
+
 
 const QType = {
     SingleChoice: "SingleChoice",
@@ -15,20 +11,20 @@ const QType = {
 };
 
 
-function saveQuestion(type){
+export function saveQuestion(div, quizid, type){
     switch (type){
         case QType.SingleChoice:
-            return saveSingleChoiceQuestion();
+            return saveSingleChoiceQuestion(div, quizid);
         case QType.MultiChoice:
-            return saveMultiChoiceQuestion();
+            return saveMultiChoiceQuestion(div, quizid);
         case QType.TextAnswer:
-            return saveTextAnswerQuestion();
+            return saveTextAnswerQuestion(div, quizid);
         case QType.MultiTextAnswer:
-            return saveMultiTextAnswerQuestion();
+            return saveMultiTextAnswerQuestion(div, quizid);
         case QType.FillInBlanks:
-            return saveFillInBlanksQuestion();
+            return saveFillInBlanksQuestion(div, quizid);
         case QType.FillChoices:
-            return saveFillInChoicesQuestion();
+            return saveFillInChoicesQuestion(div, quizid);
     }
 
 
