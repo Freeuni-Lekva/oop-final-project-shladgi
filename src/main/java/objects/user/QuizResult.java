@@ -53,5 +53,5 @@ public class QuizResult {
     public int getQuizId() {return quizId;}
     public LocalDateTime getCreationDate() {return creationDate;}
     public double getTotalScore() {return totalScore;}
-    public int getTimeTaken() {return timeTaken;}
+    public int getTimeTaken() {return this.timeTaken;}
 }
