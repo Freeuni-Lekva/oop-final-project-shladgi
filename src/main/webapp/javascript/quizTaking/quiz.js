@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const isRandom = data.israndom;
             const singlePage = data.singlepage;
             const immediateCorrection = data.immediatecorrection;
+            const quizResultId = data.quizresultid;
 
             if (isRandom) {
                 shuffleArray(questions);
@@ -97,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     let maxScore = 0;
 
                     questionDivs.forEach(({ div, question }) => {
-                        const earned = evaluateAnswer(div, question); // same function as in multi-page
+                        const earned = evaluateAnswer(div, question, quizResultId); // same function as in multi-page
                         totalScore += earned;
                         maxScore += question.weight || 1;
                     });
@@ -134,11 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     submitBtn.textContent = "Submit";
 
                     submitBtn.onclick = () => {
-                        const correct = evaluateAnswer(qDiv, q); // you must define this function
+                        const points = evaluateAnswer(qDiv, q, quizResultId); // you must define this function
+                        totalscore += points;
+                        maxscore += q.weight;
                         if (immediateCorrection) {
-                            const points = evaluateAnswer(qDiv, q); // implement based on your logic
-                            totalscore += points;
-                            maxscore += q.weight;
                             submitBtn.style.display = "none"; // hide submit button
 
                             const feedback = document.createElement("div");
@@ -202,7 +202,7 @@ function shuffleArray(array) {
 }
 
 // Placeholder: you must implement this to evaluate answers based on your UI
-function evaluateAnswer(div, questionData) {
+function evaluateAnswer(div, questionData, quizResultId) {
     // This should check if the selected answer is correct based on `questionData`
     // and return true or false
     return 1; // placeholder
