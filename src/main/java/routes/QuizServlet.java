@@ -25,6 +25,7 @@ public class QuizServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response){
+
         try {
             request.getRequestDispatcher("/quiz.html").forward(request, response);
         } catch (ServletException e) {
