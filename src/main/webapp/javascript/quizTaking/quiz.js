@@ -3,6 +3,7 @@ import {loadSessionValue} from "../getSessionInfo.js";
 import {evalAnswer} from "./answerSaveWhileTaking.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const startTime = Date.now();
     const params = new URLSearchParams(window.location.search);
     const quizId = params.get("id");
     const practiceModeStr = params.get("practice");
@@ -99,7 +100,27 @@ document.addEventListener("DOMContentLoaded", async () => {
                     homeLink.textContent = "Go Home";
                     homeLink.style.display = "block";
                     homeLink.style.marginTop = "1em";
+                    const endTime = Date.now(); // current time
+                    const timeTakenSeconds = Math.floor((endTime - startTime) / 1000); // assuming you store startTime earlier
+
+                    fetch("/updatequizresult", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: new URLSearchParams({
+                            quizresultid: quizResultId,
+                            userid: userid,               // pass user id if needed
+                            totalScore: totalScore,
+                            timeTaken: timeTakenSeconds,
+                            practice: practiceMode
+                        })
+                    })
+
                     document.body.appendChild(homeLink);
+
+
+
                 };
 
             } else {
