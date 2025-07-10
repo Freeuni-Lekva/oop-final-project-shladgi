@@ -42,11 +42,14 @@ public class CheckingBeforeQuizServlet extends HttpServlet{
         int userId = (Integer)session.getAttribute("userid");
 
         int quizId = Integer.parseInt(request.getParameter("id"));
+
         boolean practice = Boolean.parseBoolean(request.getParameter("practice"));
+
 
         ServletContext context = getServletContext();
 
         QuizResultDB quizResultDB = (QuizResultDB) context.getAttribute(QUIZRESULTDB);
+
 
         if(practice){
             List<QuizResult> quizResults = quizResultDB.query(

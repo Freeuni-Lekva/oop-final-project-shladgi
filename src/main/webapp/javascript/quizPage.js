@@ -121,7 +121,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.success) {
                     // es merea dasaweri
+
                     window.location.href = `/quiz?id=${encodeURIComponent(quizId)}&practice=${encodeURIComponent(practice)}`;
+
                 } else {
                     statusDiv.textContent = "❌ " + data.message;
                     statusDiv.style.color = "red";
