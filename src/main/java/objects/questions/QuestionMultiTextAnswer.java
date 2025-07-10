@@ -15,6 +15,7 @@ public class QuestionMultiTextAnswer extends Question{
         this.question = question;
         this.ordered = ordered;
         this.type = QType.MultiTextAnswer;
+        this.maxScore = correctAnswers.size();
         this.correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswers.size(); i++){
             this.correctAnswers.add(new ArrayList<>(correctAnswers.get(i)));
@@ -28,6 +29,7 @@ public class QuestionMultiTextAnswer extends Question{
         this.ordered = ordered;
 
         this.type = QType.MultiTextAnswer;
+        this.maxScore = correctAnswers.size();
 
         this.correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswers.size(); i++){
