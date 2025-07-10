@@ -2,12 +2,18 @@ import { getUserDiv } from '../userDivSmallJS.js';
 
 async function loadFriendsHTML() {
     try {
+        console.log(88);
         const response = await fetch("userDivSmall.html");
+        console.log(88);
         if (!response.ok) {
+            console.log(88);
             throw new Error("Failed to load userDivSmall.html: " + response.status);
         }
+        console.log(88);
         const html = await response.text();
+        console.log(88);
         document.getElementById("friends-container").innerHTML = html;
+        console.log(88);
     } catch (error) {
         console.error(error);
     }
