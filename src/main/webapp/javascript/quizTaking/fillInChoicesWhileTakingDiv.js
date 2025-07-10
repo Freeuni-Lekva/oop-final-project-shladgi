@@ -73,8 +73,55 @@ export function getFillInChoicesWhileTakingDiv(data) {
 }
 
 
-export function evalAnswerFillInChoices(div, questionid, userresultid, userid){
+export async function evalAnswerFillInChoices(div, questionid, quizresultid, userid) {
+    // Get all select dropdowns
+    const selects = div.querySelectorAll('select.answer-select');
+    const answers = [];
 
+    // Collect all selected values (indexes)
+    selects.forEach(select => {
+        if (select.value === "") {
+            answers.push(null); // Unanswered
+        } else {
+            answers.push(parseInt(select.value)); // Selected index
+        }
+    });
+
+    // Validate all dropdowns were answered
+    if (answers.some(a => a === null)) {
+        console.error("Not all dropdowns were answered for question", questionid);
+        return null;
+    }
+
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: {
+            isString: false,  // Storing choice indexes
+            choices: answers // Array of selected indexes
+        }
+    };
+
+    try {
+        const response = await fetch('/SubmitAnswerServlet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return {success : false, message: error.message || "Server error"};
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error submitting answer:', error);
+        return {success : false, message: error.message};
+    }
 }
 
 

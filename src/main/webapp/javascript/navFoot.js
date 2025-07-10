@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
 
     if (userType) {
         document.getElementById("nav-logo").href = "/home";
-        navLinks.innerHTML +=  getLi("notification" , "Notifications");
+        navLinks.innerHTML +=  getLi("notifications" , "Notifications");
         navLinks.innerHTML +=  `<li class="nav-item" id=nav-user>
             <a class="nav-link" href="/user?username=${userName}" >${userName}</a></li>`
 
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         }
         navLinks.innerHTML+= '<form action="logout" method="post">\n' +
             '<button type="submit" class="btn btn-danger">Logout</button></form>';
-        document.getElementById("nav-notification").querySelector("a").innerHTML +=
+        document.getElementById("nav-notifications").querySelector("a").innerHTML +=
             '<span id="notificationDot" style="display:none; color: red;">●</span>';
     } else {
         navLinks.innerHTML += getLi("login","LogIn");
