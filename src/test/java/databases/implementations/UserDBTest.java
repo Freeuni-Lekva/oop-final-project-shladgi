@@ -60,6 +60,10 @@ public class UserDBTest {
         assertEquals(4, userDB.query(allFilter).size());
         userDB.add(u5);
         assertEquals(5, userDB.query(allFilter).size());
+        userDB.updateType(List.of(new FilterCondition<>(UserField.ID,Operator.EQUALS,u5.getId())), UserType.Admin);
+        assertEquals(3, userDB.query(new FilterCondition<>(UserField.TYPE,Operator.EQUALS, UserType.Admin.toString())).size());
+        assertEquals(UserType.Admin, userDB.query(new FilterCondition<>(UserField.ID,Operator.EQUALS,u5.getId())).getFirst().getType() );
+        userDB.updateType(List.of(new FilterCondition<>(UserField.ID,Operator.EQUALS,u5.getId())), UserType.Basic);
     }
 
 

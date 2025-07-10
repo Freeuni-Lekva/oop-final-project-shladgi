@@ -15,10 +15,10 @@ public class UserDB extends DataBase<User, UserField> {
     public UserDB(Connection con ) {super(con, User.class);}
     public void updateType(List<FilterCondition<UserField>> filterConditions, UserType type) {
         String filterString = FilterBuilder.buildFilter(filterConditions);
-        try (PreparedStatement stmt = con.prepareStatement("UPDATE " + tableName + " SET  type = "+ type +   " WHERE " + filterString)) {
+        try (PreparedStatement stmt = con.prepareStatement("UPDATE " + tableName + " SET  type = '"+ type +   "' WHERE " + filterString)) {
              stmt.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException("DELETE ERROR \n" + e.getMessage());
+            throw new RuntimeException("update ERROR \n" + e.getMessage());
         }
 
 
