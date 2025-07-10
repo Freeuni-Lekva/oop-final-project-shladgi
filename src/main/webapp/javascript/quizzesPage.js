@@ -48,11 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
 function updateURL(page, filters) {
     const urlParams = new URLSearchParams();
     if (page > 1) urlParams.set('page', page);

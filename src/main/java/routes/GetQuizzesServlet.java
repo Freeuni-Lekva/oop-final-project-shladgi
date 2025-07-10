@@ -29,7 +29,7 @@ import static utils.Constants.QUIZDB;
 import static utils.Constants.USERDB;
 
 @WebServlet("/quizzes")
-public class QuizzesServlet extends HttpServlet {
+public class GetQuizzesServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.getRequestDispatcher("/quizzes.html").forward(request, response);
@@ -41,10 +41,9 @@ public class QuizzesServlet extends HttpServlet {
         ServletContext context = req.getServletContext();
         UserDB userDB = (UserDB) context.getAttribute(USERDB);
         QuizDB quizDB = (QuizDB) context.getAttribute(QUIZDB);
-
-        String userIdStr = req.getSession().getAttribute("userid")==null?null:req.getSession().getAttribute("userid").toString();
-        Integer userid = userIdStr==null?null:Integer.parseInt(userIdStr);
-        int id = userid==null? -1 : userid;
+        Object o =  req.getSession().getAttribute("userid");
+        String userIdStr = o == null ? null: o.toString();
+        int id = userIdStr==null || userIdStr.isEmpty() ? -1:Integer.parseInt(userIdStr);
 
         try {
             // Parse JSON request body
