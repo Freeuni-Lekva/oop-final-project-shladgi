@@ -167,7 +167,8 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin, d
 export async function getUserDiv(receiverUsername) {
     const div = document.createElement("div");
     div.className = "user-div alert alert-info d-flex align-items-center justify-content-between mb-2 p-2";
-
+    const myName = await loadSessionValue("username");
+    console.log(myName);
     const userLink = document.createElement("a");
     userLink.href = `/user.html?username=${encodeURIComponent(receiverUsername)}`;
     userLink.textContent = receiverUsername;
@@ -190,8 +191,9 @@ export async function getUserDiv(receiverUsername) {
         if (!response.ok) throw new Error("Failed to fetch friend status");
 
         const status = await response.json();
-        await updateButtons(status, btnGroup, receiverUsername, admin, div);
-
+        if(myName !== receiverUsername){
+            await updateButtons(status, btnGroup, receiverUsername, admin, div);
+        }
     } catch (error) {
         alert(error.message);
     }
