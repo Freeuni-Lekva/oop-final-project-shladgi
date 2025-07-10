@@ -25,6 +25,18 @@ public class QuestionMultiChoice extends Question{
         this.exactMatch = exactMatch;
     }
 
+    public QuestionMultiChoice(int quizId, String question, List<Integer> correctChoices, List<String> choices, boolean exactMatch, String imageLink, double weight) {
+        this.type = QType.MultiChoice;
+        this.maxScore = correctChoices.size();
+        this.question = question;
+        this.correctChoices = correctChoices;
+        this.choices = choices;
+        this.exactMatch = exactMatch;
+        this.quizId = quizId;
+        this.imageLink = imageLink;
+        this.weight = weight;
+    }
+
     // this is a constructor that constructs the object from database table information.
     public QuestionMultiChoice(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
         super(id,quizId,question,imageLink,maxScore, weight,json,  QType.SingleChoice);
@@ -44,6 +56,11 @@ public class QuestionMultiChoice extends Question{
             else return 0;
         }
         return points;
+    }
+
+    @Override
+    public void hideAnswers() {
+        correctChoices = null;
     }
 
     @Override

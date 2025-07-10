@@ -1,6 +1,9 @@
 import {addQuestion} from "./questionAdd.js"
+import {saveQuestion} from "./qustionSaving.js";
+import {deleteQuiz} from "./quizDeletion.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const addButton = document.getElementById("addQuestin");
+    const addButton = document.getElementById("addQuestion");
     addButton.addEventListener('click', addQuestion);
 
 
@@ -28,15 +31,51 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.delete("timelimithours");
         formData.delete("timelimitminutes");
 
+
+        const pointInputs = document.querySelectorAll('.points-input');
+
+        let totalPoints = 0;
+
+        pointInputs.forEach(input => {
+            totalPoints += parseInt(input.value, 10);
+        });
+
+        formData.set("totalquestions", pointInputs.length.toString());
+        formData.set("totalpoints", totalPoints.toString());
         // Send to servlet
         fetch("/createQuiz", {
             method: "POST",
             body: new URLSearchParams(formData)
         })
             .then(response => response.json())
-            .then(data => {
+            .then(async data => {
+
                 if (data.success) {
-                    window.location.href = `/startQuiz?id=${data.quizid}`; // Change as needed
+                    const quizid = data.quizid;
+
+                    const container = document.getElementById("questionContainer");
+                    const questionDivs = container.children;
+                    let failedSaving = false;
+                    for (const div of questionDivs) {
+                        const type = div.dataset.qtype;
+                        if (type) {
+                            const answer = await saveQuestion(div, quizid, type);
+                            if(answer.success === false){
+                                const error = document.getElementById("errorText");
+                                error.textContent = answer.message;
+                                deleteQuiz(quizid);
+                                failedSaving = true;
+                                break;
+                            }
+
+
+                        } else {
+                            console.warn("Missing data-question-type on a question div.");
+                        }
+                    }
+
+                    // Then redirect (optional: only after all saveQuestion calls succeed)
+                    if(!failedSaving) window.location.href = `/startQuiz?id=${quizid}`;
                 } else {
                     const error = document.getElementById("errorText");
                     error.textContent = data.message;

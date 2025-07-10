@@ -21,6 +21,20 @@ public class QuestionTextAnswer extends Question {
         }
     }
 
+    public QuestionTextAnswer(int quizid, String imageLink, String question, List<String> correctAnswers, boolean exactMatch, double weight) {
+        this.type = QType.TextAnswer;
+        this.maxScore = 1;
+        this.exactMatch = exactMatch;
+        this.question = question;
+        this.correctAnswers = new ArrayList<>();
+        for (String s : correctAnswers) {
+            this.correctAnswers.add(s);
+        }
+        this.quizId = quizid;
+        this.imageLink = imageLink;
+        this.weight = weight;
+    }
+
     public QuestionTextAnswer(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
         super(id,quizId,question,imageLink,maxScore, weight,json, QType.TextAnswer);
     }
@@ -35,6 +49,11 @@ public class QuestionTextAnswer extends Question {
             if (myEquals((String) answer.get(), correctAnswers.get(i))) return 1;
 
         return 0;
+    }
+
+    @Override
+    public void hideAnswers() {
+        correctAnswers = null;
     }
 
     @Override
