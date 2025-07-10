@@ -7,6 +7,7 @@ import databases.filters.fields.UserField;
 import databases.implementations.FriendRequestDB;
 import databases.implementations.FriendshipDB;
 import databases.implementations.UserDB;
+import objects.user.FriendRequest;
 import objects.user.Friendship;
 import objects.user.User;
 
@@ -59,6 +60,17 @@ public class UserFriendAcceptServlet extends HttpServlet {
             int id2 = user2.getId();
             int firstId = Math.min(id1, id2);
             int secondId = Math.max(id1, id2);
+
+            //Check if friend request exists
+            List<FriendRequest> req = friendRequestDB.query(
+                    new FilterCondition<>(FriendRequestField.FIRSTID, Operator.EQUALS, user1.getId()),
+                    new FilterCondition<>(FriendRequestField.SECONDID, Operator.EQUALS, user2.getId())
+            );
+
+            if(req.isEmpty()){
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
 
             // Add friendship
             Friendship f1 = new Friendship(firstId, secondId, LocalDateTime.now());

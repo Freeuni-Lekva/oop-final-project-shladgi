@@ -1,5 +1,6 @@
 package routes;
 
+import com.google.gson.Gson;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.FriendshipField;
@@ -30,8 +31,6 @@ public class UserFriendRemove extends HttpServlet {
 
         String user1 = (String) request.getSession().getAttribute("username");
         String user2 = request.getParameter("target");
-        System.out.println("user1: " + user1);
-        System.out.println("user2: " + user2);
         List<User> u1 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, user1));
         List<User> u2 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, user2));
         User us1 = u1.get(0);
@@ -42,6 +41,12 @@ public class UserFriendRemove extends HttpServlet {
             return;
         }
 
-        friendship.delete(new FilterCondition<>(FriendshipField.FIRSTID, Operator.EQUALS, us1.getId()), new FilterCondition<>(FriendshipField.SECONDID, Operator.EQUALS, us2.getId()));
+        int id1 = Math.min(us1.getId(), us2.getId());
+        int id2 = Math.max(us1.getId(), us2.getId());
+
+        friendship.delete(
+                new FilterCondition<>(FriendshipField.FIRSTID, Operator.EQUALS, id1),
+                new FilterCondition<>(FriendshipField.SECONDID, Operator.EQUALS, id2)
+        );
     }
 }
