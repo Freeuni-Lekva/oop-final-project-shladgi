@@ -2,6 +2,12 @@ export function getFillInChoicesWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
 
+    // Display the question text
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = data.question;
+    container.appendChild(questionText);
+
     // Optional image
     if (data.imageLink) {
         const img = document.createElement('img');
@@ -19,69 +25,48 @@ export function getFillInChoicesWhileTakingDiv(data) {
         container.appendChild(weightInfo);
     }
 
-    // Process the question text with blanks
-    const questionParts = splitQuestionWithBlanks(data.question, data.blanks);
-    const questionText = document.createElement('div');
-    questionText.className = 'question-text';
+    // Create answer fields based on correctAnswers or choices
+    const answersContainer = document.createElement('div');
+    answersContainer.className = 'answers-container';
 
-    questionParts.forEach((part, index) => {
-        if (part.isBlank) {
-            const select = document.createElement('select');
-            select.style.margin = '0 5px';
-            select.dataset.blankIndex = index;
+    // Determine how many answer fields to create
+    const answerCount = data.correctAnswers?.length || data.choices?.length || 1;
 
-            // Add options from choices
-            if (data.choices && data.choices[index]) {
-                data.choices[index].forEach((choice, choiceIndex) => {
-                    const option = document.createElement('option');
-                    option.value = choiceIndex;
-                    option.textContent = choice;
-                    select.appendChild(option);
-                });
-            }
+    for (let i = 0; i < answerCount; i++) {
+        const answerGroup = document.createElement('div');
+        answerGroup.className = 'answer-group';
 
-            questionText.appendChild(select);
-        } else {
-            questionText.appendChild(document.createTextNode(part.text));
-        }
-    });
+        const label = document.createElement('label');
+        label.textContent = `Answer ${i + 1}:`;
+        answerGroup.appendChild(label);
 
-    container.appendChild(questionText);
-    return container;
-}
+        const select = document.createElement('select');
+        select.style.margin = '0 5px';
+        select.dataset.answerIndex = i;
+        select.required = true;
 
-function splitQuestionWithBlanks(question, blanks) {
-    const parts = [];
-    let lastPos = 0;
+        // Add default empty option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "-- Select --";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        select.appendChild(defaultOption);
 
-    // Sort blanks to process in order
-    const sortedBlanks = [...blanks].sort((a, b) => a - b);
-
-    sortedBlanks.forEach(pos => {
-        // Add text before blank
-        if (pos > lastPos) {
-            parts.push({
-                text: question.substring(lastPos, pos),
-                isBlank: false
+        // Add options from choices (use choices[i] if available, otherwise empty)
+        if (data.choices && data.choices[i]) {
+            data.choices[i].forEach((choice, choiceIndex) => {
+                const option = document.createElement('option');
+                option.value = choiceIndex;
+                option.textContent = choice;
+                select.appendChild(option);
             });
         }
 
-        // Add blank
-        parts.push({
-            text: '',
-            isBlank: true
-        });
-
-        lastPos = pos + 2; // Skip the __
-    });
-
-    // Add remaining text after last blank
-    if (lastPos < question.length) {
-        parts.push({
-            text: question.substring(lastPos),
-            isBlank: false
-        });
+        answerGroup.appendChild(select);
+        answersContainer.appendChild(answerGroup);
     }
 
-    return parts;
+    container.appendChild(answersContainer);
+    return container;
 }

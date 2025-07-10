@@ -2,6 +2,14 @@ export function getFillInBlanksWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
 
+
+
+    // Display the question text
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = data.question;
+    container.appendChild(questionText);
+
     // Optional image
     if (data.imageLink) {
         const img = document.createElement('img');
@@ -19,60 +27,33 @@ export function getFillInBlanksWhileTakingDiv(data) {
         container.appendChild(weightInfo);
     }
 
-    // Process the question text with blanks
-    const questionParts = splitQuestionWithBlanks(data.question, data.blanks);
-    const questionText = document.createElement('div');
-    questionText.className = 'question-text';
 
-    questionParts.forEach((part, index) => {
-        if (part.isBlank) {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.style.width = '100px';
-            input.style.margin = '0 5px';
-            input.dataset.blankIndex = index;
-            questionText.appendChild(input);
-        } else {
-            questionText.appendChild(document.createTextNode(part.text));
-        }
-    });
+    // Create answer fields based on correctAnswers or choices
+    const answersContainer = document.createElement('div');
+    answersContainer.className = 'answers-container';
 
-    container.appendChild(questionText);
-    return container;
-}
+    // Determine how many answer fields to create
+    const answerCount = data.correctAnswers?.length || data.choices?.length || 1;
 
-function splitQuestionWithBlanks(question, blanks) {
-    const parts = [];
-    let lastPos = 0;
+    for (let i = 0; i < answerCount; i++) {
+        const answerGroup = document.createElement('div');
+        answerGroup.className = 'answer-group';
 
-    // Sort blanks to process in order
-    const sortedBlanks = [...blanks].sort((a, b) => a - b);
+        const label = document.createElement('label');
+        label.textContent = `Answer ${i + 1}:`;
+        answerGroup.appendChild(label);
 
-    sortedBlanks.forEach(pos => {
-        // Add text before blank
-        if (pos > lastPos) {
-            parts.push({
-                text: question.substring(lastPos, pos),
-                isBlank: false
-            });
-        }
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.style.width = '100px';
+        input.style.margin = '0 5px';
+        input.dataset.answerIndex = i;
+        input.required = true;
+        answerGroup.appendChild(input);
 
-        // Add blank
-        parts.push({
-            text: '',
-            isBlank: true
-        });
-
-        lastPos = pos + 2; // Skip the __
-    });
-
-    // Add remaining text after last blank
-    if (lastPos < question.length) {
-        parts.push({
-            text: question.substring(lastPos),
-            isBlank: false
-        });
+        answersContainer.appendChild(answerGroup);
     }
 
-    return parts;
+    container.appendChild(answersContainer);
+    return container;
 }
