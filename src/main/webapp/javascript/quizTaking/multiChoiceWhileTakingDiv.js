@@ -9,6 +9,6 @@ export function getMultiChoiceWhileTakingDiv(data){
 }
 
 
-export function evalAnswerMultiChoice(div, questionid, quizid, userid){
+export function evalAnswerMultiChoice(div, questionid, userresultid, userid){
 
 }
