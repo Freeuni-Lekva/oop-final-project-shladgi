@@ -191,7 +191,7 @@ export async function getUserDiv(receiverUsername) {
         if (!response.ok) throw new Error("Failed to fetch friend status");
 
         const status = await response.json();
-        if(myName !== receiverUsername){
+        if(myName == null||  myName.length ===0|| myName !== receiverUsername){
             await updateButtons(status, btnGroup, receiverUsername, admin, div);
         }
     } catch (error) {

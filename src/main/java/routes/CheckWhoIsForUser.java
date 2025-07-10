@@ -36,7 +36,7 @@ public class CheckWhoIsForUser extends HttpServlet {
         String target = request.getParameter("target");
 
         if (username == null || target == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+
             return;
         }
 
