@@ -2,14 +2,18 @@
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const quizId = params.get("id");
-    const practise = params.get("practise");
 
-    if (!quizId || practise === null) {
+    const practice = params.get("practice");
+
+    if (!quizId || practice === null) {
+
         showStartLink("Missing parameters.");
         return;
     }
 
-    fetch(`/checkBeforeQuiz?id=${encodeURIComponent(quizId)}&practise=${encodeURIComponent(practise)}`)
+
+    fetch(`/checkBeforeQuiz?id=${encodeURIComponent(quizId)}&practice=${encodeURIComponent(practice)}`)
+
         .then(response => response.json())
         .then(data => {
             if (!data.success) {

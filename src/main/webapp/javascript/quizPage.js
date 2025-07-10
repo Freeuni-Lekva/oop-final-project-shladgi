@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Start Quiz button click handler
     document.getElementById("startQuizButton").addEventListener("click", () => {
         const practice = document.getElementById("practiceMode").checked;
-
+        console.log(practice);
         fetch("startQuiz", {
             method: "POST",
             headers: {
@@ -121,7 +121,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.success) {
                     // es merea dasaweri
-                    window.location.href = "/quiz?id=" + quizId + "&practice=" + practice;
+
+                    window.location.href = `/quiz?id=${encodeURIComponent(quizId)}&practice=${encodeURIComponent(practice)}`;
+
                 } else {
                     statusDiv.textContent = "❌ " + data.message;
                     statusDiv.style.color = "red";
