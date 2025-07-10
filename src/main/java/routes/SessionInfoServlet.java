@@ -17,7 +17,8 @@ public class SessionInfoServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
-        Object value = (String)request.getParameter("key");
+        String key = (String)request.getParameter("key");
+        Object value = session.getAttribute(key);
         //this might be userid, username or type
         JsonObject json = new JsonObject();
 
