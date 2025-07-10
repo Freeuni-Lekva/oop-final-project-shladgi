@@ -1,4 +1,3 @@
-import {getSingleChoiceDiv} from "../quizCreation/singleChoiceDiv";
 import {getTextAnswerWhileTakingDiv} from "./textAnswerWhileTakingDiv";
 import {getSingleChoiceWhileTakingDiv} from "./singleChoiceWhileTakingDiv";
 import {getFillInBlanksWhileTakingDiv} from "./fillInBlanksWhileTakingDiv";
