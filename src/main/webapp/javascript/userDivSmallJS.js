@@ -1,6 +1,6 @@
 import { loadSessionValue } from './getSessionInfo.js';
-import { loadRequests } from './userPage/loadFriendRequests.js';
-import { loadFriendsSection } from './userPage/loadFriendsSection.js';
+//import { loadRequests } from './userPage/loadFriendRequests.js';
+//import { loadFriendsSection } from './userPage/loadFriendsSection.js';
 
 function addAdminButton(admin, receiverUsername, btnGroup, div) {
     if (admin === "Admin") {
@@ -196,6 +196,5 @@ export async function getUserDiv(receiverUsername) {
     } catch (error) {
         alert(error.message);
     }
-
     return div;
 }

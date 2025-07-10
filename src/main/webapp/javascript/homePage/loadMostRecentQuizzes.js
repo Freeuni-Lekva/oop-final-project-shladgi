@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         const response = await fetch("/recent-quizzes", {
             method: "POST"
-            // no need for headers/content-type if no body
+            // no need for headers if no body
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        container.innerHTML = "";
+        container.innerHTML = ""; // clear before adding new content
 
         const row = document.createElement("div");
         row.className = "row g-3";
@@ -36,21 +36,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             title.className = "card-title";
 
             const link = document.createElement("a");
-            link.href = `/quiz?id=${quiz.id}`; // adjust if needed
+            link.href = `/quiz?id=${quiz.id}`;
             link.textContent = quiz.title;
-            link.style.textDecoration = "none";
-            link.style.color = "inherit";
+            link.className = "text-decoration-none link-dark"; // clean Bootstrap styling
 
             title.appendChild(link);
 
-            // Info (since no description or totalQuestions)
+            // Creation date
             const info = document.createElement("p");
             info.className = "card-text text-muted small";
             info.textContent = `Created: ${quiz.creationTime}`;
 
             cardBody.appendChild(title);
             cardBody.appendChild(info);
-
             card.appendChild(cardBody);
             col.appendChild(card);
             row.appendChild(col);

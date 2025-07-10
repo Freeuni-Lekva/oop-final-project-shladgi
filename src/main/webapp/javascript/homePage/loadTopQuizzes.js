@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        container.innerHTML = "";
+        container.innerHTML = ""; // clear before adding new content
 
         const row = document.createElement("div");
         row.className = "row g-3";
@@ -36,21 +36,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             title.className = "card-title";
 
             const link = document.createElement("a");
-            link.href = `/quiz?id=${quiz.id}`; // adjust if needed
+            link.href = `/quiz?id=${quiz.id}`; // adjust path if needed
             link.textContent = quiz.title;
-            link.style.textDecoration = "none";
-            link.style.color = "inherit";
+            link.className = "text-decoration-none link-dark"; // bootstrap classes
 
             title.appendChild(link);
 
-            // Info (since no description or totalQuestions)
+            // Additional info (e.g., creation date)
             const info = document.createElement("p");
             info.className = "card-text text-muted small";
             info.textContent = `Created: ${quiz.creationTime}`;
 
             cardBody.appendChild(title);
             cardBody.appendChild(info);
-
             card.appendChild(cardBody);
             col.appendChild(card);
             row.appendChild(col);

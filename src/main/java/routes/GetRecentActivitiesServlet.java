@@ -1,5 +1,6 @@
 package routes;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
@@ -16,13 +17,12 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static utils.Constants.*;
 
 @WebServlet("/recent-activities")
-public class loadRecentActivitiesServlet extends HttpServlet {
+public class GetRecentActivitiesServlet extends HttpServlet {
 
     private static class Activity {
         public JsonObject json;           // holds the JSON object describing the activity
@@ -43,8 +43,12 @@ public class loadRecentActivitiesServlet extends HttpServlet {
         QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
 
         String username = (String) request.getSession().getAttribute("username");
-        if (username == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (username == null || username.equals("")) {
+            Gson gson = new Gson();
+            String jsonString = gson.toJson("notInAcc");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(jsonString);
             return;
         }
 
