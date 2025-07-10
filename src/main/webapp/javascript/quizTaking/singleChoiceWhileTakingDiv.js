@@ -82,7 +82,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
 
 export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid) {
     // Get the selected radio button
-    const selectedRadio = div.querySelector('input[type="radio"][name="singleChoice"]:checked');
+    const selectedRadio = div.querySelector(`input[type="radio"][name="singleChoice-${questionid}"]:checked`);
 
     if (!selectedRadio) {
         console.error("No answer selected for question", questionid);
@@ -105,7 +105,7 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
     };
 
     try {
-        const response = await fetch('/SubmitAnswerServlet', {
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -104,7 +104,7 @@ export async function evalAnswerFillInChoices(div, questionid, quizresultid, use
     };
 
     try {
-        const response = await fetch('/SubmitAnswerServlet', {
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

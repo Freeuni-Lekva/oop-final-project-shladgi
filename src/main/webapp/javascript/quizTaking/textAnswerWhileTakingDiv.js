@@ -58,8 +58,8 @@ export async function evalAnswerTextAnswer(div, questionid, quizresultid, userid
     // Prepare the JSON object as per your structure
     const dataToSend = {
         userId: userid,
-        questionId: questionId,
-        resultId: resultId,
+        questionId: questionid,
+        resultId: quizresultid,
         userAnswer: {
             isString: true,       // Since this is a text answer
             choices: userAnswers   // For text input, store the string answer in 'choices'
@@ -67,7 +67,7 @@ export async function evalAnswerTextAnswer(div, questionid, quizresultid, userid
     };
 
     try {
-        const response = await fetch('/saveAnswer', {  // Change URL to your servlet path
+        const response = await fetch('/evalAndSaveUserAnswer', {  // Change URL to your servlet path
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -73,7 +73,7 @@ export async function evalAnswerMultiChoice(div, questionId, resultId, userId) {
     };
 
     try {
-        const response = await fetch('/saveAnswer', {
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

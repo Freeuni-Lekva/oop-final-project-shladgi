@@ -65,21 +65,13 @@ public class EvalSaveUserAnswerServlet extends HttpServlet {
             return;
         }
 
-        String sessionUserIdStr = (String) session.getAttribute("userid");
-        if (sessionUserIdStr == null) {
+        Integer sessionUserId = (Integer) session.getAttribute("userid");
+        if (sessionUserId == null) {
             retErr("Not logged in", response);
             return;
         }
 
-        int sessionUserIdInt;
-        try {
-            sessionUserIdInt = Integer.parseInt(sessionUserIdStr);
-        } catch (NumberFormatException e) {
-            retErr("Invalid user ID in session", response);
-            return;
-        }
-
-        if (userId != sessionUserIdInt) {
+        if (userId != sessionUserId) {
             retErr("Wrong User", response);
             return;
         }

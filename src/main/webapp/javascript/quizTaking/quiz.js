@@ -1,10 +1,14 @@
 import { getQuestionWhileTaking } from "./questionWhileTaking.js";
+import {loadSessionValue} from "../getSessionInfo.js";
+import {evalAnswer} from "./answerSaveWhileTaking.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     const quizId = params.get("id");
     const practiceModeStr = params.get("practice");
-    const practiceMode = practiceModeStr==="true";
+    const practiceMode = practiceModeStr === "true";
+    const userid = await loadSessionValue("userid");
+
     fetch("/quiz", {
         method: "POST",
         headers: {
@@ -25,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const immediateCorrection = data.immediatecorrection;
             const quizResultId = data.quizresultid;
             const practicemode = data.practicemode;
-            if(!practicemode) {
+            if (!practicemode) {
                 //TODO
             }
 
@@ -53,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const questionDiv = getQuestionWhileTaking(q);
                         questionDiv.classList.add("question");
                         document.body.appendChild(questionDiv);
-                        questionDivs.push({ div: questionDiv, question: q });
+                        questionDivs.push({div: questionDiv, question: q});
                     });
                 };
 
@@ -63,19 +67,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 submitBtn.textContent = "Submit All";
                 document.body.appendChild(submitBtn);
 
-                submitBtn.onclick = () => {
+                submitBtn.onclick = async () => {
                     let totalScore = 0;
                     let maxScore = 0;
 
-                    questionDivs.forEach(({ div, question }) => {
-                        const earned = evaluateAnswer(div, question, quizResultId);
-                        totalScore += earned;
+                    for (const {div, question} of questionDivs) {
+                        const json = await evaluateAnswer(div, question, quizResultId, userid);
+                        totalScore += json.points;
                         maxScore += question.weight || 1;
 
                         if (practiceMode && earned > 0) {
                             question.correctCount++;
                         }
-                    });
+                    }
 
                     if (practiceMode) {
                         questions = questions.filter(q => q.correctCount < 3);
@@ -98,110 +102,109 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.body.appendChild(homeLink);
                 };
 
-            }
+            } else {
+                let totalscore = 0;
+                let maxscore = 0;
+                let currentIndex = 0;
 
-            else {
-        let totalscore = 0;
-        let maxscore = 0;
-        let currentIndex = 0;
+                // Initialize correctCount for each question
+                if (practiceMode) {
+                    questions.forEach(q => q.correctCount = 0);
+                }
 
-        // Initialize correctCount for each question
-        if (practiceMode) {
-            questions.forEach(q => q.correctCount = 0);
-        }
+                const renderQuestion = () => {
+                    console.log("Current id " + currentIndex + "total " + questions.length)
+                    if (questions.length === 0 || (!practiceMode && currentIndex >= questions.length)) {
+                        showFinalSubmit();
+                        return;
+                    }
 
-        const renderQuestion = () => {
-            console.log("Current id "+currentIndex + "total " + questions.length)
-            if (questions.length === 0 || (!practiceMode && currentIndex >= questions.length) ) {
-                showFinalSubmit();
-                return;
-            }
+                    // Wrap currentIndex to avoid out-of-bounds
+                    currentIndex = currentIndex % questions.length;
 
-            // Wrap currentIndex to avoid out-of-bounds
-            currentIndex = currentIndex % questions.length;
-
-            const q = questions[currentIndex];
-            document.body.innerHTML = `
+                    const q = questions[currentIndex];
+                    document.body.innerHTML = `
             <h2>${data.title}</h2>
             <p>${data.description}</p>
         `;
 
-            const qDiv = getQuestionWhileTaking(q, currentIndex);
-            qDiv.classList.add("question");
-            document.body.appendChild(qDiv);
+                    const qDiv = getQuestionWhileTaking(q, currentIndex);
+                    qDiv.classList.add("question");
+                    document.body.appendChild(qDiv);
 
-            const submitBtn = document.createElement("button");
-            submitBtn.textContent = "Submit";
+                    const submitBtn = document.createElement("button");
+                    submitBtn.textContent = "Submit";
 
-            submitBtn.onclick = () => {
-                const points = evaluateAnswer(qDiv, q, quizResultId);
-                totalscore += points;
-                maxscore += q.weight;
+                    submitBtn.onclick = async () => {
+                        const json = await evaluateAnswer(qDiv, q, quizResultId, userid);
+                        totalscore += json.points;
+                        maxscore += q.weight;
 
-                if (practiceMode && points === q.weight) {
-                    q.correctCount++;
-                }
+                        if (practiceMode && points === q.weight) {
+                            q.correctCount++;
+                        }
 
-                const isCompleted = q.correctCount >= 3;
+                        const isCompleted = q.correctCount >= 3;
 
-                if (isCompleted) {
-                    questions.splice(currentIndex, 1);
-                    currentIndex = currentIndex % questions.length;
-                    // Don't increment currentIndex, stay at the same index
-                } else if(practiceMode){
-                    currentIndex = (currentIndex + 1) % questions.length;
-                } else {
-                    currentIndex++;
-                }
+                        if (isCompleted) {
+                            questions.splice(currentIndex, 1);
+                            currentIndex = currentIndex % questions.length;
+                            // Don't increment currentIndex, stay at the same index
+                        } else if (practiceMode) {
+                            currentIndex = (currentIndex + 1) % questions.length;
+                        } else {
+                            currentIndex++;
+                        }
 
 
-                if (immediateCorrection) {
-                    submitBtn.style.display = "none";
-                    const feedback = document.createElement("div");
-                    feedback.textContent = points > 0 ? "Correct!" : "Incorrect!";
-                    document.body.appendChild(feedback);
+                        if (immediateCorrection) {
+                            submitBtn.style.display = "none";
+                            const feedback = document.createElement("div");
+                            console.log(json);
+                            feedback.textContent = json.points > 0 ? "Correct!" : "Incorrect!";
+                            document.body.appendChild(feedback);
 
-                    const nextBtn = document.createElement("button");
-                    nextBtn.textContent = "Next Question";
-                    nextBtn.onclick = () => {
-                        qDiv.remove();
-                        feedback.remove();
-                        nextBtn.remove();
-                        renderQuestion(); // proceed to next
+                            const nextBtn = document.createElement("button");
+                            nextBtn.textContent = "Next Question";
+                            nextBtn.onclick = () => {
+                                qDiv.remove();
+                                feedback.remove();
+                                nextBtn.remove();
+                                renderQuestion(); // proceed to next
+                            };
+                            document.body.appendChild(nextBtn);
+                        } else {
+                            renderQuestion(); // proceed to next directly
+                        }
                     };
-                    document.body.appendChild(nextBtn);
-                } else {
-                    renderQuestion(); // proceed to next directly
-                }
-            };
 
-            document.body.appendChild(submitBtn);
-        };
+                    document.body.appendChild(submitBtn);
+                };
 
-        const showFinalSubmit = () => {
-            document.body.innerHTML = "<h3>All questions completed!</h3>";
-            const finalBtn = document.createElement("button");
-            finalBtn.textContent = "Submit Quiz";
-            finalBtn.onclick = () => {
-                const resultDiv = document.createElement("div");
-                resultDiv.innerHTML = `<h3>Your Score: ${totalscore} / ${maxscore}</h3>`;
-                document.body.appendChild(resultDiv);
-                finalBtn.remove();
-            };
-            document.body.appendChild(finalBtn);
+                const showFinalSubmit = () => {
+                    document.body.innerHTML = "<h3>All questions completed!</h3>";
+                    const finalBtn = document.createElement("button");
+                    finalBtn.textContent = "Submit Quiz";
+                    finalBtn.onclick = () => {
+                        const resultDiv = document.createElement("div");
+                        resultDiv.innerHTML = `<h3>Your Score: ${totalscore} / ${maxscore}</h3>`;
+                        document.body.appendChild(resultDiv);
+                        finalBtn.remove();
+                    };
+                    document.body.appendChild(finalBtn);
 
-            const homeLink = document.createElement("a");
-            homeLink.href = "/home";
-            homeLink.textContent = "Go Home";
-            homeLink.style.display = "block";
-            homeLink.style.marginTop = "1em";
-            document.body.appendChild(homeLink);
-        };
+                    const homeLink = document.createElement("a");
+                    homeLink.href = "/home";
+                    homeLink.textContent = "Go Home";
+                    homeLink.style.display = "block";
+                    homeLink.style.marginTop = "1em";
+                    document.body.appendChild(homeLink);
+                };
 
-        renderQuestion(); // initial render
-    }
+                renderQuestion(); // initial render
+            }
 
-})
+        })
         .catch(error => {
             console.error("Fetch failed", error);
         });
@@ -214,6 +217,8 @@ function shuffleArray(array) {
     }
 }
 
-function evaluateAnswer(div, questionData, quizResultId) {
-    return 1; // Replace with real evaluation
+async function evaluateAnswer(div, questionData, quizResultId, userid) {
+    const msg = await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
+    console.log(msg);
+    return msg;  // Replace with real evaluation
 }
