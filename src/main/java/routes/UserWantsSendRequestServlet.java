@@ -32,6 +32,12 @@ public class UserWantsSendRequestServlet extends HttpServlet {
 
         List<User> us1 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS,  username));
         List<User> us2 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS,  target));
+
+        if(us1.isEmpty() || us2.isEmpty()){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         User user1 =  us1.get(0);
         User user2 =  us2.get(0);
 
