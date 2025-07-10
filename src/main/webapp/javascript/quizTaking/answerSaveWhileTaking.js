@@ -3,7 +3,7 @@ import { evalAnswerMultiChoice } from "./multiChoiceWhileTakingDiv.js";
 import { evalAnswerTextAnswer } from "./textAnswerWhileTakingDiv.js";
 import { evalAnswerMultiTextAnswer } from "./multiTextAnswerWhileTakingDiv.js";
 import { evalAnswerFillInBlanks } from "./fillInBlanksWhileTakingDiv.js";
-import { evalAnswerFillInChoices } from "./fillInChoicesWhileTakingDiv";
+import { evalAnswerFillInChoices } from "./fillInChoicesWhileTakingDiv.js";
 
 const QType = {
     SingleChoice: "SingleChoice",

@@ -16,27 +16,27 @@ public class SessionInfoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession(false);
-        String value = (String)request.getParameter("key");
+        HttpSession session = request.getSession();
+        Object value = (String)request.getParameter("key");
         //this might be userid, username or type
-        String answer = null;
-        if(session == null){
-            JsonObject json = new JsonObject();
-            json.addProperty("value", answer);
-            try {
-                response.getWriter().write(json.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-        if(session.getAttribute(value) != null){
-            answer = session.getAttribute(value).toString();
+        JsonObject json = new JsonObject();
+
+        if (value instanceof String) {
+            json.addProperty("value", (String) value);
+        } else if (value instanceof Integer) {
+            json.addProperty("value", (Integer) value);
+        } else if (value instanceof Boolean) {
+            json.addProperty("value", (Boolean) value);
+        } else if (value instanceof Long) {
+            json.addProperty("value", (Long) value);
+        } else if (value instanceof Double) {
+            json.addProperty("value", (Double) value);
+        } else{
+            throw new RuntimeException("Unknown variable type in session");
         }
 
+
         try {
-            JsonObject json = new JsonObject();
-            json.addProperty("value", answer);
             response.getWriter().write(json.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -56,6 +56,8 @@ public class QuestionFillInChoices extends Question{
         if(answer.getSize() == 0) return 0;
         int points = 0;
         for(int i = 0; i < Math.min(this.correctIndexes.size(), answer.getSize()); i++){
+            System.out.println("corr : " + this.correctIndexes.get(i));
+            System.out.println((int)answer.get(i));
             if(this.correctIndexes.get(i) == (int)answer.get(i)) points++;
         }
         return points;

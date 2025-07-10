@@ -42,7 +42,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
     // Radio buttons for choices with proper accessibility
     const choiceList = document.createElement('div');
     choiceList.className = 'choice-list';
-    choiceList.setAttribute('role', 'radiogroup');
+    choiceList.setAttribute('role', `radiogroup`);
     choiceList.setAttribute('aria-labelledby', questionText.id);
 
     data.choices.forEach((choice, index) => {
@@ -55,7 +55,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
         const input = document.createElement('input');
         input.type = 'radio';
         input.id = choiceId;
-        input.name = 'singleChoice';
+        input.name = `singleChoice-${data.id}`;
         input.value = index;
         input.required = true; // At least one option must be selected
         input.setAttribute('aria-checked', 'false');
@@ -82,7 +82,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
 
 export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid) {
     // Get the selected radio button
-    const selectedRadio = div.querySelector('input[type="radio"][name="singleChoice"]:checked');
+    const selectedRadio = div.querySelector(`input[type="radio"][name="singleChoice-${questionid}"]:checked`);
 
     if (!selectedRadio) {
         console.error("No answer selected for question", questionid);
@@ -95,6 +95,7 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
         choices: [parseInt(selectedRadio.value)]  // Wrap in array as Answer expects list
     };
 
+
     // Prepare data for submission
     const submissionData = {
         userId: userid,
@@ -104,7 +105,7 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
     };
 
     try {
-        const response = await fetch('/SubmitAnswerServlet', {
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

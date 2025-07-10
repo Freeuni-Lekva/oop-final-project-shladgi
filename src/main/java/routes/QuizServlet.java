@@ -47,6 +47,46 @@ public class QuizServlet extends HttpServlet {
         String quizIdStr = request.getParameter("id");
         JsonObject json = new JsonObject();
 
+        HttpSession session = request.getSession();
+
+        if(session == null){
+            json.addProperty("success", false);
+            json.addProperty("message", "User not logged in!");
+            try {
+                response.getWriter().write(json.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+
+        }
+
+        Integer userId = (Integer)session.getAttribute("userid");
+
+        if(userId == null){
+            json.addProperty("success", false);
+            json.addProperty("message", "User not logged in!");
+            try {
+                response.getWriter().write(json.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+
+        if(session == null){
+            json.addProperty("success", false);
+            json.addProperty("message", "User not logged in!");
+            try {
+                response.getWriter().write(json.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+
+        }
+
         if (quizIdStr == null) {
             json.addProperty("success", false);
             json.addProperty("message", "Quiz ID not provided");
@@ -114,6 +154,17 @@ public class QuizServlet extends HttpServlet {
         json.addProperty("practicemode", quiz.isPracticeMode());
         json.addProperty("timelimit", quiz.getTimeLimit());
         json.addProperty("description", quiz.getDescription());
+
+        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
+
+        List<QuizResult> quizResults = quizResultDB.query(
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0));
+
+        QuizResult quizResult = quizResults.getFirst();
+
+        json.addProperty("quizresultid", quizResult.getId());
 
         try {
             response.getWriter().write(json.toString());
