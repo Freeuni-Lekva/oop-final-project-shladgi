@@ -80,4 +80,4 @@ INSERT INTO notes (senderid, recipientid, text, viewed) VALUES
                                                             (3, 2, 'Thanks for the challenge, let me know when you want a rematch!', false),
                                                             (4, 5, 'How did you solve question 4 on the Math test?', false),
                                                             (5, 4, 'Check out this new geography quiz I created!', false),
-                                                            (2, 4, 'Your history knowledge is impressive!', false);
+                                                            (2, 4, 'Your history knowledge is impressive!', false)
