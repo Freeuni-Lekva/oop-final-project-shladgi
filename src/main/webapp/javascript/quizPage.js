@@ -65,9 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("editDeleteSection").style.display = "block";
                 }
 
-                document.getElementById("editQuizBtn").onclick = () => {
-                    window.location.href = "/editQuiz?id=" + quizId;
-                };
 
                 document.getElementById("deleteQuizBtn").addEventListener("click", () => {
                     if (!confirm("Are you sure you want to delete this quiz? This action cannot be undone.")) return;
