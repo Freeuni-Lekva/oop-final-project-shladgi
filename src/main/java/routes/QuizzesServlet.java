@@ -65,6 +65,8 @@ public class QuizzesServlet extends HttpServlet {
             List<FilterCondition<QuizField>> filters = getFilters(qr, id);
 
             List<Quiz> quizes = quizDB.query(filters,QuizField.CREATIONDATE,true,qr.pageSize,(qr.page-1)*qr.pageSize);
+
+
             int size = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.NOTEQ,-1)).size();
             int totalPages = (int) Math.ceil((double) size / qr.pageSize);
 
@@ -87,7 +89,7 @@ public class QuizzesServlet extends HttpServlet {
             json.add("quizzes", jsonArray);
             json.addProperty("totalPages", totalPages);
 
-            System.out.println(json.toString());
+
             res.setContentType("application/json");
             res.setCharacterEncoding("UTF-8");
 
@@ -116,23 +118,25 @@ public class QuizzesServlet extends HttpServlet {
     private List<FilterCondition<QuizField>> getFilters(QuizRequest qr, int userid) {
         List<FilterCondition<QuizField>> ans= new ArrayList<>();
 
-        if(qr.creator.equals("Me")) {
+        if(qr.creator.equals("me")) {
             ans.add(new FilterCondition<>(QuizField.USERID, Operator.EQUALS, userid));
         } else if (qr.creator.equals("other")) {
             ans.add(new FilterCondition<>(QuizField.USERID, Operator.NOTEQ,userid ));
         }
-        ans.add(new FilterCondition<>(QuizField.TITLE, Operator.LIKE, "%"+qr.searchQuery+"%"));
-        ans.add(new FilterCondition<>(QuizField.DESCRIPTION, Operator.LIKE, "%"+qr.searchQuery+"%"));
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        ans.add(new FilterCondition<>(QuizField.TITLE, Operator.LIKE, "%"+qr.searchQuery.trim()+"%"));
 
         if(qr.dateFrom != null && qr.dateFrom.length()>0) {
-            String format = formatter.format(qr.dateFrom);
-            ans.add(new FilterCondition<>(QuizField.CREATIONDATE, Operator.MOREEQ, format));
+            System.out.println(1);
+
+            System.out.println(2);
+            ans.add(new FilterCondition<>(QuizField.CREATIONDATE, Operator.MOREEQ, qr.dateFrom));
+            System.out.println(3);
         }
+
         if(qr.dateTo != null && qr.dateTo.length()>0) {
-            String format = formatter.format(qr.dateTo);
-            ans.add(new FilterCondition<>(QuizField.CREATIONDATE, Operator.LESSEQ,format));
+
+            ans.add(new FilterCondition<>(QuizField.CREATIONDATE, Operator.LESSEQ,qr.dateTo));
         }
 
         return ans;

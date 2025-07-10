@@ -3,7 +3,32 @@ import { loadSessionValue } from "./getSessionInfo.js";
 export async function getQuizDiv(quiz){
     const userType = await loadSessionValue("type");
     const userid = await loadSessionValue("userid");
+    const userName = await loadSessionValue("username");
 
+    let r = document.createElement("div");
+    r.className= "col";
+    r.innerHTML+=`
+            <div class="card quiz-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title">${quiz.title}</h5>
+                        <a  href="/user?userName=${quiz.creatorName}" class="badge bg-primary">${quiz.creatorName || 'Unknown'}</a>
+                    </div>
+                
+                    <div  class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted d-block">Created: ${quiz.createDate}</small>
+                        </div>
+                        <a href="/startQuiz?id=${quiz.id}" class="btn btn-sm btn-primary">Take Quiz</a>
+                        <div class="forbtn">
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        `;
+
+    if(userName === quiz.creatorName || userType ==="Admin"){
     const removeBtn = document.createElement("button");
     removeBtn.className = "btn btn-danger btn-sm";
     removeBtn.textContent = "Remove Quiz";
@@ -18,7 +43,7 @@ export async function getQuizDiv(quiz){
             .then(data => {
                 if (data.success) {
                     alert("Quiz deleted successfully!");
-                   location.reload();
+                    location.reload();
 
                 } else {
                     alert("Error: " + data.message);
@@ -29,27 +54,9 @@ export async function getQuizDiv(quiz){
                 alert("Something went wrong.");
             });
     });
-    const r = document.createElement("div");
-    r.className= "col";
-    r.innerHTML+=`
-            <div class="card quiz-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <h5 class="card-title">${quiz.title}</h5>
-                        <a  href="/user?userName=${quiz.creatorName}" class="badge bg-primary">${quiz.creatorName || 'Unknown'}</a>
-                    </div>
-                
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted d-block">Created: ${quiz.createDate}</small>
-                        </div>
-                        <a href="/staetQuiz?id=${quiz.id}" class="btn btn-sm btn-primary">Take Quiz</a>
-                        ${userid === quiz.creatorid || userType ==="Admin" ? removeBtn : ""}
-                        
-                    </div>
-                </div>
-            </div>
-        `;
+
+        r.querySelector(".forbtn").appendChild(removeBtn);
+    }
 
     return r ;
 }

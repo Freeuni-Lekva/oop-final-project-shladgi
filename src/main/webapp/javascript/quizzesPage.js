@@ -120,12 +120,13 @@ function loadQuizzes(page, filters) {
         });
 }
 
-function renderQuizzes(quizzes) {
+async function renderQuizzes(quizzes) {
     const quizzesList = document.getElementById('quizzesList');
     quizzesList.innerHTML = '';
-    quizzes.forEach(quiz => {
-        quizzesList.innerHTML+=  getQuizDiv(quiz);
-    });
+    for (const quiz of quizzes) {
+        //console.log(await getQuizDiv(quiz));
+        quizzesList.appendChild( await getQuizDiv(quiz));
+    }
 }
 
 function renderPagination(currentPage, totalPages, filters) {

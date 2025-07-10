@@ -31,17 +31,16 @@
                     <select id="creator" class="form-select">
                         <option value="">Anyone</option>
                         <option value="me">Me</option>
-                        <option value="friend">Friend</option>
                         <option value="other">Others</option>
                     </select>
                 </div>
                 <div class="col-md-3">
                     <label for="dateFrom" class="form-label">From Date</label>
-                    <input type="date" class="form-control" id="dateFrom">
+                    <input type="datetime-local" class="form-control" id="dateFrom">
                 </div>
                 <div class="col-md-3">
                     <label for="dateTo" class="form-label">To Date</label>
-                    <input type="date" class="form-control" id="dateTo">
+                    <input type="datetime-local" class="form-control" id="dateTo">
                 </div>
                 <div class="col-md-3">
                     <label for="search" class="form-label">Search</label>
@@ -50,6 +49,7 @@
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Apply Filters</button>
                     <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                    <a href="/createQuiz"> create a new quiz</a>
                 </div>
             </form>
         </div>
