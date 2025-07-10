@@ -21,7 +21,7 @@ import java.util.List;
 import static utils.Constants.*;
 
 @WebServlet("/sent-request")
-public class UserSentFriendRequserServlet extends HttpServlet {
+public class UserDeletesRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);

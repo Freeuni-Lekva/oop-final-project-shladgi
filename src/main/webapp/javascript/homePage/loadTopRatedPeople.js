@@ -1,6 +1,6 @@
 import {getUserDiv} from "../userDivSmallJS.js";
 
-document.addEventListener("DOMContentLoaded", async () => {git
+document.addEventListener("DOMContentLoaded", async () => {
     const topRatedContainer = document.getElementById("top-rated-people");
     try {
         const response = await fetch("/get-top-rated-people", {

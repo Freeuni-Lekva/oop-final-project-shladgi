@@ -33,13 +33,14 @@ public class UserFriendRemove extends HttpServlet {
         String user2 = request.getParameter("target");
         List<User> u1 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, user1));
         List<User> u2 = userDB.query(new FilterCondition<>(UserField.USERNAME, Operator.EQUALS, user2));
-        User us1 = u1.get(0);
-        User us2 = u2.get(0);
 
         if (u1.isEmpty() || u2.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
+
+        User us1 = u1.get(0);
+        User us2 = u2.get(0);
 
         int id1 = Math.min(us1.getId(), us2.getId());
         int id2 = Math.max(us1.getId(), us2.getId());

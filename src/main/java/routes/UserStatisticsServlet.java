@@ -40,6 +40,11 @@ public class UserStatisticsServlet extends HttpServlet {
                 new FilterCondition<>(QuizResultField.USERID, Operator.MOREEQ, user.getId())
         );
 
+        if(quizResults.isEmpty()){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         List<Integer> ids = new ArrayList<>();
         for (QuizResult q : quizResults) {
             ids.add(q.getId());

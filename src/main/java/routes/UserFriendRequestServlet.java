@@ -45,6 +45,10 @@ public class UserFriendRequestServlet extends HttpServlet {
 
         for (FriendRequest f : friendRequest) {
             List<User> us = userDB.query(new FilterCondition<>(UserField.ID, Operator.EQUALS, f.getFirstId()));
+            if(us.isEmpty()){
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
             User u1 = us.get(0);
             list.add(u1.getUserName());
         }
