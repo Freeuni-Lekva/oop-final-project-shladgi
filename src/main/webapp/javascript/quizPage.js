@@ -66,6 +66,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
+                // Show cancel button if there's an ongoing quiz result
+                if (data.ongoingResult) { // ✅ ADDED: show cancel button if quiz was started but not finished
+                    document.getElementById("cancelQuizButton").style.display = "inline-block";
+                } else {
+                    document.getElementById("cancelQuizButton").style.display = "none";
+                }
+
+
+
                 document.getElementById("deleteQuizBtn").addEventListener("click", () => {
                     if (!confirm("Are you sure you want to delete this quiz? This action cannot be undone.")) return;
 
@@ -131,6 +140,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 statusDiv.style.color = "red";
             });
     });
+
+
+    // ✅ CANCEL QUIZ LOGIC
+    document.getElementById("cancelQuizButton")?.addEventListener("click", () => {
+        if (!confirm("Are you sure you want to cancel this quiz? Your progress will be lost.")) return;
+
+        fetch("cancelQuiz", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                quizId: quizId
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Quiz canceled successfully.");
+                    document.getElementById("cancelQuizButton").style.display = "none";
+                } else {
+                    alert("Cancel failed: " + data.message);
+                }
+            })
+            .catch(() => {
+                alert("❌ Server error while canceling quiz.");
+            });
+    });
+
 });
 
 

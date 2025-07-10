@@ -156,6 +156,17 @@ public class QuizInfoServlet extends HttpServlet {
 
         json.addProperty("averageScore", avgScore);
 
+
+
+        if (userId != null) {
+            List<QuizResult> ongoing = quizResultDB.query(List.of(
+                    new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                    new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
+                    new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0)
+            ));
+            json.addProperty("ongoingResult", !ongoing.isEmpty());
+        }
+
         response.getWriter().write(json.toString());
     }
 }
