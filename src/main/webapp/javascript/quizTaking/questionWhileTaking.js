@@ -1,10 +1,9 @@
-import {getSingleChoiceDiv} from "../quizCreation/singleChoiceDiv";
-import {getTextAnswerWhileTakingDiv} from "./textAnswerWhileTakingDiv";
-import {getSingleChoiceWhileTakingDiv} from "./singleChoiceWhileTakingDiv";
-import {getFillInBlanksWhileTakingDiv} from "./fillInBlanksWhileTakingDiv";
-import {getMultiChoiceWhileTakingDiv} from "./multiChoiceWhileTakingDiv";
-import {getMultiTextAnswerWhileTakingDiv} from "./multiTextAnswerWhileTakingDiv";
-import {getFillInChoicesWhileTakingDiv} from "./fillInChoicesWhileTakingDiv";
+import {getTextAnswerWhileTakingDiv} from "./textAnswerWhileTakingDiv.js";
+import {getSingleChoiceWhileTakingDiv} from "./singleChoiceWhileTakingDiv.js";
+import {getFillInBlanksWhileTakingDiv} from "./fillInBlanksWhileTakingDiv.js";
+import {getMultiChoiceWhileTakingDiv} from "./multiChoiceWhileTakingDiv.js";
+import {getMultiTextAnswerWhileTakingDiv} from "./multiTextAnswerWhileTakingDiv.js";
+import {getFillInChoicesWhileTakingDiv} from "./fillInChoicesWhileTakingDiv.js";
 
 const QType = {
     SingleChoice: "SingleChoice",
