@@ -2,7 +2,7 @@ import { loadSessionValue } from './getSessionInfo.js';
 import { loadRequests } from './userPage/loadFriendRequests.js';
 import { loadFriendsSection } from './userPage/loadFriendsSection.js';
 
-function addAdminButton(admin, receiverUsername, btnGroup, status) {
+function addAdminButton(admin, receiverUsername, btnGroup, div) {
     if (admin === "Admin") {
         const adminBtn = document.createElement("button");
         adminBtn.className = "btn btn-warning btn-sm";
@@ -36,14 +36,7 @@ function addAdminButton(admin, receiverUsername, btnGroup, status) {
 
                 if (!res3.ok) throw new Error("Failed to remove user");
 
-                if (status === "friends") {
-                    const name = await loadSessionValue("username");
-                    await loadFriendsSection(name);
-                } else if (status === "requested") {
-                    await loadRequests();
-                } else {
-                    location.reload();
-                }
+                div.remove();  // ✅ remove div from DOM
             } catch (err) {
                 alert(err.message);
             }
@@ -52,7 +45,7 @@ function addAdminButton(admin, receiverUsername, btnGroup, status) {
     }
 }
 
-export async function updateButtons(status, btnGroup, receiverUsername, admin) {
+export async function updateButtons(status, btnGroup, receiverUsername, admin, div) {
     btnGroup.innerHTML = ""; // clear buttons
 
     if (status === "friends") {
@@ -67,7 +60,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin) {
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    updateButtons("default", btnGroup, receiverUsername, admin);
+                    await updateButtons("default", btnGroup, receiverUsername, admin, div);
                 } else {
                     alert("Failed to remove friend");
                 }
@@ -90,7 +83,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin) {
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    updateButtons("friends", btnGroup, receiverUsername, admin);
+                    await updateButtons("friends", btnGroup, receiverUsername, admin, div);
                 } else {
                     alert("Failed to accept friend request");
                 }
@@ -111,7 +104,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin) {
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    updateButtons("default", btnGroup, receiverUsername, admin);
+                    await updateButtons("default", btnGroup, receiverUsername, admin, div);
                 } else {
                     alert("Failed to reject friend request");
                 }
@@ -134,7 +127,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin) {
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    updateButtons("default", btnGroup, receiverUsername, admin);
+                    await updateButtons("default", btnGroup, receiverUsername, admin, div);
                 } else {
                     alert("Failed to remove friend request");
                 }
@@ -157,7 +150,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin) {
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    updateButtons("request", btnGroup, receiverUsername, admin);
+                    await updateButtons("request", btnGroup, receiverUsername, admin, div);
                 } else {
                     alert("Failed to send friend request");
                 }
@@ -168,7 +161,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin) {
         btnGroup.appendChild(sendReqBtn);
     }
 
-    addAdminButton(admin, receiverUsername, btnGroup, status);
+    addAdminButton(admin, receiverUsername, btnGroup, div);
 }
 
 export async function getUserDiv(receiverUsername) {
@@ -197,7 +190,7 @@ export async function getUserDiv(receiverUsername) {
         if (!response.ok) throw new Error("Failed to fetch friend status");
 
         const status = await response.json();
-        await updateButtons(status, btnGroup, receiverUsername, admin);
+        await updateButtons(status, btnGroup, receiverUsername, admin, div);
 
     } catch (error) {
         alert(error.message);
