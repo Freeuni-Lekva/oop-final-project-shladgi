@@ -54,57 +54,61 @@ export function getMultiTextAnswerWhileTakingDiv(data) {
     return container;
 }
 
-
-export async function evalAnswerMultiTextAnswer(div, questionId, resultId, userId) {
-    // Select all text inputs in the container
+export async function evalAnswerMultiTextAnswer(div, questionid, quizresultid, userid) {
     const inputs = div.querySelectorAll('input[type="text"]');
-    if (!inputs || inputs.length === 0) {
-        console.error("No text inputs found for multi-text answer.");
-        return { success: false, message: "No answer inputs found." };
+    const answers = Array.from(inputs).map(input => input.value.trim()).filter(a => a);
+
+    if (answers.length === 0) {
+        return { success: false, message: "No answers provided" };
     }
 
-    // Collect non-empty trimmed answers
-    const userAnswers = [];
-    inputs.forEach(input => {
-        const value = input.value.trim();
-        if (value) {
-            userAnswers.push(value);
-        }
-    });
+    const userAnswer = {
+        isString: true,
+        choices: answers
+    };
 
-    if (userAnswers.length === 0) {
-        return { success: false, message: "Please enter at least one answer." };
-    }
-
-    const dataToSend = {
-        userId: userId,
-        questionId: questionId,
-        resultId: resultId,
-        userAnswer: {
-            isString: true,              // Still treating as string-based answers
-            choices: userAnswers         // An array of strings
-        }
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
     };
 
     try {
         const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
         });
 
-        if (!response.ok) {
-            const error = await response.json();
-            return { success: false, message: error.message || 'Server error' };
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
         }
 
-        const result = await response.json();
-        return result;
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
 
     } catch (error) {
-        console.error("Error sending multi-text answer:", error);
-        return { success: false, message: error.message };
+        return { success: false, message: "Network error" };
     }
+}
+
+export function highlightCorrectionMultiTextAnswer(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData) return;
+    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const inputs = div.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => input.readOnly = true);
+
+    // Note: For multi-text answers, we typically can't highlight individual correct answers
+    // without server providing specific feedback about which answers were correct
+    // This is a simplified version that just shows overall correctness
+    const overallClass = evaluationResult.points > 0 ? 'partially-correct' : 'incorrect-choice';
+    inputs.forEach(input => input.classList.add(overallClass));
 }
