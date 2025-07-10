@@ -12,4 +12,8 @@ public class AdminPanelServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         req.getRequestDispatcher("/admin.html").forward(req, res);
     }
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+
+    }
 }

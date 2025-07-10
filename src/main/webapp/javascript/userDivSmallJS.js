@@ -1,6 +1,6 @@
 import { loadSessionValue } from './getSessionInfo.js';
-import { loadRequests } from './userPage/loadFriendRequests.js';
-import { loadFriendsSection } from './userPage/loadFriendsSection.js';
+// import { loadRequests } from './userPage/loadFriendRequests.js';
+//import { loadFriendsSection } from './userPage/loadFriendsSection.js';
 
 function addAdminButton(admin, receiverUsername, btnGroup, div) {
     if (admin === "Admin") {
@@ -189,9 +189,9 @@ export async function getUserDiv(receiverUsername) {
         });
 
         if (!response.ok) throw new Error("Failed to fetch friend status");
-
+        console.log(response);
         const status = await response.json();
-        if(myName == null||  myName.length ===0|| myName !== receiverUsername){
+        if(myName != null||  myName.length !==0||  myName !== receiverUsername){
             await updateButtons(status, btnGroup, receiverUsername, admin, div);
         }
     } catch (error) {

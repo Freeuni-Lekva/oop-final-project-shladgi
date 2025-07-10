@@ -37,6 +37,7 @@ public class CheckWhoIsForUser extends HttpServlet {
 
         if (username == null || target == null) {
 
+
             return;
         }
 

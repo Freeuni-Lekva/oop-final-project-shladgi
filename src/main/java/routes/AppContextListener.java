@@ -35,6 +35,7 @@ public class AppContextListener implements ServletContextListener {
             context.setAttribute(USERANSWERDB, new UserAnswerDB(conn));
             context.setAttribute(QUESTIONDB, new  QuestionDB(conn));
             context.setAttribute(FRIENDREQUESTDB, new FriendRequestDB(conn));
+            context.setAttribute(ANNOUNCEMENTSDB, new AnnouncementDB(conn));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
