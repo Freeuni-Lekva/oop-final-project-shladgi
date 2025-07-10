@@ -34,9 +34,12 @@ public class CheckWhoIsForUser extends HttpServlet {
 
         String username = (String)request.getSession().getAttribute("username");
         String target = request.getParameter("target");
-
-        if (username == null || target == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+        if (username == "" || target == null) {
+            Gson gson = new Gson();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            System.out.println("aqaa");
+            response.getWriter().write(gson.toJson("guest"));
             return;
         }
 
