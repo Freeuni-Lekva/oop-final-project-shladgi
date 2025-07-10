@@ -59,6 +59,52 @@ export function getFillInBlanksWhileTakingDiv(data) {
 }
 
 
-export function evalAnswerFillInBlanks(div, questionid, userresultid, userid){
+export async function evalAnswerFillInBlanks(div, questionid, quizresultid, userid) {
+    // Get all blank inputs
+    const inputs = div.querySelectorAll('input[type="text"].answer-input');
+    const answers = [];
+
+    // Collect all answers (text values)
+    inputs.forEach(input => {
+        answers.push(input.value.trim());
+    });
+
+    // Validate at least one answer exists
+    if (answers.length === 0 || answers.every(a => a === "")) {
+        console.error("No answers provided for fill-in-blanks question", questionid);
+        return null;
+    }
+
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: {
+            isString: true,  // Storing text answers
+            choices: answers // Array of text responses
+        }
+    };
+
+
+    try {
+        const response = await fetch('/SubmitAnswerServlet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return {success : false, message: error.message || "Server error"};
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error submitting answer:', error);
+        return {success : false, message: error.message};
+    }
+
 
 }
