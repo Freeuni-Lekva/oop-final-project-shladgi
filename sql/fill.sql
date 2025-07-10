@@ -13,14 +13,9 @@ INSERT INTO quizzes (title, userid, totalscore, totalquestions, random, singlepa
                                                                                                                                                    ('General Knowledge Quiz', 2, 100, 10, FALSE, TRUE, TRUE, TRUE, 600, "a"),
                                                                                                                                                    ('Science Trivia', 3, 150, 15, TRUE, FALSE, FALSE, TRUE, 900, "aba"),
                                                                                                                                                    ('History Challenge', 2, 75, 5, FALSE, TRUE, TRUE, FALSE, 300, "desc"),
+                                                                                                                                                    ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
 
-                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                                   ('Geography Quiz', 3, 120, 12, TRUE, FALSE, TRUE, TRUE, 720, "1234");
+                                                                                                                                                        ('Geography Quiz', 3, 120, 12, TRUE, FALSE, TRUE, TRUE, 720, "1234");
 
 
 
@@ -85,4 +80,4 @@ INSERT INTO notes (senderid, recipientid, text, viewed) VALUES
                                                             (3, 2, 'Thanks for the challenge, let me know when you want a rematch!', false),
                                                             (4, 5, 'How did you solve question 4 on the Math test?', false),
                                                             (5, 4, 'Check out this new geography quiz I created!', false),
-                                                            (2, 4, 'Your history knowledge is impressive!', false);
+                                                            (2, 4, 'Your history knowledge is impressive!', false)
