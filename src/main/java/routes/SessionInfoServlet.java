@@ -15,7 +15,6 @@ import java.io.IOException;
 public class SessionInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("gamoidzaxaaa");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
