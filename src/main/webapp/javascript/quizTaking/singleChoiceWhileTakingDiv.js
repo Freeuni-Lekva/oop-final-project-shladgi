@@ -80,10 +80,48 @@ export function getSingleChoiceWhileTakingDiv(data) {
     return container;
 }
 
-export function evalAnswerSingleChoice(div, questionid, userresultid, userid){
+export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid) {
+    // Get the selected radio button
+    const selectedRadio = div.querySelector('input[type="radio"][name="singleChoice"]:checked');
 
+    if (!selectedRadio) {
+        console.error("No answer selected for question", questionid);
+        return null;
+    }
 
+    // Create the UserAnswer JSON structure
+    const userAnswer = {
+        isString: false,         // Single choice uses integer indexes
+        choices: [parseInt(selectedRadio.value)]  // Wrap in array as Answer expects list
+    };
 
+    // Prepare data for submission
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
+    };
+
+    try {
+        const response = await fetch('/SubmitAnswerServlet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return {success : false, message: error.message || "Server error"};
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error submitting answer:', error);
+        return {success : false, message: error.message};
+    }
 }
 
 
