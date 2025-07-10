@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     if (userType) {
         document.getElementById("nav-logo").href = "/home";
         navLinks.innerHTML +=  getLi("notification" , "Notifications");
-        navLinks.innerHTML +=  getLi("user" , userName);
+        navLinks.innerHTML +=  `<li class="nav-item" id=nav-user>
+            <a class="nav-link" href="/user?username=${userName}" >${userName}</a></li>`
+
         checkNotifications(userid);
         if (userType === "Admin") {
             navLinks.innerHTML += getLi("admin","Admin Panel");

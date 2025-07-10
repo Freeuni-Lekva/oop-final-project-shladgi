@@ -130,4 +130,43 @@ public class FriendshipDBTest {
         assertEquals(false, friendshipDB.areFriends(2, 9));
     }
 
+    @Test
+    @Order(4)
+    public void testGetFriends() {
+
+        List<Integer> friendsOf1 = friendshipDB.getFriends(1);
+        assertEquals(3, friendsOf1.size());
+        assertTrue(friendsOf1.contains(2));
+        assertTrue(friendsOf1.contains(3));
+        assertTrue(friendsOf1.contains(4));
+
+        List<Integer> friendsOf2 = friendshipDB.getFriends(2);
+        assertEquals(3, friendsOf2.size());
+        assertTrue(friendsOf2.contains(1));
+        assertTrue(friendsOf2.contains(3));
+        assertTrue(friendsOf2.contains(4));
+
+        List<Integer> friendsOf3 = friendshipDB.getFriends(3);
+        assertEquals(3, friendsOf3.size());
+        assertTrue(friendsOf3.contains(1));
+        assertTrue(friendsOf3.contains(2));
+        assertTrue(friendsOf3.contains(4));
+
+        List<Integer> friendsOf4 = friendshipDB.getFriends(4);
+        assertEquals(3, friendsOf4.size());
+        assertTrue(friendsOf4.contains(3));
+        assertTrue(friendsOf4.contains(2));
+        assertTrue(friendsOf4.contains(1));
+
+        List<Integer> friendsOf5 = friendshipDB.getFriends(5);
+        assertTrue(friendsOf5.isEmpty());
+
+
+        assertFalse(friendsOf4.contains(4));
+        assertFalse(friendsOf3.contains(3));
+        assertFalse(friendsOf2.contains(2));
+        assertFalse(friendsOf1.contains(1));
+    }
+
+
 }
