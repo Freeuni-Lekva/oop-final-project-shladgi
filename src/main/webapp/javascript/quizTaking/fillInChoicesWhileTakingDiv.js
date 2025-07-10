@@ -9,7 +9,7 @@ export function getFillInChoicesWhileTakingDiv(data){
 }
 
 
-export function evalAnswerFillInChoices(div, questionid, quizid, userid){
+export function evalAnswerFillInChoices(div, questionid, userresultid, userid){
 
 }
 

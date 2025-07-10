@@ -9,6 +9,6 @@ export function getMultiTextAnswerWhileTakingDiv(data){
 }
 
 
-export function evalAnswerMultiTextAnswer(div, questionid, quizid, userid){
+export function evalAnswerMultiTextAnswer(div, questionid, userresultid, userid){
 
 }
