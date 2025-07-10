@@ -2,6 +2,7 @@ package routes;
 
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import objects.user.UserType;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,29 +15,48 @@ import java.io.IOException;
 public class SessionInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("gamoidzaxaaa");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession(false);
-        String value = (String)request.getParameter("key");
+        HttpSession session = request.getSession();
+        String key = (String)request.getParameter("key");
+        Object value = session.getAttribute(key);
         //this might be userid, username or type
-        String answer = null;
-        if(session == null){
-            JsonObject json = new JsonObject();
-            json.addProperty("value", answer);
+        JsonObject json = new JsonObject();
+
+        if(value == null){
+            System.out.println(key +"        "+value);
+            json.addProperty("value", "");
             try {
                 response.getWriter().write(json.toString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
             return;
         }
-        if(session.getAttribute(value) != null){
-            answer = session.getAttribute(value).toString();
+        System.out.println(key +"        "+value);
+
+        if (value instanceof String) {
+            json.addProperty("value", (String) value);
+        } else if (value instanceof Integer) {
+            json.addProperty("value", (Integer) value);
+        } else if (value instanceof Boolean) {
+            json.addProperty("value", (Boolean) value);
+        } else if (value instanceof Long) {
+            json.addProperty("value", (Long) value);
+        } else if (value instanceof Double) {
+            json.addProperty("value", (Double) value);
+        } else if(value instanceof UserType){
+            json.addProperty("value", value.toString());
+        } else{
+            System.out.println("erorri");
+            System.out.println(key +"        "+value);
+            throw new RuntimeException("Unknown variable type in session");
         }
 
+
         try {
-            JsonObject json = new JsonObject();
-            json.addProperty("value", answer);
             response.getWriter().write(json.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);

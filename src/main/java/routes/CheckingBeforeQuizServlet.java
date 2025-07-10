@@ -84,6 +84,10 @@ public class CheckingBeforeQuizServlet extends HttpServlet{
                 return;
             }
         }
+        List<QuizResult> quizResults = quizResultDB.query(
+                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
+                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0));
 
         try {
             json.addProperty("success", true);

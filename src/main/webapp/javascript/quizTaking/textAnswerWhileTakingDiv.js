@@ -44,6 +44,47 @@ export function getTextAnswerWhileTakingDiv(data) {
 
 
 
-export function evalAnswerTextAnswer(div, questionid, userresultid, userid){
+export async function evalAnswerTextAnswer(div, questionid, quizresultid, userid) {
+    const input = div.querySelector('input[type="text"]');
+    if (!input) {
+        console.error("No text input found in the question div.");
+        return {success: false, message: "Answer input not found."};
+    }
 
+    const userAnswer = input.value.trim();
+    const userAnswers = [];
+    userAnswers.push(userAnswer);
+
+    // Prepare the JSON object as per your structure
+    const dataToSend = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: {
+            isString: true,       // Since this is a text answer
+            choices: userAnswers   // For text input, store the string answer in 'choices'
+        }
+    };
+
+    try {
+        const response = await fetch('/evalAndSaveUserAnswer', {  // Change URL to your servlet path
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return {success: false, message: error.message || 'Server error'};
+        }
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error('Error sending answer:', error);
+        return {success: false, message: error.message};
+    }
 }

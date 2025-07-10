@@ -2,8 +2,6 @@ export function getFillInBlanksWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
 
-
-
     // Display the question text
     const questionText = document.createElement('div');
     questionText.className = 'question-text';
@@ -27,12 +25,10 @@ export function getFillInBlanksWhileTakingDiv(data) {
         container.appendChild(weightInfo);
     }
 
-
-    // Create answer fields based on correctAnswers or choices
+    // Create answer fields
     const answersContainer = document.createElement('div');
     answersContainer.className = 'answers-container';
 
-    // Determine how many answer fields to create
     const answerCount = data.correctAnswers?.length || data.choices?.length || 1;
 
     for (let i = 0; i < answerCount; i++) {
@@ -45,6 +41,7 @@ export function getFillInBlanksWhileTakingDiv(data) {
 
         const input = document.createElement('input');
         input.type = 'text';
+        input.className = 'answer-input';
         input.style.width = '100px';
         input.style.margin = '0 5px';
         input.dataset.answerIndex = i;
@@ -57,7 +54,6 @@ export function getFillInBlanksWhileTakingDiv(data) {
     container.appendChild(answersContainer);
     return container;
 }
-
 
 export async function evalAnswerFillInBlanks(div, questionid, quizresultid, userid) {
     // Get all blank inputs
@@ -87,7 +83,7 @@ export async function evalAnswerFillInBlanks(div, questionid, quizresultid, user
 
 
     try {
-        const response = await fetch('/SubmitAnswerServlet', {
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

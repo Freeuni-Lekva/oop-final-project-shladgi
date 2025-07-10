@@ -51,7 +51,46 @@ export function getMultiChoiceWhileTakingDiv(data) {
 }
 
 
-export function evalAnswerMultiChoice(div, questionid, userresultid, userid){
+export async function evalAnswerMultiChoice(div, questionId, resultId, userId) {
+    // Get all checked checkboxes inside the div
+    const checkedInputs = div.querySelectorAll('input[type="checkbox"]:checked');
 
+    if (!checkedInputs || checkedInputs.length === 0) {
+        return { success: false, message: "Please select at least one option." };
+    }
 
+    // Collect selected choice indexes
+    const selectedChoices = Array.from(checkedInputs).map(input => parseInt(input.value));
+
+    const dataToSend = {
+        userId: userId,
+        questionId: questionId,
+        resultId: resultId,
+        userAnswer: {
+            isString: false,           // Not a text answer
+            choices: selectedChoices  // List of selected indexes
+        }
+    };
+
+    try {
+        const response = await fetch('/evalAndSaveUserAnswer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            return { success: false, message: error.message || 'Server error' };
+        }
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error("Error sending multi-choice answer:", error);
+        return { success: false, message: error.message };
+    }
 }
