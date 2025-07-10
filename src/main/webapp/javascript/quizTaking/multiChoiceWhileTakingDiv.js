@@ -49,3 +49,9 @@ export function getMultiChoiceWhileTakingDiv(data) {
     container.appendChild(choiceList);
     return container;
 }
+
+
+export function evalAnswerMultiChoice(div, questionid, userresultid, userid){
+
+
+}

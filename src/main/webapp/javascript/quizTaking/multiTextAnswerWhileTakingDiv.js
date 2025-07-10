@@ -39,4 +39,11 @@ export function getMultiTextAnswerWhileTakingDiv(data) {
     }
 
     return container;
+
+}
+
+
+export function evalAnswerMultiTextAnswer(div, questionid, userresultid, userid){
+
+
 }

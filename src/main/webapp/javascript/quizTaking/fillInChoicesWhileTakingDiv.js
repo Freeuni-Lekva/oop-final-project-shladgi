@@ -40,6 +40,7 @@ export function getFillInChoicesWhileTakingDiv(data) {
         label.textContent = `Answer ${i + 1}:`;
         answerGroup.appendChild(label);
 
+
         const select = document.createElement('select');
         select.style.margin = '0 5px';
         select.dataset.answerIndex = i;
@@ -70,3 +71,10 @@ export function getFillInChoicesWhileTakingDiv(data) {
     container.appendChild(answersContainer);
     return container;
 }
+
+
+export function evalAnswerFillInChoices(div, questionid, userresultid, userid){
+
+}
+
+

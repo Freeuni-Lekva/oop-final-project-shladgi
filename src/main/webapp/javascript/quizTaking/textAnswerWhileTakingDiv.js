@@ -1,4 +1,5 @@
 export function getTextAnswerWhileTakingDiv(data) {
+
     const container = document.createElement('div');
     container.className = 'question-container';
 
@@ -25,7 +26,7 @@ export function getTextAnswerWhileTakingDiv(data) {
         container.appendChild(weightInfo);
     }
 
-    // Text input for answer
+        // Text input for answer
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = 'Type your answer here...';
@@ -34,6 +35,15 @@ export function getTextAnswerWhileTakingDiv(data) {
     input.style.margin = '10px 0';
     input.style.boxSizing = 'border-box';
 
+
     container.appendChild(input);
     return container;
+
+}
+
+
+
+
+export function evalAnswerTextAnswer(div, questionid, userresultid, userid){
+
 }

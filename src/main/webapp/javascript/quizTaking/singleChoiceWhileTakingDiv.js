@@ -38,6 +38,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
         container.appendChild(weightInfo);
     }
 
+  
     // Radio buttons for choices with proper accessibility
     const choiceList = document.createElement('div');
     choiceList.className = 'choice-list';
@@ -78,3 +79,11 @@ export function getSingleChoiceWhileTakingDiv(data) {
     container.appendChild(choiceList);
     return container;
 }
+
+export function evalAnswerSingleChoice(div, questionid, userresultid, userid){
+
+
+
+}
+
+

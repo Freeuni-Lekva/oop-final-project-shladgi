@@ -57,3 +57,8 @@ export function getFillInBlanksWhileTakingDiv(data) {
     container.appendChild(answersContainer);
     return container;
 }
+
+
+export function evalAnswerFillInBlanks(div, questionid, userresultid, userid){
+
+}
