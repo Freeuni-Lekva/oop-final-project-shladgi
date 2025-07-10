@@ -71,6 +71,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
             });
         });
 
+
         label.appendChild(input);
         label.appendChild(span);
         choiceList.appendChild(label);
@@ -125,35 +126,30 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
 }
 
 export function highlightCorrectionSingleChoice(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData) return;
-
-    // Clear previous highlights
-    div.querySelectorAll('.correct-highlight, .incorrect-highlight').forEach(el => {
-        el.classList.remove('correct-highlight', 'incorrect-highlight');
-    });
-
-    // Only proceed if evaluation was successful
-    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
 
     const userChoice = evaluationResult.userAnswer.choices[0];
     const correctId = questionData.correctId;
-    const isCorrect = userChoice === correctId;
 
-    // Highlight user's selection
-    const userSelectedInput = div.querySelector(`input[value="${userChoice}"]`);
-    if (userSelectedInput) {
-        userSelectedInput.closest('label').classList.add(
-            isCorrect ? 'correct-highlight' : 'incorrect-highlight'
-        );
+    // Clear previous highlights
+    div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(label => {
+        label.classList.remove('correct-choice', 'incorrect-choice');
+    });
+
+    // Highlight user's selected choice
+    const userInput = div.querySelector(`input[name="singleChoice-${questionData.id}"][value="${userChoice}"]`);
+    if (userInput) {
+        const label = userInput.closest('label');
+        const isCorrect = userChoice === correctId;
+        label.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
     }
 
-    // Highlight correct answer if different
-    if (!isCorrect && correctId !== undefined) {
-        const correctInput = div.querySelector(`input[value="${correctId}"]`);
+    // Also highlight correct choice if user's answer was wrong
+    if (userChoice !== correctId && correctId !== undefined) {
+        const correctInput = div.querySelector(`input[name="singleChoice-${questionData.id}"][value="${correctId}"]`);
         if (correctInput) {
-            correctInput.closest('label').classList.add('correct-highlight');
+            const label = correctInput.closest('label');
+            label.classList.add('correct-choice');
         }
     }
 }
-
-

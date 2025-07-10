@@ -1,0 +1,14 @@
+.correct-answer-text {
+    margin-left: 10px;
+    font-style: italic;
+    color: #155724;
+    font-size: 0.9em;
+}
+.correct-choice {
+    background-color: #d4edda !important;
+    border-left: 4px solid #28a745;
+}
+.incorrect-choice {
+    background-color: #f8d7da !important;
+    border-left: 4px solid #dc3545;
+}

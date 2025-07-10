@@ -100,15 +100,41 @@ export async function evalAnswerMultiTextAnswer(div, questionid, quizresultid, u
 }
 
 export function highlightCorrectionMultiTextAnswer(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData) return;
-    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
 
     const inputs = div.querySelectorAll('input[type="text"]');
-    inputs.forEach(input => input.readOnly = true);
+    const correctAnswers = questionData.correctAnswers || [];
 
-    // Note: For multi-text answers, we typically can't highlight individual correct answers
-    // without server providing specific feedback about which answers were correct
-    // This is a simplified version that just shows overall correctness
-    const overallClass = evaluationResult.points > 0 ? 'partially-correct' : 'incorrect-choice';
-    inputs.forEach(input => input.classList.add(overallClass));
+    inputs.forEach((input, index) => {
+        input.readOnly = true;
+
+        let isCorrect = false;
+
+        // Debug log
+        console.log(`Input ${index}: "${input.value}"`);
+
+        // First: use server-provided correctness if available
+        if (Array.isArray(evaluationResult.details?.perAnswerCorrectness)) {
+            isCorrect = evaluationResult.details.perAnswerCorrectness[index] === true;
+        }
+        // Otherwise: fallback to comparing user input against correct options
+        else if (Array.isArray(correctAnswers[index])) {
+            const userInput = input.value.trim().toLowerCase();
+            const normalizedCorrects = correctAnswers[index].map(ans => ans.trim().toLowerCase());
+            isCorrect = normalizedCorrects.includes(userInput);
+        }
+
+        input.classList.add(isCorrect ? "correct-choice" : "incorrect-choice");
+
+        // Show correct answers only if incorrect
+        if (!isCorrect && Array.isArray(correctAnswers[index]) && correctAnswers[index].length > 0) {
+            const correctText = correctAnswers[index].join(" OR ");
+            const span = document.createElement("span");
+            span.className = "correct-answer-text";
+            span.textContent = ` (Correct: ${correctText})`;
+            input.parentNode.insertBefore(span, input.nextSibling);
+        }
+    });
 }
+
+

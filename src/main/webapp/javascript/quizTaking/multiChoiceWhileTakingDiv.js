@@ -95,36 +95,37 @@ export async function evalAnswerMultiChoice(div, questionid, quizresultid, useri
     }
 }
 
-export function highlightCorrectionMultiChoice(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData) return;
-    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
 
-    // Clear previous highlights
-    div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(el => {
-        el.classList.remove('correct-choice', 'incorrect-choice');
-    });
+export function highlightCorrectionMultiChoice(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
 
     const userChoices = evaluationResult.userAnswer.choices;
     const correctChoices = questionData.correctChoices || [];
 
-    // Highlight all user selections
+    // Clear previous highlights
+    div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(label => {
+        label.classList.remove('correct-choice', 'incorrect-choice');
+    });
+
+    // Highlight user's selected checkboxes
     userChoices.forEach(choiceIndex => {
         const input = div.querySelector(`input[value="${choiceIndex}"]`);
         if (input) {
+            const label = input.closest('label');
             const isCorrect = correctChoices.includes(choiceIndex);
-            input.closest('label').classList.add(
-                isCorrect ? 'correct-choice' : 'incorrect-choice'
-            );
+            label.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
         }
     });
 
-    // Highlight correct answers not selected by user
+    // Highlight correct choices not selected by user
     correctChoices.forEach(correctIndex => {
         if (!userChoices.includes(correctIndex)) {
-            const correctInput = div.querySelector(`input[value="${correctIndex}"]`);
-            if (correctInput) {
-                correctInput.closest('label').classList.add('correct-choice');
+            const input = div.querySelector(`input[value="${correctIndex}"]`);
+            if (input) {
+                const label = input.closest('label');
+                label.classList.add('correct-choice');
             }
         }
     });
 }
+

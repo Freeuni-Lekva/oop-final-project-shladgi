@@ -108,7 +108,36 @@ export function highlightCorrectionFillInBlanks(div, evaluationResult, questionD
     const inputs = div.querySelectorAll('input[type="text"].answer-input');
     inputs.forEach(input => input.readOnly = true);
 
-    // Note: Similar to multi-text, we'd need server feedback for per-blank correctness
-    const overallClass = evaluationResult.points > 0 ? 'partially-correct' : 'incorrect-choice';
-    inputs.forEach(input => input.classList.add(overallClass));
+    // If server provides per-blank correctness
+    if (evaluationResult.details?.perBlankCorrectness) {
+        inputs.forEach((input, index) => {
+            const isCorrect = evaluationResult.details.perBlankCorrectness[index];
+            input.classList.add(isCorrect ? 'correct-answer' : 'incorrect-answer');
+
+            const feedbackSpan = document.createElement('span');
+            feedbackSpan.className = 'feedback-icon';
+            feedbackSpan.textContent = isCorrect ? '✓' : '✗';
+            input.parentNode.insertBefore(feedbackSpan, input.nextSibling);
+        });
+    }
+    // Fallback - highlight based on overall correctness
+    else {
+        const overallClass = evaluationResult.points > 0 ? 'correct-answer' : 'incorrect-answer';
+        inputs.forEach(input => input.classList.add(overallClass));
+    }
+
+    // Show correct answers if available
+    if (questionData.correctAnswers) {
+        const correctAnswersDiv = document.createElement('div');
+        correctAnswersDiv.className = 'correct-answers-container';
+
+        questionData.correctAnswers.forEach((answers, index) => {
+            const answerDiv = document.createElement('div');
+            answerDiv.textContent = `Blank ${index + 1}: ${answers.join(' OR ')}`;
+            answerDiv.className = 'correct-answer-marker';
+            correctAnswersDiv.appendChild(answerDiv);
+        });
+
+        div.appendChild(correctAnswersDiv);
+    }
 }
