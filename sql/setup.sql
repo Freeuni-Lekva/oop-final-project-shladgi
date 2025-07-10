@@ -63,7 +63,7 @@ CREATE TABLE achievements
     id       INT PRIMARY KEY AUTO_INCREMENT,
     title    VARCHAR(255) NOT NULL,
     description VARCHAR(255),
-    iconlink VARCHAR(255),
+    iconlink VARCHAR(1000),
     rarity   ENUM ('Common', 'Rare', 'Epic', 'Legendary') NOT NULL
 );
 

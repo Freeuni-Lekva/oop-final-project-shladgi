@@ -20,16 +20,17 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     if (userType) {
         document.getElementById("nav-logo").href = "/home";
         navLinks.innerHTML +=  getLi("notifications" , "Notifications");
-        navLinks.innerHTML +=  getLi("user" , userName);
+        navLinks.innerHTML +=  `<li class="nav-item" id=nav-user>
+            <a class="nav-link" href="/user?username=${userName}" >${userName}</a></li>`
 
+        checkNotifications(userid);
         if (userType === "Admin") {
             navLinks.innerHTML += getLi("admin","Admin Panel");
         }
         navLinks.innerHTML+= '<form action="logout" method="post">\n' +
             '<button type="submit" class="btn btn-danger">Logout</button></form>';
-        document.getElementById("nav-notifications").querySelector("a").innerHTML +=
+        document.getElementById("nav-notification").querySelector("a").innerHTML +=
             '<span id="notificationDot" style="display:none; color: red;">●</span>';
-        checkNotifications(userid);
     } else {
         navLinks.innerHTML += getLi("login","LogIn");
     }
@@ -54,7 +55,7 @@ function checkNotifications(userId){
         }
     ).then(res => res.json())
         .then(data => {
-            if (data.success && data.hasUnseen) {
+            if (data.hasUnseen) {
                 document.getElementById("notificationDot").style.display = "inline";
             }else{
                 document.getElementById("notificationDot").style.display = "none";

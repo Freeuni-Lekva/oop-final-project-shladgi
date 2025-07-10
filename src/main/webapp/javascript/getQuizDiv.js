@@ -29,9 +29,9 @@ export async function getQuizDiv(quiz){
                 alert("Something went wrong.");
             });
     });
-
-
-    return `<div class="col">
+    const r = document.createElement("div");
+    r.className= "col";
+    r.innerHTML+=`
             <div class="card quiz-card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -45,15 +45,12 @@ export async function getQuizDiv(quiz){
                         </div>
                         <a href="/staetQuiz?id=${quiz.id}" class="btn btn-sm btn-primary">Take Quiz</a>
                         ${userid === quiz.creatorid || userType ==="Admin" ? removeBtn : ""}
-                        <button class=""
+                        
                     </div>
                 </div>
-            </div></div>
+            </div>
         `;
 
-
-
-
-
+    return r ;
 }
 

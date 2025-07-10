@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.logging.Filter;
 
 public abstract class DataBase<T, TField extends SqlField>{
-    Connection con;
-    Class<T> clazz;
-    String tableName = null;
+    protected Connection con;
+    protected Class<T> clazz;
+    protected String tableName = null;
 
     /**
      * Constructor that gets the Connection to the database and the Class for the Field it accepts(for filters)

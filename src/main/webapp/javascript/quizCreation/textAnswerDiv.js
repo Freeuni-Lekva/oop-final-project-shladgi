@@ -24,6 +24,7 @@ export function getTextAnswerDiv() {
     const pointsLabel = document.createElement("label");
     pointsLabel.textContent = "Points:";
     const pointsInput = document.createElement("input");
+    pointsInput.className = 'points-input';
     pointsInput.type = "number";
     pointsInput.name = "points";
     pointsInput.min = "0";
@@ -48,25 +49,48 @@ export function getTextAnswerDiv() {
     const answersList = document.createElement("div");
     answersList.classList.add("answers-list");
 
+    // Function to add a new answer input with a delete button
+    const addAnswerInput = (defaultValue = "") => {
+        const container = document.createElement("div");
+        container.classList.add("answer-item");
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = "correctAnswer";
+        input.value = defaultValue;
+        input.required = true;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "remove answer";
+        deleteBtn.addEventListener("click", () => {
+            // Prevent removing the last remaining answer
+            if (answersList.childElementCount > 1) {
+                container.remove();
+            } else {
+                alert("At least one correct answer is required.");
+            }
+        });
+
+        container.appendChild(input);
+        container.appendChild(deleteBtn);
+        answersList.appendChild(container);
+    };
+
+    // Start with 1 answer input
+    addAnswerInput();
+
     const addAnswerBtn = document.createElement("button");
     addAnswerBtn.type = "button";
     addAnswerBtn.classList.add("add-answer");
     addAnswerBtn.textContent = "Add Answer";
-
-    // Add answer input when button is clicked
-    addAnswerBtn.addEventListener("click", () => {
-        const answerInput = document.createElement("input");
-        answerInput.type = "text";
-        answerInput.name = "correctAnswer";
-        answersList.appendChild(answerInput);
-        answersList.appendChild(document.createElement("br"));
-    });
+    addAnswerBtn.addEventListener("click", () => addAnswerInput());
 
     answersSection.appendChild(answersLabel);
     answersSection.appendChild(answersList);
     answersSection.appendChild(addAnswerBtn);
 
-    // Delete button
+    // Delete entire question button
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.classList.add("delete-question");
@@ -75,7 +99,7 @@ export function getTextAnswerDiv() {
         div.remove();
     });
 
-    // Append everything to the div
+    // Append everything to the main div
     div.appendChild(questionLabel);
     div.appendChild(document.createElement("br"));
     div.appendChild(imageLabel);
@@ -90,7 +114,8 @@ export function getTextAnswerDiv() {
     return div;
 }
 
-export async function saveTextAnswerDiv(div, quizid) {
+
+export async function saveTextAnswerQuestion(div, quizid) {
     const questionText = div.querySelector("input[name='questionText']").value.trim();
     const imageLink = div.querySelector("input[name='imageLink']").value.trim();
     const pointsStr = div.querySelector("input[name='points']").value.trim();
@@ -160,6 +185,3 @@ export async function saveTextAnswerDiv(div, quizid) {
         };
     }
 }
-
-
-window.saveTextAnswerDiv = saveTextAnswerDiv;

@@ -16,6 +16,7 @@ const QType = {
 
 
 export function getQuizCreationDiv(type){
+    console.log(type);
     switch (type){
         case QType.SingleChoice:
             return getSingleChoiceDiv();

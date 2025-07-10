@@ -50,6 +50,7 @@ public abstract class Question implements ObjectWithJson {
     // checks the answer and returns a score
     public abstract int check(Answer<?> answer);
 
+    public abstract void hideAnswers();
 
     public int getId() {return id;}
 
