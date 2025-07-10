@@ -15,7 +15,6 @@ import java.io.IOException;
 public class SessionInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("gamoidzaxaaa");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
@@ -25,7 +24,6 @@ public class SessionInfoServlet extends HttpServlet {
         JsonObject json = new JsonObject();
 
         if(value == null){
-            System.out.println(key +"        "+value);
             json.addProperty("value", "");
             try {
                 response.getWriter().write(json.toString());
@@ -35,7 +33,6 @@ public class SessionInfoServlet extends HttpServlet {
 
             return;
         }
-        System.out.println(key +"        "+value);
 
         if (value instanceof String) {
             json.addProperty("value", (String) value);
@@ -50,8 +47,6 @@ public class SessionInfoServlet extends HttpServlet {
         } else if(value instanceof UserType){
             json.addProperty("value", value.toString());
         } else{
-            System.out.println("erorri");
-            System.out.println(key +"        "+value);
             throw new RuntimeException("Unknown variable type in session");
         }
 

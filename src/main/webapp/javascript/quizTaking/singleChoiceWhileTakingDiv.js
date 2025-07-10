@@ -81,22 +81,17 @@ export function getSingleChoiceWhileTakingDiv(data) {
 }
 
 export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid) {
-    // Get the selected radio button
     const selectedRadio = div.querySelector(`input[type="radio"][name="singleChoice-${questionid}"]:checked`);
 
     if (!selectedRadio) {
-        console.error("No answer selected for question", questionid);
-        return null;
+        return { success: false, message: "No answer selected" };
     }
 
-    // Create the UserAnswer JSON structure
     const userAnswer = {
-        isString: false,         // Single choice uses integer indexes
-        choices: [parseInt(selectedRadio.value)]  // Wrap in array as Answer expects list
+        isString: false,
+        choices: [parseInt(selectedRadio.value)]
     };
 
-
-    // Prepare data for submission
     const submissionData = {
         userId: userid,
         questionId: questionid,
@@ -107,21 +102,57 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
     try {
         const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(submissionData)
         });
 
-        if (!response.ok) {
-            const error = await response.json();
-            return {success : false, message: error.message || "Server error"};
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
         }
 
-        return await response.json();
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
+
     } catch (error) {
-        console.error('Error submitting answer:', error);
-        return {success : false, message: error.message};
+        return { success: false, message: "Network error" };
+    }
+}
+
+export function highlightCorrectionSingleChoice(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData) return;
+
+    // Clear previous highlights
+    div.querySelectorAll('.correct-highlight, .incorrect-highlight').forEach(el => {
+        el.classList.remove('correct-highlight', 'incorrect-highlight');
+    });
+
+    // Only proceed if evaluation was successful
+    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const userChoice = evaluationResult.userAnswer.choices[0];
+    const correctId = questionData.correctId;
+    const isCorrect = userChoice === correctId;
+
+    // Highlight user's selection
+    const userSelectedInput = div.querySelector(`input[value="${userChoice}"]`);
+    if (userSelectedInput) {
+        userSelectedInput.closest('label').classList.add(
+            isCorrect ? 'correct-highlight' : 'incorrect-highlight'
+        );
+    }
+
+    // Highlight correct answer if different
+    if (!isCorrect && correctId !== undefined) {
+        const correctInput = div.querySelector(`input[value="${correctId}"]`);
+        if (correctInput) {
+            correctInput.closest('label').classList.add('correct-highlight');
+        }
     }
 }
 

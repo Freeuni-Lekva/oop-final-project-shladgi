@@ -43,48 +43,58 @@ export function getTextAnswerWhileTakingDiv(data) {
 
 
 
-
 export async function evalAnswerTextAnswer(div, questionid, quizresultid, userid) {
     const input = div.querySelector('input[type="text"]');
-    if (!input) {
-        console.error("No text input found in the question div.");
-        return {success: false, message: "Answer input not found."};
+    if (!input || !input.value.trim()) {
+        return { success: false, message: "No answer provided" };
     }
 
-    const userAnswer = input.value.trim();
-    const userAnswers = [];
-    userAnswers.push(userAnswer);
+    const userAnswer = {
+        isString: true,
+        choices: [input.value.trim()]
+    };
 
-    // Prepare the JSON object as per your structure
-    const dataToSend = {
+    const submissionData = {
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: {
-            isString: true,       // Since this is a text answer
-            choices: userAnswers   // For text input, store the string answer in 'choices'
-        }
+        userAnswer: userAnswer
     };
 
     try {
-        const response = await fetch('/evalAndSaveUserAnswer', {  // Change URL to your servlet path
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
         });
 
-        if (!response.ok) {
-            const error = await response.json();
-            return {success: false, message: error.message || 'Server error'};
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
         }
 
-        const result = await response.json();
-        return result;
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
 
     } catch (error) {
-        console.error('Error sending answer:', error);
-        return {success: false, message: error.message};
+        return { success: false, message: "Network error" };
     }
+}
+
+export function highlightCorrectionTextAnswer(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData) return;
+    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const input = div.querySelector('input[type="text"]');
+    if (!input) return;
+
+    input.readOnly = true; // Prevent editing after submission
+
+    const isCorrect = evaluationResult.points > 0;
+    input.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
 }

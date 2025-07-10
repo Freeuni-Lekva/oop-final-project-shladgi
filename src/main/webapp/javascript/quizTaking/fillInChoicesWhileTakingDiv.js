@@ -72,53 +72,69 @@ export function getFillInChoicesWhileTakingDiv(data) {
     return container;
 }
 
+
 export async function evalAnswerFillInChoices(div, questionid, quizresultid, userid) {
-    // Get all select dropdowns - now using the correct class
     const selects = div.querySelectorAll('select.answer-select');
-    const answers = [];
+    const answers = Array.from(selects).map(select =>
+        select.value === "" ? null : parseInt(select.value)
+    );
 
-    // Collect all selected values (indexes)
-    selects.forEach(select => {
-        if (select.value === "") {
-            answers.push(null); // Unanswered
-        } else {
-            answers.push(parseInt(select.value)); // Selected index
-        }
-    });
-
-    // Validate all dropdowns were answered
     if (answers.some(a => a === null)) {
-        console.error("Not all dropdowns were answered for question", questionid);
-        return {success: false, message: "Please answer all dropdowns"};
+        return { success: false, message: "Please answer all dropdowns" };
     }
+
+    const userAnswer = {
+        isString: false,
+        choices: answers
+    };
 
     const submissionData = {
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: {
-            isString: false,  // Storing choice indexes
-            choices: answers // Array of selected indexes
-        }
+        userAnswer: userAnswer
     };
 
     try {
         const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(submissionData)
         });
 
-        if (!response.ok) {
-            const error = await response.json();
-            return {success: false, message: error.message || "Server error"};
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
         }
 
-        return await response.json();
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
+
     } catch (error) {
-        console.error('Error submitting answer:', error);
-        return {success: false, message: error.message};
+        return { success: false, message: "Network error" };
     }
+}
+
+export function highlightCorrectionFillInChoices(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData) return;
+    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const selects = div.querySelectorAll('select.answer-select');
+    selects.forEach(select => select.disabled = true);
+
+    const userChoices = evaluationResult.userAnswer.choices;
+    const correctChoices = questionData.correctIndexes || [];
+
+    selects.forEach((select, index) => {
+        const isCorrect = index < correctChoices.length &&
+            index < userChoices.length &&
+            userChoices[index] === correctChoices[index];
+
+        select.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
+    });
 }
