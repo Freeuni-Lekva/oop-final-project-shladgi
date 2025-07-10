@@ -16,6 +16,7 @@ import objects.questions.QuestionMultiChoice;
 import objects.questions.QuestionSingleChoice;
 import objects.questions.QuestionTextAnswer;
 import objects.questions.QuestionMultiTextAnswer;
+import objects.questions.QuestionFillInChoices;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -46,12 +47,118 @@ public class SaveQuestionServlet extends HttpServlet {
             handleTextAnswer(out, body,  response);
         } else if (QType.MultiTextAnswer.name().equals(type)) {
             handleMultiTextAnswer(out, body, response);
-        }else{
-
+        }else if(QType.FillChoices.name().equals(type)){
+            handleFillInChoices(out, body, response);
         }
 
     }
 
+    private void handleFillInChoices(PrintWriter out, JsonObject body, HttpServletResponse response) {
+        JsonObject jsonResponse = new JsonObject();
+        try {
+            QuestionDB questionDB = (QuestionDB) getServletContext().getAttribute(QUESTIONDB);
+            QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
+
+            int quizId = body.get("quizId").getAsInt();
+
+            List<Quiz> quizzes = quizDB.query(
+                    new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
+            );
+
+            if (quizzes.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Invalid quiz ID: " + quizId);
+                out.print(jsonResponse);
+                return;
+            }
+
+            String question = body.get("question").getAsString();
+
+            JsonArray correctIndexesArray = body.getAsJsonArray("correctIndexes");
+            List<Integer> correctIndexes = new ArrayList<>();
+            for (JsonElement element : correctIndexesArray) {
+                correctIndexes.add(element.getAsInt());
+            }
+
+            JsonArray choicesArray = body.getAsJsonArray("choices");
+            List<List<String>> choices = new ArrayList<>();
+            for (JsonElement choiceGroupElement : choicesArray) {
+                JsonArray choiceGroupArray = choiceGroupElement.getAsJsonArray();
+                List<String> choiceGroup = new ArrayList<>();
+                for (JsonElement choiceElement : choiceGroupArray) {
+                    choiceGroup.add(choiceElement.getAsString());
+                }
+                choices.add(choiceGroup);
+            }
+
+            JsonArray fillIndexesArray = body.getAsJsonArray("fillIndexes");
+            List<Integer> fillIndexes = new ArrayList<>();
+            // amas savaraudod agar gamoviyenebt, prosta carieli iyos.
+            /*for (JsonElement element : fillIndexesArray) {
+                fillIndexes.add(element.getAsInt());
+            }*/
+
+            String photoUrl = body.has("photoUrl") && !body.get("photoUrl").isJsonNull()
+                    ? body.get("photoUrl").getAsString() : null;
+            int points = body.has("points") ? body.get("points").getAsInt() : 1;
+
+            // Validation
+            if (question == null || question.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Question text cannot be empty");
+            } else if (correctIndexes.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Missing correct indexes");
+            } else if (choices.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Missing choices");
+            } else if (correctIndexes.size() != choices.size()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Mismatch in correct indexes and choices counts");
+            } else if (choices.stream().anyMatch(group -> group.size() < 2)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Each blank must have at least two choices");
+            } else if (choices.stream().flatMap(List::stream).anyMatch(String::isEmpty)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Choice texts cannot be empty");
+            } else if (points < 1) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("message", "Points value must be at least 1");
+            } else {
+
+                QuestionFillInChoices q = new QuestionFillInChoices(
+                        quizId,
+                        question,
+                        correctIndexes,
+                        choices,
+                        fillIndexes,
+                        photoUrl,
+                        points
+                );
+
+                questionDB.add(q);
+                jsonResponse.addProperty("success", true);
+                jsonResponse.addProperty("message", "Fill-in-Choices Question saved successfully.");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            jsonResponse.addProperty("success", false);
+            jsonResponse.addProperty("message", "Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            response.setContentType("application/json");
+            out.print(jsonResponse);
+            out.flush();
+        }
+    }
     private void handleMultiTextAnswer(PrintWriter out, JsonObject body, HttpServletResponse response) {
         JsonObject jsonResponse = new JsonObject();
         try {
@@ -191,7 +298,8 @@ public class SaveQuestionServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jsonResponse.addProperty("success", false);
                 jsonResponse.addProperty("message", "Invalid Fill-in-the-Blanks question format or missing fields.");
-            } else {
+            }
+            else {
                 QuestionFillInBlanks q = new QuestionFillInBlanks(quizId, question, blankIdx, correctAnswers, exactMatch, photoUrl, points);
                 questionDB.add(q);
                 jsonResponse.addProperty("success", true);
