@@ -42,7 +42,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
     // Radio buttons for choices with proper accessibility
     const choiceList = document.createElement('div');
     choiceList.className = 'choice-list';
-    choiceList.setAttribute('role', 'radiogroup');
+    choiceList.setAttribute('role', `radiogroup`);
     choiceList.setAttribute('aria-labelledby', questionText.id);
 
     data.choices.forEach((choice, index) => {
@@ -55,7 +55,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
         const input = document.createElement('input');
         input.type = 'radio';
         input.id = choiceId;
-        input.name = 'singleChoice';
+        input.name = `singleChoice-${data.id}`;
         input.value = index;
         input.required = true; // At least one option must be selected
         input.setAttribute('aria-checked', 'false');

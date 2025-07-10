@@ -1,54 +1,10 @@
-import {getQuestionWhileTaking} from "./questionWhileTaking.js";
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     const params = new URLSearchParams(window.location.search);
-//     const quizId = params.get("id");
-//
-//     fetch("/quiz", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/x-www-form-urlencoded"
-//         },
-//         body: `id=${encodeURIComponent(quizId)}`
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (!data.success) {
-//                 console.error("Error loading quiz" + data.message);
-//                 return;
-//             }
-//
-//
-//             const questions = data.questions;
-//
-//             // Use quiz info
-//             document.body.insertAdjacentHTML("afterbegin", `
-//             <h2>${data.title}</h2>
-//             <p>${data.description}</p>
-//         `);
-//
-//             // Display each question
-//             questions.forEach((q, index) => {
-//                 const questionDiv = getQuestionWhileTaking(q);
-//
-//                 questionDiv.classList.add("question");
-//
-//                 document.body.appendChild(questionDiv);
-//             });
-//
-//
-//         })
-//         .catch(error => {
-//             console.error("Fetch failed", error);
-//         });
-// });
-
-
+import { getQuestionWhileTaking } from "./questionWhileTaking.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const quizId = params.get("id");
-
+    const practiceModeStr = params.get("practice");
+    const practiceMode = practiceModeStr==="true";
     fetch("/quiz", {
         method: "POST",
         headers: {
@@ -63,11 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const questions = data.questions;
+            let questions = data.questions;
             const isRandom = data.israndom;
             const singlePage = data.singlepage;
             const immediateCorrection = data.immediatecorrection;
             const quizResultId = data.quizresultid;
+            const practicemode = data.practicemode;
+            if(!practicemode) {
+                //TODO
+            }
 
             if (isRandom) {
                 shuffleArray(questions);
@@ -78,130 +38,175 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>${data.description}</p>
             `);
 
-            if (singlePage) {
-                // Render all questions at once
-                const questionDivs = []; // store divs here
+            if (practiceMode) {
+                questions.forEach(q => q.correctCount = 0);
+            }
 
-                // Render all questions at once
-                questions.forEach((q) => {
-                    const questionDiv = getQuestionWhileTaking(q);
-                    questionDiv.classList.add("question");
-                    document.body.appendChild(questionDiv);
-                    questionDivs.push({ div: questionDiv, question: q });
-                });
+            if (singlePage) {
+                let questionDivs = [];
+
+                const renderSinglePage = () => {
+                    document.querySelectorAll('.question').forEach(q => q.remove());
+                    questionDivs = [];
+
+                    questions.forEach((q) => {
+                        const questionDiv = getQuestionWhileTaking(q);
+                        questionDiv.classList.add("question");
+                        document.body.appendChild(questionDiv);
+                        questionDivs.push({ div: questionDiv, question: q });
+                    });
+                };
+
+                renderSinglePage();
 
                 const submitBtn = document.createElement("button");
                 submitBtn.textContent = "Submit All";
                 document.body.appendChild(submitBtn);
+
                 submitBtn.onclick = () => {
                     let totalScore = 0;
                     let maxScore = 0;
 
                     questionDivs.forEach(({ div, question }) => {
-                        const earned = evaluateAnswer(div, question, quizResultId); // same function as in multi-page
+                        const earned = evaluateAnswer(div, question, quizResultId);
                         totalScore += earned;
                         maxScore += question.weight || 1;
+
+                        if (practiceMode && earned > 0) {
+                            question.correctCount++;
+                        }
                     });
 
-                    // Optional: hide button
-                    submitBtn.style.display = "none";
+                    if (practiceMode) {
+                        questions = questions.filter(q => q.correctCount < 3);
+                        if (questions.length > 0) {
+                            renderSinglePage();
+                            return;
+                        }
+                    }
 
-                    // Show result
+                    submitBtn.style.display = "none";
                     const resultDiv = document.createElement("div");
                     resultDiv.innerHTML = `<h3>Your Score: ${totalScore} / ${maxScore}</h3>`;
+                    document.body.innerHTML = ``;
                     document.body.appendChild(resultDiv);
-                    // Optional: send to backend
-                };
-
-            } else {
-
-                 let totalscore = 0;
-                 let maxscore = 0;
-                // Multi-page mode
-                let currentIndex = 0;
-
-                function renderQuestion(index) {
-                    document.body.innerHTML = `
-                        <h2>${data.title}</h2>
-                        <p>${data.description}</p>
-                    `;
-
-                    const q = questions[index];
-                    const qDiv = getQuestionWhileTaking(q, index);
-                    qDiv.classList.add("question");
-                    document.body.appendChild(qDiv);
-
-                    const submitBtn = document.createElement("button");
-                    submitBtn.textContent = "Submit";
-
-                    submitBtn.onclick = () => {
-                        const points = evaluateAnswer(qDiv, q, quizResultId); // you must define this function
-                        totalscore += points;
-                        maxscore += q.weight;
-                        if (immediateCorrection) {
-                            submitBtn.style.display = "none"; // hide submit button
-
-                            const feedback = document.createElement("div");
-                            feedback.textContent = points > 0 ? "Correct!" : "Incorrect!";
-                            document.body.appendChild(feedback);
-
-                            const nextBtn = document.createElement("button");
-                            nextBtn.textContent = "Next Question";
-                            nextBtn.onclick = () => {
-                                qDiv.remove();
-                                feedback.remove();
-                                nextBtn.remove();
-                                nextQuestion();
-                            };
-                            document.body.appendChild(nextBtn);
-                        } else {
-                            nextQuestion();
-                        }
-                    };
-
-                    document.body.appendChild(submitBtn);
-                }
-
-                function nextQuestion() {
-                    currentIndex++;
-                    if (currentIndex < questions.length) {
-                        renderQuestion(currentIndex);
-                    } else {
-                        showFinalSubmit();
-                    }
-                }
-
-                function showFinalSubmit() {
-                    document.body.innerHTML = "<h3>All questions completed!</h3>";
-                    const finalBtn = document.createElement("button");
-                    finalBtn.textContent = "Submit Quiz";
-                    document.body.appendChild(finalBtn);
-                    finalBtn.onclick = () => {
-                        const resultDiv = document.createElement("div");
-                        resultDiv.innerHTML = `<h3>Your Score: ${totalscore} / ${maxscore}</h3>`;
-                        document.body.appendChild(resultDiv);
-                        finalBtn.remove();
-                    };
-
-
                     const homeLink = document.createElement("a");
                     homeLink.href = "/home";
                     homeLink.textContent = "Go Home";
-                    homeLink.style.display = "block";  // makes it appear on a new line
+                    homeLink.style.display = "block";
                     homeLink.style.marginTop = "1em";
                     document.body.appendChild(homeLink);
+                };
 
+            }
+
+            else {
+        let totalscore = 0;
+        let maxscore = 0;
+        let currentIndex = 0;
+
+        // Initialize correctCount for each question
+        if (practiceMode) {
+            questions.forEach(q => q.correctCount = 0);
+        }
+
+        const renderQuestion = () => {
+            console.log("Current id "+currentIndex + "total " + questions.length)
+            if (questions.length === 0 || (!practiceMode && currentIndex >= questions.length) ) {
+                showFinalSubmit();
+                return;
+            }
+
+            // Wrap currentIndex to avoid out-of-bounds
+            currentIndex = currentIndex % questions.length;
+
+            const q = questions[currentIndex];
+            document.body.innerHTML = `
+            <h2>${data.title}</h2>
+            <p>${data.description}</p>
+        `;
+
+            const qDiv = getQuestionWhileTaking(q, currentIndex);
+            qDiv.classList.add("question");
+            document.body.appendChild(qDiv);
+
+            const submitBtn = document.createElement("button");
+            submitBtn.textContent = "Submit";
+
+            submitBtn.onclick = () => {
+                const points = evaluateAnswer(qDiv, q, quizResultId);
+                totalscore += points;
+                maxscore += q.weight;
+
+                if (practiceMode && points === q.weight) {
+                    q.correctCount++;
                 }
 
-                renderQuestion(currentIndex);
-            }
-        })
+                const isCompleted = q.correctCount >= 3;
+
+                if (isCompleted) {
+                    questions.splice(currentIndex, 1);
+                    currentIndex = currentIndex % questions.length;
+                    // Don't increment currentIndex, stay at the same index
+                } else if(practiceMode){
+                    currentIndex = (currentIndex + 1) % questions.length;
+                } else {
+                    currentIndex++;
+                }
+
+
+                if (immediateCorrection) {
+                    submitBtn.style.display = "none";
+                    const feedback = document.createElement("div");
+                    feedback.textContent = points > 0 ? "Correct!" : "Incorrect!";
+                    document.body.appendChild(feedback);
+
+                    const nextBtn = document.createElement("button");
+                    nextBtn.textContent = "Next Question";
+                    nextBtn.onclick = () => {
+                        qDiv.remove();
+                        feedback.remove();
+                        nextBtn.remove();
+                        renderQuestion(); // proceed to next
+                    };
+                    document.body.appendChild(nextBtn);
+                } else {
+                    renderQuestion(); // proceed to next directly
+                }
+            };
+
+            document.body.appendChild(submitBtn);
+        };
+
+        const showFinalSubmit = () => {
+            document.body.innerHTML = "<h3>All questions completed!</h3>";
+            const finalBtn = document.createElement("button");
+            finalBtn.textContent = "Submit Quiz";
+            finalBtn.onclick = () => {
+                const resultDiv = document.createElement("div");
+                resultDiv.innerHTML = `<h3>Your Score: ${totalscore} / ${maxscore}</h3>`;
+                document.body.appendChild(resultDiv);
+                finalBtn.remove();
+            };
+            document.body.appendChild(finalBtn);
+
+            const homeLink = document.createElement("a");
+            homeLink.href = "/home";
+            homeLink.textContent = "Go Home";
+            homeLink.style.display = "block";
+            homeLink.style.marginTop = "1em";
+            document.body.appendChild(homeLink);
+        };
+
+        renderQuestion(); // initial render
+    }
+
+})
         .catch(error => {
             console.error("Fetch failed", error);
         });
 });
 
-// Fisher-Yates Shuffle
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -209,10 +214,6 @@ function shuffleArray(array) {
     }
 }
 
-// Placeholder: you must implement this to evaluate answers based on your UI
 function evaluateAnswer(div, questionData, quizResultId) {
-    // This should check if the selected answer is correct based on `questionData`
-    // and return true or false
-    return 1; // placeholder
+    return 1; // Replace with real evaluation
 }
-
