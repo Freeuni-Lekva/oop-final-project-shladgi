@@ -9,9 +9,9 @@ import java.io.IOException;
 @WebServlet(name = "LogoutServlet",value="/logout")
 public class LogoutServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        req.getSession().setAttribute("userid","");
-        req.getSession().setAttribute("username" ,"");
-        req.getSession().setAttribute("type", "");
+        req.getSession().setAttribute("userid",null);
+        req.getSession().setAttribute("username" ,null);
+        req.getSession().setAttribute("type", null);
         res.sendRedirect("/");
     }
 }

@@ -15,33 +15,57 @@
 
 
 <main>
+    <div class="container mt-4">
+        <h2>Create Announcement</h2>
+        <form id="announcementForm">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" required />
+            </div>
 
-    <div class="container">
-        <h2 class="mb-4">Admin Dashboard</h2>
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <textarea class="form-control" id="content" rows="4" required></textarea>
+            </div>
 
-        <!-- Announcements Section -->
-        <div class="mb-5">
-            <h4>Announcements</h4>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image Link (optional)</label>
+                <input type="url" class="form-control" id="image" />
+            </div>
 
-            <form id="createForm" class="d-flex gap-2 mb-3">
-                <input type="text" id="announcementText" class="form-control" placeholder="Write announcement" required>
-                <button type="submit" class="btn btn-success btn-sm">Add</button>
-            </form>
+            <button type="submit" class="btn btn-primary">Create Announcement</button>
+        </form>
+    </div>
 
-            <ul id="announcementList" class="list-group">
 
-            </ul>
+    <div class="container mt-5">
+        <h2 class="mb-3">Site Statistics</h2>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="period" class="form-label">Select Period:</label>
+                <select id="period" class="form-select">
+                    <option value="all">All Time</option>
+                    <option value="24h">Last 24 Hours</option>
+                    <option value="7d">Last 7 Days</option>
+                    <option value="30d">Last 30 Days</option>
+                    <option value="1y">Last 1 year</option>
+                </select>
+            </div>
         </div>
 
-        <div>
-            <h4>Website Statistics</h4>
-            <ul class="list-group">
-                <li class="list-group-item">Users: <span id="statUsers">0</span></li>
-                <li class="list-group-item">Total Visits: <span id="statVisits">0</span></li>
-                <li class="list-group-item">Active Sessions: <span id="statSessions">0</span></li>
-            </ul>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle" id="statsTable">
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
     </div>
+
+
+
+
 </main>
 
 <footer></footer>

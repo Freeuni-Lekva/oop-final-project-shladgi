@@ -109,10 +109,7 @@ public class GetQuizzesServlet extends HttpServlet {
         public String searchQuery;
     }
 
-    private static class QuizResponse {
-        public List<Quiz> quizzes;
-        public int totalPages;
-    }
+
 
     private List<FilterCondition<QuizField>> getFilters(QuizRequest qr, int userid) {
         List<FilterCondition<QuizField>> ans= new ArrayList<>();
