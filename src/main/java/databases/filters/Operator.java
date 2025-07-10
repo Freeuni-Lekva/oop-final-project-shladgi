@@ -7,6 +7,7 @@ public enum Operator {
     LESSEQ("<="),
     MORE(">"),
     LESS("<"),
+    NOTEQ("!="),
     LIKE("LIKE");
 
     private final String operator;

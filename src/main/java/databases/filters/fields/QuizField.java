@@ -11,6 +11,7 @@ public enum QuizField implements SqlField{
     RANDOM("random"),
     SINGLEPAGE("singlepage"),
     IMMEDCORRECTION("immediatecorrection"),
+    DESCRIPTION("description"),
     PRACTICEMODE("practicemode");
 
 

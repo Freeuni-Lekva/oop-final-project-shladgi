@@ -10,11 +10,17 @@ INSERT INTO users (username, salt, password, type) VALUES
 
 -- Insert quizzes (5 entries)
 INSERT INTO quizzes (title, userid, totalscore, totalquestions, random, singlepage, immediatecorrection, practicemode, timelimit, description) VALUES
-                                                                                                                                      ('General Knowledge Quiz', 2, 100, 10, FALSE, TRUE, TRUE, TRUE, 600, "a"),
-                                                                                                                                      ('Science Trivia', 3, 150, 15, TRUE, FALSE, FALSE, TRUE, 900, "aba"),
-                                                                                                                                      ('History Challenge', 2, 75, 5, FALSE, TRUE, TRUE, FALSE, 300, "desc"),
-                                                                                                                                      ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
-                                                                                                                                      ('Geography Quiz', 3, 120, 12, TRUE, FALSE, TRUE, TRUE, 720, "1234");
+                                                                                                                                                   ('General Knowledge Quiz', 2, 100, 10, FALSE, TRUE, TRUE, TRUE, 600, "a"),
+                                                                                                                                                   ('Science Trivia', 3, 150, 15, TRUE, FALSE, FALSE, TRUE, 900, "aba"),
+                                                                                                                                                   ('History Challenge', 2, 75, 5, FALSE, TRUE, TRUE, FALSE, 300, "desc"),
+
+                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                                   ('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),('Math Quick Test', 4, 50, 5, FALSE, TRUE, FALSE, TRUE, 300, "123"),
+                                                                                                                                                   ('Geography Quiz', 3, 120, 12, TRUE, FALSE, TRUE, TRUE, 720, "1234");
 
 
 
@@ -43,11 +49,11 @@ INSERT INTO quiz_results (userid, quizid, timetaken, totalscore) VALUES
                                                                      (5, 5, 300, 110);
 
 INSERT INTO friendships (firstid, secondid) VALUES
-(2, 3),
-(2, 4),
-(3, 5),
-(4, 5),
-(1, 2);  -- Admin is friends with user1
+                                                (2, 3),
+                                                (2, 4),
+                                                (3, 5),
+                                                (4, 5),
+                                                (1, 2);  -- Admin is friends with user1
 
 -- Insert friend_requests (5 entries)
 -- Only between users who aren't already friends
@@ -60,23 +66,23 @@ INSERT INTO friend_requests (firstid, secondid) VALUES
 
 -- Insert challenges (5 entries)
 INSERT INTO challenges (quizid, senderid, recipientid, bestscore, quiztitle, viewed) VALUES
-                                                                                 (1, 2, 3, 75, 'General Knowledge Quiz', false),
-                                                                                 (2, 3, 4, 100, 'Science Trivia', false),
-                                                                                 (3, 4, 5, 50, 'History Challenge', false),
-                                                                                 (4, 5, 2, 40, 'Math Quick Test', false),
-                                                                                 (5, 2, 4, 90, 'Geography Quiz', false);
+                                                                                         (1, 2, 3, 75, 'General Knowledge Quiz', false),
+                                                                                         (2, 3, 4, 100, 'Science Trivia', false),
+                                                                                         (3, 4, 5, 50, 'History Challenge', false),
+                                                                                         (4, 5, 2, 40, 'Math Quick Test', false),
+                                                                                         (5, 2, 4, 90, 'Geography Quiz', false);
 
 
 INSERT INTO announcements (imagelink, title, content, author) VALUES
-                                                    ('imglink1.png', 'announcement1', 'very important announcement to see', 'admin1'),
-                                                    ('imglink2.png', 'announcement2', 'very important 222 announcement to see', 'admin1'),
-                                                    ('imglink3.png', 'announcement3', 'very important  333 announcement to see', 'admin1'),
-                                                    ('imglink4.png', 'announcement4', 'very important  4444 announcement to see', 'admin1'),
-                                                    ('imglink5.png', 'announcement5', 'very important  55555 announcement to see', 'admin1');
-                                                    
+                                                                  ('imglink1.png', 'announcement1', 'very important announcement to see', 'admin1'),
+                                                                  ('imglink2.png', 'announcement2', 'very important 222 announcement to see', 'admin1'),
+                                                                  ('imglink3.png', 'announcement3', 'very important  333 announcement to see', 'admin1'),
+                                                                  ('imglink4.png', 'announcement4', 'very important  4444 announcement to see', 'admin1'),
+                                                                  ('imglink5.png', 'announcement5', 'very important  55555 announcement to see', 'admin1');
+
 INSERT INTO notes (senderid, recipientid, text, viewed) VALUES
-                                                    (2, 3, 'Great job on the Science Trivia quiz!', false),
-                                                    (3, 2, 'Thanks for the challenge, let me know when you want a rematch!', false),
-                                                    (4, 5, 'How did you solve question 4 on the Math test?', false),
-                                                    (5, 4, 'Check out this new geography quiz I created!', false),
-                                                    (2, 4, 'Your history knowledge is impressive!', false);
+                                                            (2, 3, 'Great job on the Science Trivia quiz!', false),
+                                                            (3, 2, 'Thanks for the challenge, let me know when you want a rematch!', false),
+                                                            (4, 5, 'How did you solve question 4 on the Math test?', false),
+                                                            (5, 4, 'Check out this new geography quiz I created!', false),
+                                                            (2, 4, 'Your history knowledge is impressive!', false);

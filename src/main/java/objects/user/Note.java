@@ -53,4 +53,5 @@ public class Note {
     public LocalDateTime getCreationDate() {return creationDate;}
     public void setViewed(boolean viewed) {this.viewed = viewed;}
     public boolean isViewed() {return viewed;}
+    public String getText() {return text;}
 }
