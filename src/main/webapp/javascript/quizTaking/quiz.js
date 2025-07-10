@@ -183,6 +183,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         finalBtn.remove();
                     };
 
+
+                    const homeLink = document.createElement("a");
+                    homeLink.href = "/home";
+                    homeLink.textContent = "Go Home";
+                    homeLink.style.display = "block";  // makes it appear on a new line
+                    homeLink.style.marginTop = "1em";
+                    document.body.appendChild(homeLink);
+
                 }
 
                 renderQuestion(currentIndex);
