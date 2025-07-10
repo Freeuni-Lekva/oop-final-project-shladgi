@@ -79,7 +79,7 @@ public class StartQuizServlet extends HttpServlet {
         // Check if user has unfinished quiz
         List<FilterCondition<QuizResultField>> unfinishedFilters = List.of(
                 new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
-                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.EQUALS, -1)
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0)
         );
 
         List<QuizResult> unfinishedResults = quizResultDB.query(unfinishedFilters);
@@ -91,13 +91,16 @@ public class StartQuizServlet extends HttpServlet {
             return;
         }
 
+        int timetaken = -1; // started quiz normally
+        if(practice) timetaken = -2;
+
         // Start new result entry
         QuizResult newResult = new QuizResult(
                 userId,
                 quizId,
                 LocalDateTime.now(),
-                -1.0,
-                -1
+                0,
+                timetaken
         );
 
         quizResultDB.add(newResult);

@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.success) {
                     // es merea dasaweri
-                    window.location.href = "/quiz?id=" + quizId; // redirect to quiz page, adjust URL as needed
+                    window.location.href = "/quiz?id=" + quizId + "&practice=" + practice;
                 } else {
                     statusDiv.textContent = "❌ " + data.message;
                     statusDiv.style.color = "red";

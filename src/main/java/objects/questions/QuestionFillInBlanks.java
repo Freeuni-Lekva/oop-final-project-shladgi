@@ -71,7 +71,6 @@ public class QuestionFillInBlanks extends Question{
 
     }
 
-
     // compare participant's answers with given possible correct answers.
     @Override
     public int check(Answer<?> answer) {
@@ -170,4 +169,8 @@ public class QuestionFillInBlanks extends Question{
         return answer.equals(correctAnswer);
     }
 
+    @Override
+    public void hideAnswers(){
+        correctAnswers = null;
+    }
 }
