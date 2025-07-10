@@ -170,7 +170,7 @@ export async function getUserDiv(receiverUsername) {
     const myName = await loadSessionValue("username");
     console.log(myName);
     const userLink = document.createElement("a");
-    userLink.href = `/user.html?username=${encodeURIComponent(receiverUsername)}`;
+    userLink.href = `/user?username=${encodeURIComponent(receiverUsername)}`;
     userLink.textContent = receiverUsername;
     userLink.classList.add("fw-bold", "text-decoration-none", "text-dark");
     div.appendChild(userLink);
