@@ -26,6 +26,22 @@ public class QuestionFillInChoices extends Question{
         this.fillIndexes = new ArrayList<>(fillIndexes);
     }
 
+    public QuestionFillInChoices(int quizId, String question, List<Integer> correctIndexes, List<List<String>> choices, List<Integer> fillIndexes, String imageLink, double weight){
+        this.question = question;
+        this.type = QType.FillChoices;
+        this.maxScore = correctIndexes.size();
+        this.correctIndexes = new ArrayList<>(correctIndexes);
+        this.choices = new ArrayList<>();
+        for(int i = 0; i < choices.size(); i++){
+            this.choices.add(new ArrayList<>(choices.get(i)));
+        }
+        this.fillIndexes = new ArrayList<>(fillIndexes);
+
+        this.quizId = quizId;
+        this.imageLink = imageLink;
+        this.weight = weight;
+    }
+
     // this is a constructor that constructs the object from database table information.
     public QuestionFillInChoices(int id, int quizId, String question, String imageLink, int maxScore, double weight, JsonObject json) {
         super(id,quizId,question,imageLink,maxScore, weight,json, QType.FillChoices);

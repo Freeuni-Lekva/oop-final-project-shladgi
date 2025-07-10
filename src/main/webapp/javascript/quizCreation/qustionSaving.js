@@ -3,6 +3,7 @@ import {saveMultiChoiceQuestion} from "./multiChoiceDiv.js";
 import {saveFillInBlanksQuestion} from "./fillInBlanksDiv.js";
 import {saveMultiTextAnswerQuestion} from "./multiTextAnswerDiv.js"
 import {saveTextAnswerQuestion} from "./textAnswerDiv.js";
+import {saveFillInChoicesQuestion} from "./fillInChoicesDiv.js"
 
 
 const QType = {
@@ -30,7 +31,5 @@ export function saveQuestion(div, quizid, type){
         case QType.FillChoices:
             return saveFillInChoicesQuestion(div, quizid);
     }
-
-
 
 }
