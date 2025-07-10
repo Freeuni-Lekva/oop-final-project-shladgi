@@ -61,8 +61,8 @@ public class RegisterServlet extends HttpServlet {
 
         userDB.add(newUser);
 
-        HttpSession session = request.getSession();
-        session.setAttribute("userid", newUser.getId());
+//        HttpSession session = request.getSession();
+        request.getSession().setAttribute("userid", newUser.getId());
         request.getSession().setAttribute("username", newUser.getUserName());
         request.getSession().setAttribute("type", newUser.getType());
         response.setContentType("application/json");
