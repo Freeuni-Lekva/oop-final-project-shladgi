@@ -83,7 +83,7 @@ export async function evalAnswerFillInBlanks(div, questionid, quizresultid, user
 
 
     try {
-        const response = await fetch('/SubmitAnswerServlet', {
+        const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
