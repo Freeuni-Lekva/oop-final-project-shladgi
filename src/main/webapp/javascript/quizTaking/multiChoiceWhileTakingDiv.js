@@ -51,46 +51,80 @@ export function getMultiChoiceWhileTakingDiv(data) {
 }
 
 
-export async function evalAnswerMultiChoice(div, questionId, resultId, userId) {
-    // Get all checked checkboxes inside the div
-    const checkedInputs = div.querySelectorAll('input[type="checkbox"]:checked');
+export async function evalAnswerMultiChoice(div, questionid, quizresultid, userid) {
+    const checkedBoxes = div.querySelectorAll(`input[type="checkbox"]:checked`);
 
-    if (!checkedInputs || checkedInputs.length === 0) {
-        return { success: false, message: "Please select at least one option." };
+    if (!checkedBoxes || checkedBoxes.length === 0) {
+        return { success: false, message: "No answers selected" };
     }
 
-    // Collect selected choice indexes
-    const selectedChoices = Array.from(checkedInputs).map(input => parseInt(input.value));
+    const userAnswer = {
+        isString: false,
+        choices: Array.from(checkedBoxes).map(box => parseInt(box.value))
+    };
 
-    const dataToSend = {
-        userId: userId,
-        questionId: questionId,
-        resultId: resultId,
-        userAnswer: {
-            isString: false,           // Not a text answer
-            choices: selectedChoices  // List of selected indexes
-        }
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
     };
 
     try {
         const response = await fetch('/evalAndSaveUserAnswer', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataToSend)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
         });
 
-        if (!response.ok) {
-            const error = await response.json();
-            return { success: false, message: error.message || 'Server error' };
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
         }
 
-        const result = await response.json();
-        return result;
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
 
     } catch (error) {
-        console.error("Error sending multi-choice answer:", error);
-        return { success: false, message: error.message };
+        return { success: false, message: "Network error" };
     }
+}
+
+export function highlightCorrectionMultiChoice(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData) return;
+    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    // Clear previous highlights
+    div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(el => {
+        el.classList.remove('correct-choice', 'incorrect-choice');
+    });
+
+    const userChoices = evaluationResult.userAnswer.choices;
+    const correctChoices = questionData.correctChoices || [];
+
+    // Highlight all user selections
+    userChoices.forEach(choiceIndex => {
+        const input = div.querySelector(`input[value="${choiceIndex}"]`);
+        if (input) {
+            const isCorrect = correctChoices.includes(choiceIndex);
+            input.closest('label').classList.add(
+                isCorrect ? 'correct-choice' : 'incorrect-choice'
+            );
+        }
+    });
+
+    // Highlight correct answers not selected by user
+    correctChoices.forEach(correctIndex => {
+        if (!userChoices.includes(correctIndex)) {
+            const correctInput = div.querySelector(`input[value="${correctIndex}"]`);
+            if (correctInput) {
+                correctInput.closest('label').classList.add('correct-choice');
+            }
+        }
+    });
 }
