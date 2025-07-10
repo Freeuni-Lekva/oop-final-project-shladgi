@@ -1,6 +1,7 @@
 import { getQuestionWhileTaking } from "./questionWhileTaking.js";
 import {loadSessionValue} from "../getSessionInfo.js";
 import {evalAnswer} from "./answerSaveWhileTaking.js";
+import {highlightQuestionDiv} from "./hihglightQuestion.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const startTime = Date.now();
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             let questions = data.questions;
+            let responses = [];
             const isRandom = data.israndom;
             const singlePage = data.singlepage;
             const immediateCorrection = data.immediatecorrection;
@@ -71,16 +73,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                 submitBtn.onclick = async () => {
                     let totalScore = 0;
                     let maxScore = 0;
-
+                    let qid = 0;
                     for (const {div, question} of questionDivs) {
                         const json = await evaluateAnswer(div, question, quizResultId, userid);
-                        totalScore += json.points;
-                        maxScore += question.weight || 1;
+                        if(json.success === true){
+                            totalScore += json.points;
+                            maxScore += question.weight || 1;
+                            responses[qid] = json;
+                            if (practiceMode && earned > 0) {
+                                question.correctCount++;
+                            }
 
-                        if (practiceMode && earned > 0) {
-                            question.correctCount++;
+                        }else {
+                            responses.length = 0;
+                            responses = [];
+
+                            // TODO: washale userResultebi databasedan
+
+                            return;
                         }
                     }
+
+
+
 
                     if (practiceMode) {
                         questions = questions.filter(q => q.correctCount < 3);
@@ -90,10 +105,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                         }
                     }
 
+                    // TODO if practice mode da single page gachvenos yvela divze pasuxebi da next try
+                    // TODO if singlePage ar aris unda gamoitanos yvela da daaupdatos
+
                     submitBtn.style.display = "none";
                     const resultDiv = document.createElement("div");
                     resultDiv.innerHTML = `<h3>Your Score: ${totalScore} / ${maxScore}</h3>`;
-                    document.body.innerHTML = ``;
                     document.body.appendChild(resultDiv);
                     const homeLink = document.createElement("a");
                     homeLink.href = "/home";
@@ -102,6 +119,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     homeLink.style.marginTop = "1em";
                     const endTime = Date.now(); // current time
                     const timeTakenSeconds = Math.floor((endTime - startTime) / 1000); // assuming you store startTime earlier
+
+                    qid = 0;
+                    for (const {div, question} of questionDivs) {
+                        highlightQuestionDiv(div, responses[qid], question);
+                        qid++;
+                    }
+
 
                     fetch("/updatequizresult", {
                         method: "POST",
