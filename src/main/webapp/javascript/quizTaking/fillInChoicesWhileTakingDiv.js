@@ -40,8 +40,8 @@ export function getFillInChoicesWhileTakingDiv(data) {
         label.textContent = `Answer ${i + 1}:`;
         answerGroup.appendChild(label);
 
-
         const select = document.createElement('select');
+        select.className = 'answer-select'; // Added this class
         select.style.margin = '0 5px';
         select.dataset.answerIndex = i;
         select.required = true;
@@ -72,9 +72,8 @@ export function getFillInChoicesWhileTakingDiv(data) {
     return container;
 }
 
-
 export async function evalAnswerFillInChoices(div, questionid, quizresultid, userid) {
-    // Get all select dropdowns
+    // Get all select dropdowns - now using the correct class
     const selects = div.querySelectorAll('select.answer-select');
     const answers = [];
 
@@ -90,7 +89,7 @@ export async function evalAnswerFillInChoices(div, questionid, quizresultid, use
     // Validate all dropdowns were answered
     if (answers.some(a => a === null)) {
         console.error("Not all dropdowns were answered for question", questionid);
-        return null;
+        return {success: false, message: "Please answer all dropdowns"};
     }
 
     const submissionData = {
@@ -114,14 +113,12 @@ export async function evalAnswerFillInChoices(div, questionid, quizresultid, use
 
         if (!response.ok) {
             const error = await response.json();
-            return {success : false, message: error.message || "Server error"};
+            return {success: false, message: error.message || "Server error"};
         }
 
         return await response.json();
     } catch (error) {
         console.error('Error submitting answer:', error);
-        return {success : false, message: error.message};
+        return {success: false, message: error.message};
     }
 }
-
-
