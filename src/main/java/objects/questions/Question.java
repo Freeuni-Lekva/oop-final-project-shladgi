@@ -75,4 +75,8 @@ public abstract class Question implements ObjectWithJson {
     public int getMaxScore() {return maxScore;}
 
     public void setMaxScore(int maxScore) {this.maxScore = maxScore;}
+
+    public double getWeight() {return weight;}
+
+    public void setWeight(double weight) {this.weight = weight;}
 }
