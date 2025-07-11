@@ -107,37 +107,69 @@ export function highlightCorrectionMultiTextAnswer(div, evaluationResult, questi
 
     const inputs = div.querySelectorAll('input[type="text"]');
     const correctAnswers = questionData.correctAnswers || [];
+    const exactMatch = !!questionData.exactMatch;
+    const ordered = !!questionData.ordered;
+
+    // Helper function: normalize for non-exact match
+    function normalize(str) {
+        return str.toLowerCase().replace(/\s+/g, '');
+    }
+
+    // Helper function: compare with correct options
+    function matches(possibleAnswer, userInput) {
+        if (exactMatch) {
+            return possibleAnswer === userInput;
+        } else {
+            return normalize(possibleAnswer) === normalize(userInput);
+        }
+    }
+
+    // Track which correct groups were used (for unordered mode)
+    const used = new Array(correctAnswers.length).fill(false);
 
     inputs.forEach((input, index) => {
         input.readOnly = true;
+        const userInput = input.value.trim();
 
         let isCorrect = false;
+        let matchedGroupIndex = -1;
 
-        // Debug log
-
-        // First: use server-provided correctness if available
-        if (Array.isArray(evaluationResult.details?.perAnswerCorrectness)) {
-            isCorrect = evaluationResult.details.perAnswerCorrectness[index] === true;
-        }
-        // Otherwise: fallback to comparing user input against correct options
-        else if (Array.isArray(correctAnswers[index])) {
-            const userInput = input.value.trim().toLowerCase();
-            const normalizedCorrects = correctAnswers[index].map(ans => ans.trim().toLowerCase());
-            isCorrect = normalizedCorrects.includes(userInput);
+        if (ordered) {
+            // Ordered mode: position matters
+            if (index < correctAnswers.length) {
+                const correctGroup = correctAnswers[index];
+                isCorrect = correctGroup.some(possible => matches(possible, userInput));
+            }
+        } else {
+            // Unordered mode: try to find any unused correct group that matches
+            for (let i = 0; i < correctAnswers.length; i++) {
+                if (used[i]) continue;
+                const group = correctAnswers[i];
+                if (group.some(possible => matches(possible, userInput))) {
+                    used[i] = true;
+                    isCorrect = true;
+                    matchedGroupIndex = i;
+                    break;
+                }
+            }
         }
 
         input.classList.add(isCorrect ? "correct-choice" : "incorrect-choice");
 
-        // Show correct answers only if incorrect
-        if (!isCorrect && Array.isArray(correctAnswers[index]) && correctAnswers[index].length > 0) {
-            const correctText = correctAnswers[index].join(" OR ");
-            const span = document.createElement("span");
-            span.className = "correct-answer-text";
-            span.textContent = ` (Correct: ${correctText})`;
-            input.parentNode.insertBefore(span, input.nextSibling);
+        // Show correct answers if incorrect
+        if (!isCorrect && (ordered ? index < correctAnswers.length : matchedGroupIndex !== -1)) {
+            const group = ordered ? correctAnswers[index] : correctAnswers[matchedGroupIndex];
+            if (group && group.length > 0) {
+                const correctText = group.join(" OR ");
+                const span = document.createElement("span");
+                span.className = "correct-answer-text";
+                span.textContent = ` (Correct: ${correctText})`;
+                input.parentNode.insertBefore(span, input.nextSibling);
+            }
         }
     });
 }
+
 
 
 export function populateMultiTextAnswerDiv(div, questionData, userAnswer) {
