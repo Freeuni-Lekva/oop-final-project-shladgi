@@ -105,7 +105,7 @@ async function renderUsers(users) {
     usersList.innerHTML = '';
 
     for (const user of users) {
-        const userCard = await getUserDiv(user.name);
+        const userCard = await getUserDiv(user.name, user.type);
         usersList.appendChild(userCard);
     }
 

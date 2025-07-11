@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // New fields
                 document.getElementById("quizDescription").textContent = data.description;
                 let creatorLink = document.getElementById("creatorLink");
-                creatorLink.href = "/user?id=" + data.creatorId;
+                creatorLink.href = "/user?username=" + data.creatorName;
                 creatorLink.textContent = data.creatorName;
 
                 // get my past results.
