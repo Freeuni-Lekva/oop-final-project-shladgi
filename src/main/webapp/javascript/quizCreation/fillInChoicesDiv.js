@@ -2,10 +2,14 @@
  * Creates a fill-in-choices question div with UI components.
  * @returns {HTMLDivElement} DOM element for fill-in-choices question creation.
  */
+let fillChoiceGlobalId = 0;
+
 export function getFillInChoicesDiv() {
     const container = document.createElement('div');
     container.className = 'fill-in-choices-container';
     container.dataset.qtype = "FillChoices";
+
+    const containerId = `fill-${fillChoiceGlobalId++}`;  // Unique ID for this question
 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
@@ -68,32 +72,32 @@ export function getFillInChoicesDiv() {
         section.appendChild(optionsContainer);
 
         // Add two default options
-        addChoiceOption(optionsContainer, blankCounter, true);
-        addChoiceOption(optionsContainer, blankCounter, false);
+        addChoiceOption(optionsContainer, blankCounter, containerId, true);
+        addChoiceOption(optionsContainer, blankCounter, containerId, false);
 
         const addOptionBtn = document.createElement('button');
         addOptionBtn.textContent = '+ Add Option';
         addOptionBtn.className = 'add-option-btn';
-        addOptionBtn.onclick = () => addChoiceOption(optionsContainer, blankCounter, false);
+        addOptionBtn.onclick = () => addChoiceOption(optionsContainer, blankCounter, containerId, false);
         section.appendChild(addOptionBtn);
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete This Blank';
-        deleteBtn.className = 'delete-blank-btn';
-        deleteBtn.onclick = () => {
+        const deleteBlankBtn = document.createElement('button');
+        deleteBlankBtn.textContent = 'Delete This Blank';
+        deleteBlankBtn.className = 'delete-blank-btn';
+        deleteBlankBtn.onclick = () => {
             if (choicesContainer.children.length > 1) {
                 section.remove();
             } else {
                 alert('At least one blank is required');
             }
         };
-        section.appendChild(deleteBtn);
+        section.appendChild(deleteBlankBtn);
 
         choicesContainer.appendChild(section);
         blankCounter++;
     }
 
-    function addChoiceOption(container, blankIndex, isFirst) {
+    function addChoiceOption(container, blankIndex, containerId, isFirst) {
         const group = document.createElement('div');
         group.className = 'option-group';
 
@@ -106,16 +110,14 @@ export function getFillInChoicesDiv() {
         const radio = document.createElement('input');
         radio.type = 'radio';
 
-        // 🔧 Ensure radio group is correct even if dynamically added later
-        const section = container.closest('.choice-section');
-        const trueBlankIndex = section?.dataset?.blankIndex || blankIndex;
-        radio.name = `correct-option-${trueBlankIndex}`;
-
+        // Unique name per blank and question
+        const radioName = `correct-option-${containerId}-${blankIndex}`;
+        radio.name = radioName;
         radio.required = isFirst;
         if (isFirst) radio.checked = true;
 
         radio.addEventListener('change', () => {
-            const allRadios = container.querySelectorAll(`input[type="radio"][name="correct-option-${trueBlankIndex}"]`);
+            const allRadios = container.querySelectorAll(`input[type="radio"][name="${radioName}"]`);
             allRadios.forEach(r => {
                 if (r !== radio) r.checked = false;
             });
@@ -142,7 +144,6 @@ export function getFillInChoicesDiv() {
         container.appendChild(group);
     }
 
-
     addBlankBtn.onclick = () => {
         const startPos = questionInput.selectionStart;
         const endPos = questionInput.selectionEnd;
@@ -160,6 +161,7 @@ export function getFillInChoicesDiv() {
 
     return container;
 }
+
 
 
 /**
