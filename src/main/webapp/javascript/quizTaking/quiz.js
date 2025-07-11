@@ -12,18 +12,52 @@
         const userid = await loadSessionValue("userid");
         const quizContainer = document.getElementById("quiz-container");
         const bottomContainer = document.getElementById("bottom-container");
+        const bigMessageContainer = document.getElementById("big-message-container");
+        const smallMessageContainer = document.getElementById("small-message-container")
+
+        console.log(bigMessageContainer);
+
+        const  showSmallMessage = (isOk, message) => {
+            smallMessageContainer.classList.remove("error-message", "success-message");
+            if(isOk) smallMessageContainer.classList.add("success-message");
+            else smallMessageContainer.classList.add("error-message");
+            smallMessageContainer.innerText = message;
+        };
+
+        const body = new URLSearchParams({
+            id: quizId,
+            practiceMode : practiceMode,
+        });
+
+
+
+
 
         fetch("/quiz", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: `id=${encodeURIComponent(quizId)}`
+            body: body.toString()
         })
             .then(response => response.json())
             .then(data => {
                 if (!data.success) {
-                    console.error("Error loading quiz: " + data.message);
+                    bigMessageContainer.innerText = data.message;
+                    bigMessageContainer.classList.add("error-message");
+
+                    if (data.showLink === true) {
+                        const runningQuizId = data.runningQuizId;
+                        const runningQuizButtn = document.createElement("a");
+                        runningQuizButtn.textContent = "Go to Running Quiz";
+                        runningQuizButtn.href = `startQuiz?id=${runningQuizId}`;  // set default link if none provided
+                        runningQuizButtn.classList.add("btn", "btn-primary");  // Bootstrap styling
+                        runningQuizButtn.style.marginTop = "1em";
+
+                        bigMessageContainer.appendChild(runningQuizButtn);
+                    }
+
+
                     return;
                 }
 
@@ -33,11 +67,7 @@
                 const singlePage = data.singlepage;
                 const immediateCorrection = data.immediatecorrection;
                 const quizResultId = data.quizresultid;
-                const practicemode = data.practicemode;
                 const allQuestionsDiv = document.getElementById("all-questions-container");
-                if (!practicemode) {
-                    //TODO
-                }
 
                 if (isRandom) {
                     shuffleArray(questions);
@@ -47,6 +77,7 @@
                     <h2>${data.title}</h2>
                     <p>${data.description}</p>
                 `);
+
 
                 if (practiceMode) {
                     questions.forEach(q => q.correctCount = 0);
@@ -80,6 +111,7 @@
                         for (const {div, question} of questionDivs) {
                             const json = await evaluateAnswer(div, question, quizResultId, userid);
                             if (json.success === true) {
+                                div.classList.remove("invalid-input");
                                 totalScore += json.points;
                                 maxScore += question.weight || 1;
                                 responses[qid] = json;
@@ -87,9 +119,16 @@
                                     question.correctCount++;
                                 }
 
+
                             } else {
                                 responses.length = 0;
                                 responses = [];
+
+                                div.classList.add("invalid-input");
+
+                                showSmallMessage(false, json.message);
+
+
 
                                 // TODO: washale userResultebi databasedan
 
@@ -97,11 +136,6 @@
                             }
                             qid++;
                         }
-
-
-                        // TODO if practice mode da single page gachvenos yvela divze pasuxebi da next try
-
-                        // TODO if singlePage ar aris unda gamoitanos yvela da daaupdatos
                         submitBtn.style.display = "none";
 
                         const resultDiv = document.createElement("div");
@@ -179,9 +213,9 @@
 
                         const q = questions[currentIndex];
                         quizContainer.innerHTML = `
-                <h2>${data.title}</h2>
-                <p>${data.description}</p>
-            `;
+                        <h2>${data.title}</h2>
+                        <p>${data.description}</p>
+                        `;
 
                         const qDiv = getQuestionWhileTaking(q, currentIndex);
                         qDiv.classList.add("question");
@@ -210,6 +244,7 @@
                             } else {
                                 currentIndex++;
                             }
+
 
 
                             if (immediateCorrection) {
@@ -261,6 +296,7 @@
 
             })
             .catch(error => {
+                console.log("SAKDLJSALKJD");
                 console.error("Fetch failed", error);
             });
     });
@@ -273,11 +309,10 @@
     }
 
 
-    function showMessage(isOk, message){
 
 
 
-    }
+
 
     async function evaluateAnswer(div, questionData, quizResultId, userid) {
         const msg = await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
