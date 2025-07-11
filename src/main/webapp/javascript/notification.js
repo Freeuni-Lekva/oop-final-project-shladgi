@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await res.json();
             if (!data.success) {
-                content.innerHTML = `<div class="alert alert-danger">${data.message || "Error loading notifications."}</div>`;
+                content.innerHTML = `<div class="alert alert-danger">Something went wrong</div>`;
                 seeMoreContainer.style.display = "none";
                 return;
             }
@@ -80,15 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
     card.innerHTML = `
         <div class="card-body ${noteObj.viewed ? "":"viewed"}">
             <div class="d-flex justify-content-between">
-                <h5 class="card-title mb-1">${noteObj.text}</h5>
-                <span class="badge bg-${noteObj.viewed ? "secondary" : "success"}">
-                    ${noteObj.viewed ? "Viewed" : "New"}
-                </span>
+                <h5 class="card-title mb-0">${noteObj.text}</h5>
+                 <span class="badge bg-info text-dark">Note</span>
+               
             </div>
             <p class="mb-1 text-muted"><small>${new Date(noteObj.createDate).toLocaleString()}</small></p>
-            <p class="mb-0"> 
+            <p class="mb-1"> 
                 <a href="/user?username=${noteObj.username}">${noteObj.username}</a>
             </p>
+             <span class="badge bg-${noteObj.viewed ? "secondary" : "success"}">
+                    ${noteObj.viewed ? "Viewed" : "New"}
+                </span>
+            
         </div>
     `;
 
