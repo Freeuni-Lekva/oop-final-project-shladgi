@@ -18,14 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     ids.forEach(id => {
         const el = document.getElementById(id);
-        if (el) {
-            // Get computed display style
-            const display = window.getComputedStyle(el).display;
-            info[id] = (display !== "none");
-        } else {
-            info[id] = null; // if the element is missing
-        }
+        info[id] = el ? (window.getComputedStyle(el).display !== "none") : null;
     });
+
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
 
@@ -50,10 +45,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (userSection && viewedUsername) {
         userSection.style.display = "block";
 
-        // Clear old username display
-        const oldUsernameDisplay = userSection.querySelector(".username-display");
-        if (oldUsernameDisplay) oldUsernameDisplay.remove();
+        // Remove previous displays to avoid duplicates
+        userSection.querySelectorAll(".username-display, .achievement-title, .achievement-container, .no-achievements")
+            .forEach(el => el.remove());
 
+        // Show username
         const usernameDisplay = document.createElement("p");
         usernameDisplay.textContent = `Username: ${viewedUsername}`;
         usernameDisplay.classList.add("username-display");
@@ -72,14 +68,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const achievements = await response.json();
 
-            // Remove old elements
-            userSection.querySelectorAll(".achievement-title, .achievement-container, .no-achievements")
-                .forEach(el => el.remove());
-
             if (achievements.length > 0) {
                 const achTitle = document.createElement("h4");
                 achTitle.textContent = "Achievements:";
-                achTitle.classList.add("achievement-title");
+                achTitle.classList.add("achievement-title", "mt-3");
                 userSection.appendChild(achTitle);
 
                 const achContainer = document.createElement("div");
@@ -93,11 +85,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else {
                 const noAch = document.createElement("p");
                 noAch.textContent = "No achievements yet.";
-                noAch.classList.add("no-achievements");
+                noAch.classList.add("no-achievements", "mt-3");
                 userSection.appendChild(noAch);
             }
         } catch (error) {
             console.error("Error loading achievements:", error);
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "alert alert-danger mt-3";
+            errorDiv.textContent = "Failed to load achievements.";
+            userSection.appendChild(errorDiv);
         }
     }
 

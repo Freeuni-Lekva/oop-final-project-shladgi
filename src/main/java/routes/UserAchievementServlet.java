@@ -1,6 +1,8 @@
 package routes;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import databases.filters.FilterCondition;
 import databases.filters.Operator;
 import databases.filters.fields.AchievementField;
@@ -28,8 +30,15 @@ public class UserAchievementServlet extends HttpServlet {
         List<Achievement> list = achievementDB.query(new FilterCondition<>(AchievementField.ID, Operator.EQUALS, id));
         Achievement achievement = list.get(0);
 
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", achievement.getId());
+        jsonObject.addProperty("rarity", achievement.getAchivementRarity().toString());
+        jsonObject.addProperty("description", achievement.getDescription());
+        jsonObject.addProperty("title", achievement.getTitle());
+        jsonObject.addProperty("iconLink", achievement.getIconLink());
+
         Gson gson = new Gson();
-        String json = gson.toJson(achievement);
+        String json = gson.toJson(jsonObject);
         response.setContentType("application/json");
         response.getWriter().write(json);
     }
