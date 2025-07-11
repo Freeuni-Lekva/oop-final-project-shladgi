@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                             return;
                         }
+                        qid++;
                     }
 
 

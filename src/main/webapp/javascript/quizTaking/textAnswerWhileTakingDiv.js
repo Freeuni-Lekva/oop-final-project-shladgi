@@ -86,15 +86,24 @@ export async function evalAnswerTextAnswer(div, questionid, quizresultid, userid
     }
 }
 
+
 export function highlightCorrectionTextAnswer(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData) return;
-    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
 
     const input = div.querySelector('input[type="text"]');
     if (!input) return;
 
-    input.readOnly = true; // Prevent editing after submission
-
+    input.readOnly = true;
     const isCorrect = evaluationResult.points > 0;
     input.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
+
+    // Show all possible correct answers next to input if user's answer was wrong
+    if (!isCorrect && Array.isArray(questionData.correctAnswers) && questionData.correctAnswers.length > 0) {
+        const correctText = questionData.correctAnswers.join(" OR ");
+        const span = document.createElement('span');
+        span.className = 'correct-answer-text';
+        span.textContent = ` (Correct: ${correctText})`;
+        input.parentNode.insertBefore(span, input.nextSibling);
+    }
 }
+
