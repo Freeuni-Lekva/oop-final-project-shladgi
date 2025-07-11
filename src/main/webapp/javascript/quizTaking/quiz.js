@@ -264,8 +264,9 @@
                                 currentIndex++;
                             }
 
+                            submitBtn.remove();
+
                             if (immediateCorrection) {
-                                submitBtn.remove();
                                 highlightQuestionDiv(qDiv, json, q);
 
                                 const nextBtn = document.createElement("button");
@@ -277,6 +278,7 @@
                                 };
                                 bottomContainer.appendChild(nextBtn);
                             } else {
+                                qDiv.remove();
                                 renderQuestion(); // proceed to next directly
                             }
                         };
