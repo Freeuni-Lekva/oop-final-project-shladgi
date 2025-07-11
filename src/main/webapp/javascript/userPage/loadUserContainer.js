@@ -1,5 +1,6 @@
 import { loadSessionValue } from "../getSessionInfo.js";
 import { getAchievementDiv } from "../achievementDivGetter.js";
+import {getQuizDiv} from "../getQuizDiv.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("userMenuItem").classList.add("active");
@@ -88,6 +89,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 noAch.classList.add("no-achievements", "mt-3");
                 userSection.appendChild(noAch);
             }
+
+            const res = await fetch("/current-quiz", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `username=${encodeURIComponent(viewedUsername)}`
+            });
+            console.log("in");
+            if (!res.ok) throw new Error("Failed to fetch current quizzes");
+            console.log("out");
+            const currentQuiz = await res.json();
+            if(currentQuiz !== "no curr"){
+                const div = await getQuizDiv(currentQuiz);
+                userSection.appendChild(div);
+            }
+
         } catch (error) {
             console.error("Error loading achievements:", error);
             const errorDiv = document.createElement("div");
