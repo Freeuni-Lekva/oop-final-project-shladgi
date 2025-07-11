@@ -86,7 +86,7 @@ private int PAGE_SIZE =10;
                         new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, p.userid),
                         new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, false)),
                 ChallengeField.CREATIONDATE,
-                true,
+                false,
                 PAGE_SIZE+1,
                 0
         );
@@ -96,7 +96,7 @@ private int PAGE_SIZE =10;
                             new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, p.userid),
                             new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, true)),
                     ChallengeField.CREATIONDATE,
-                    true,
+                    false,
                     PAGE_SIZE+1-unseenChals.size(),
                     0
             );
@@ -104,17 +104,15 @@ private int PAGE_SIZE =10;
         }
 
         for(Challenge c : unseenChals){
-            p.chalDB.delete(new FilterCondition<>(ChallengeField.ID, Operator.EQUALS, c.getId()));
-            c.setViewed(true);
-            p.chalDB.add(c);
-            c.setViewed(false);
+            p.chalDB.updateViewed(List.of(new FilterCondition<>(ChallengeField.ID, Operator.EQUALS, c.getId())),true);
+
         }
         if(unseenChals.size() ==0){
             seenChals = p.chalDB.query((List<FilterCondition<ChallengeField>>) List.of(
                             new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, p.userid),
                             new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, true)),
                     ChallengeField.CREATIONDATE,
-                    true,
+                    false,
                     PAGE_SIZE+1,
                     p.offset
             );
@@ -147,7 +145,7 @@ private int PAGE_SIZE =10;
                         new FilterCondition<>(NoteField.RECIPIENTID, Operator.EQUALS, p.userid),
                         new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, false)),
                 NoteField.CREATIONDATE,
-                true,
+                false,
                 PAGE_SIZE+1,
                 0
         );
@@ -158,7 +156,7 @@ private int PAGE_SIZE =10;
                             new FilterCondition<>(NoteField.RECIPIENTID, Operator.EQUALS, p.userid),
                             new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, true)),
                     NoteField.CREATIONDATE,
-                    true,
+                    false,
                     PAGE_SIZE+1-unseenNotes.size(),
                     0
             );
@@ -173,7 +171,7 @@ private int PAGE_SIZE =10;
                             new FilterCondition<>(NoteField.RECIPIENTID, Operator.EQUALS, p.userid),
                             new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, true)),
                     NoteField.CREATIONDATE,
-                    true,
+                    false,
                     PAGE_SIZE+1,
                     p.offset
             );
@@ -205,7 +203,7 @@ private int PAGE_SIZE =10;
 
         List<Note> notes = p.noteDB.query(List.of(
                 new FilterCondition<>(NoteField.SENDERID, Operator.EQUALS, p.userid)
-        ), NoteField.CREATIONDATE, true, PAGE_SIZE+1, p.offset);
+        ), NoteField.CREATIONDATE, false, PAGE_SIZE+1, p.offset);
         int n = Math.min(notes.size(), PAGE_SIZE);
         for(int i=0;i<n;i++) {
             Note note = notes.get(i);
@@ -222,7 +220,7 @@ private int PAGE_SIZE =10;
         JsonArray infoArray = new JsonArray();
         List<Challenge> challenges = p.chalDB.query(List.of(
                 new FilterCondition<>(ChallengeField.SENDERID, Operator.EQUALS, p.userid)
-        ), ChallengeField.CREATIONDATE, true, PAGE_SIZE+1, p.offset);
+        ), ChallengeField.CREATIONDATE, false, PAGE_SIZE+1, p.offset);
         int n = Math.min(challenges.size(), PAGE_SIZE);
         for(int i=0;i<n;i++) {
             Challenge ch = challenges.get(i);
