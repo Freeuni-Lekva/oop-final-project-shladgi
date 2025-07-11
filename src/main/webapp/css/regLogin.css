@@ -53,7 +53,7 @@ form button#button {
     font-size: 1.1rem;
     font-weight: 600;
     color: white;
-    background-color: #4a69bd;
+    background-color: #0382f1;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -61,14 +61,14 @@ form button#button {
 }
 
 form button#button:hover {
-    background-color: #3b549a;
+    background-color: rgba(0.5, 0, 0, 0.4);
 }
 
 form a {
     display: block;
     margin-top: 1rem;
     text-align: center;
-    color: #4a69bd;
+    color: #0382f1;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9rem;
