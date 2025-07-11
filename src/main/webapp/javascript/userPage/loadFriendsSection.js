@@ -73,7 +73,7 @@ async function setupFriendsButtonListener() {
         const statBtn = document.getElementById("statisticsMenuItem");
 
         userBtn.classList.remove("active");
-        frBtn.classList.remove("active");
+        if(frBtn)frBtn.classList.remove("active");
         statBtn.classList.remove("active");
         button.classList.add("active");
 
