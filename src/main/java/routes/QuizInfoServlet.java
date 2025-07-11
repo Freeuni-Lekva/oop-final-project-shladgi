@@ -165,6 +165,10 @@ public class QuizInfoServlet extends HttpServlet {
                     new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0)
             ));
             json.addProperty("ongoingResult", !ongoing.isEmpty());
+            if(!ongoing.isEmpty()) {
+                QuizResult qr = ongoing.getFirst();
+                json.addProperty("ongoingPractice", qr.getTimeTaken() == -2);
+            }
         }
 
         response.getWriter().write(json.toString());

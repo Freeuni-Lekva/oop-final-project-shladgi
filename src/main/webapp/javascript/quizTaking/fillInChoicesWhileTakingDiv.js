@@ -139,7 +139,6 @@ export function highlightCorrectionFillInChoices(div, evaluationResult, question
         // Add feedback icon
         const feedbackSpan = document.createElement('span');
         feedbackSpan.className = 'feedback-icon';
-        feedbackSpan.textContent = isCorrect ? '✓' : '✗';
         select.parentNode.insertBefore(feedbackSpan, select.nextSibling);
 
         // Show correct answer if wrong

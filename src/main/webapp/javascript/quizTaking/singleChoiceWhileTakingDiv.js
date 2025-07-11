@@ -131,6 +131,10 @@ export function highlightCorrectionSingleChoice(div, evaluationResult, questionD
     const userChoice = evaluationResult.userAnswer.choices[0];
     const correctId = questionData.correctId;
 
+    // Disable all radio inputs
+    const allInputs = div.querySelectorAll(`input[name="singleChoice-${questionData.id}"]`);
+    allInputs.forEach(input => input.disabled = true);
+
     // Clear previous highlights
     div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(label => {
         label.classList.remove('correct-choice', 'incorrect-choice');
@@ -153,3 +157,4 @@ export function highlightCorrectionSingleChoice(div, evaluationResult, questionD
         }
     }
 }
+

@@ -102,6 +102,9 @@ export function highlightCorrectionMultiChoice(div, evaluationResult, questionDa
     const userChoices = evaluationResult.userAnswer.choices;
     const correctChoices = questionData.correctChoices || [];
 
+    // Disable all checkboxes
+    div.querySelectorAll(`input[type="checkbox"][name="multiChoice"]`).forEach(input => input.disabled = true);
+
     // Clear previous highlights
     div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(label => {
         label.classList.remove('correct-choice', 'incorrect-choice');
@@ -109,7 +112,7 @@ export function highlightCorrectionMultiChoice(div, evaluationResult, questionDa
 
     // Highlight user's selected checkboxes
     userChoices.forEach(choiceIndex => {
-        const input = div.querySelector(`input[value="${choiceIndex}"]`);
+        const input = div.querySelector(`input[type="checkbox"][value="${choiceIndex}"]`);
         if (input) {
             const label = input.closest('label');
             const isCorrect = correctChoices.includes(choiceIndex);
@@ -120,7 +123,7 @@ export function highlightCorrectionMultiChoice(div, evaluationResult, questionDa
     // Highlight correct choices not selected by user
     correctChoices.forEach(correctIndex => {
         if (!userChoices.includes(correctIndex)) {
-            const input = div.querySelector(`input[value="${correctIndex}"]`);
+            const input = div.querySelector(`input[type="checkbox"][value="${correctIndex}"]`);
             if (input) {
                 const label = input.closest('label');
                 label.classList.add('correct-choice');

@@ -12,3 +12,37 @@
     background-color: #f8d7da !important;
     border-left: 4px solid #dc3545;
 }
+
+.correct-answer {
+    background-color: #e6f7ee;
+    border-left: 4px solid #28a745;
+}
+
+.incorrect-answer {
+    background-color: #fce8e8;
+    border-left: 4px solid #dc3545;
+}
+
+.answer-highlight {
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 4px;
+}
+
+.feedback-icon {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.correct-answer-marker {
+    color: #28a745;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.correct-answers-container {
+    margin-top: 12px;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}

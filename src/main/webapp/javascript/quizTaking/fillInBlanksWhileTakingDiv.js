@@ -102,42 +102,39 @@ export async function evalAnswerFillInBlanks(div, questionid, quizresultid, user
 }
 
 export function highlightCorrectionFillInBlanks(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData) return;
-    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
 
     const inputs = div.querySelectorAll('input[type="text"].answer-input');
-    inputs.forEach(input => input.readOnly = true);
+    const correctAnswersList = questionData.correctAnswers || [];
 
-    // If server provides per-blank correctness
-    if (evaluationResult.details?.perBlankCorrectness) {
-        inputs.forEach((input, index) => {
-            const isCorrect = evaluationResult.details.perBlankCorrectness[index];
-            input.classList.add(isCorrect ? 'correct-answer' : 'incorrect-answer');
+    inputs.forEach((input, index) => {
+        input.readOnly = true; // Make input read-only after submission
 
-            const feedbackSpan = document.createElement('span');
-            feedbackSpan.className = 'feedback-icon';
-            feedbackSpan.textContent = isCorrect ? '✓' : '✗';
-            input.parentNode.insertBefore(feedbackSpan, input.nextSibling);
-        });
-    }
-    // Fallback - highlight based on overall correctness
-    else {
-        const overallClass = evaluationResult.points > 0 ? 'correct-answer' : 'incorrect-answer';
-        inputs.forEach(input => input.classList.add(overallClass));
-    }
+        const userAnswer = input.value.trim();
+        const correctAnswers = correctAnswersList[index] || [];
 
-    // Show correct answers if available
-    if (questionData.correctAnswers) {
-        const correctAnswersDiv = document.createElement('div');
-        correctAnswersDiv.className = 'correct-answers-container';
+        let isCorrect = false;
+        if (questionData.exactMatch) {
+            isCorrect = correctAnswers.includes(userAnswer);
+        } else {
+            const normalizedUser = userAnswer.toLowerCase().replace(/\s+/g, '');
+            isCorrect = correctAnswers.some(
+                correct => normalizedUser === correct.toLowerCase().replace(/\s+/g, '')
+            );
+        }
 
-        questionData.correctAnswers.forEach((answers, index) => {
-            const answerDiv = document.createElement('div');
-            answerDiv.textContent = `Blank ${index + 1}: ${answers.join(' OR ')}`;
-            answerDiv.className = 'correct-answer-marker';
-            correctAnswersDiv.appendChild(answerDiv);
-        });
+        // Remove prior highlights if any
+        input.classList.remove("correct-answer", "incorrect-answer");
 
-        div.appendChild(correctAnswersDiv);
-    }
+        // Apply styling
+        input.classList.add(isCorrect ? "correct-answer" : "incorrect-answer");
+
+        // Add correct answer info only if wrong
+        if (!isCorrect && correctAnswers.length > 0) {
+            const correctAnswerText = document.createElement("span");
+            correctAnswerText.className = "correct-answer-text";
+            correctAnswerText.textContent = ` (Correct: ${correctAnswers.join(' OR ')})`;
+            input.parentNode.appendChild(correctAnswerText);
+        }
+    });
 }
