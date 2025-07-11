@@ -279,6 +279,3 @@ export async function saveFillInChoicesQuestion(div, quizId) {
         return { success: false, message: error.message || 'Unexpected error' };
     }
 }
-
-
-window.saveFillInChoicesQuestion = saveFillInChoicesQuestion;

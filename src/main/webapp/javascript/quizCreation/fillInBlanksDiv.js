@@ -253,5 +253,3 @@ export async function saveFillInBlanksQuestion(div, quizId) {
         return {success: false, message: error.message};
     }
 }
-
-window.saveFillInBlanksQuestion = saveFillInBlanksQuestion;

@@ -3,6 +3,7 @@
     import {evalAnswer} from "./answerSaveWhileTaking.js";
     import {highlightQuestionDiv} from "./hihglightQuestion.js";
     import {loadSavedAnswers, startAutoSave, stopSavingGracefully} from "./quizAutoSave.js";
+    import {populateQuestionDiv} from "./populateQuestionDiv.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
         const startTime = Date.now();
@@ -37,10 +38,6 @@
             id: quizId,
             practiceMode : practiceMode,
         });
-
-
-
-
 
         fetch("/quiz", {
             method: "POST",
@@ -118,8 +115,10 @@
                     };
 
                     renderSinglePage();
-                    loadSavedAnswers(quizResultId);
-                    startAutoSave(30, quizResultId, userid);
+                    if(!practiceMode){
+                        loadSavedAnswers(quizResultId);
+                        startAutoSave(30, quizResultId, userid);
+                    }
 
 
                     const submitBtn = document.createElement("button");
@@ -166,7 +165,7 @@
 
 
 
-                        const endTime = Date.now(); // current time
+                        const endTime = Date.now();
                         const timeTakenSeconds = Math.floor((endTime - startTime) / 1000); // assuming you store startTime earlier
                         qid = 0;
 
@@ -213,7 +212,7 @@
                         questions[i].arrayId = i;
                     }
 
-                    const renderQuestion = () => {
+                    const renderQuestion = async () => {
                         console.log("Current id " + currentIndex + "total " + questions.length)
                         if (questions.length === 0 || (!practiceMode && currentIndex >= questions.length)) {
                             showFinalSubmit();
@@ -228,7 +227,19 @@
                         const qDiv = getQuestionWhileTaking(q, currentIndex);
                         qDiv.classList.add("question");
 
-                        if(practiceMode) addCorrectCount(q, qDiv);
+                        const resultQuestionRes = await wasResultQuestionAnswered(questions[currentIndex].id, quizResultId)
+                        if (!practiceMode && resultQuestionRes.answered) {
+                            const questionData = questions[currentIndex];
+                            populateQuestionDiv(qDiv, questionData, resultQuestionRes.userAnswer);
+                            const json = await evaluateAnswer(qDiv, q, quizResultId, userid);
+                            totalscore += json.points;
+                            maxscore += q.weight;
+                            questions.splice(currentIndex, 1);
+                            renderQuestion();
+                            return;
+                        }
+
+                        if (practiceMode) addCorrectCount(q, qDiv);
 
                         allQuestionsDiv.appendChild(qDiv);
 
@@ -237,7 +248,7 @@
 
                         submitBtn.onclick = async () => {
                             const json = await evaluateAnswer(qDiv, q, quizResultId, userid);
-                            if(!json.success){
+                            if (!json.success) {
                                 qDiv.classList.add("invalid-input");
                                 showSmallMessage(false, json.message);
                                 return;
@@ -247,7 +258,6 @@
                             responses[q.arrayId] = json;
                             totalscore += json.points;
                             maxscore += q.weight;
-
 
 
                             if (practiceMode && json.points === q.weight) {
@@ -270,7 +280,7 @@
 
                             if (immediateCorrection) {
                                 highlightQuestionDiv(qDiv, json, q);
-                                addCorrectCount(q, qDiv);
+                                if(practiceMode) addCorrectCount(q, qDiv);
                                 const nextBtn = document.createElement("button");
                                 nextBtn.textContent = "Next Question";
                                 nextBtn.onclick = () => {
@@ -338,7 +348,7 @@
                 body: `resultId=${encodeURIComponent(resultId)}`
             });
 
-            console.log(response);
+
             const json = await response.json();
 
             if (json.success) {
@@ -390,6 +400,34 @@
         });
     }
 
+    export async function wasResultQuestionAnswered(questionId, resultId) {
+        const params = new URLSearchParams({
+            questionId: String(questionId),
+            resultId: String(resultId),
+        });
+
+        try {
+            const res = await fetch("/was-result-question-answered", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: params.toString(),
+            });
+            if (!res.ok) {
+                throw new Error(`Server returned ${res.status}`);
+            }
+            const json = await res.json();
+            if (!json.success) {
+                console.error("Error from server:", json.error);
+                return false;
+            }
+            return json;
+        } catch (err) {
+            console.error("Failed to check if user answered:", err);
+            return false;
+        }
+    }
 
 
     export async function evaluateAnswer(div, questionData, quizResultId, userid) {
