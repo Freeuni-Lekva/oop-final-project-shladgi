@@ -1,6 +1,9 @@
 package routes;
 
 import com.google.gson.JsonObject;
+import databases.filters.FilterCondition;
+import databases.filters.Operator;
+import databases.filters.fields.AnnouncementField;
 import databases.implementations.AnnouncementDB;
 import objects.Announcement;
 
@@ -9,7 +12,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import static utils.Constants.*;
 
@@ -43,8 +48,6 @@ public class AnnouncementsServlet extends HttpServlet {
                         return;
                 }
 
-
-
                 AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTSDB);
                 Announcement announcement = new Announcement(title, content, userName, image, LocalDateTime.now());
                 announcementDB.add(announcement);
@@ -53,10 +56,78 @@ public class AnnouncementsServlet extends HttpServlet {
                 res.getWriter().write(json.toString());
 
         }
-        public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-        }
-        public void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        public void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                response.setContentType("application/json");
+                PrintWriter out = response.getWriter();
+                AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTSDB);
+                Object o =  request.getSession().getAttribute("type") ;
+
+                JsonObject json = new JsonObject();
+
+                if (o == null || !o.toString().equalsIgnoreCase("Admin")) {
+                        json.addProperty("success", false);
+                        json.addProperty("message", "Access denied. Only admins can delete announcements.");
+                        out.print(json);
+                        return;
+                }
+
+                String idParam = request.getParameter("id");
+                if (idParam == null) {
+                        json.addProperty("success", false);
+                        json.addProperty("message", "Missing announcement ID.");
+                        out.print(json);
+                        return;
+                }
+
+                int announcementId;
+                try {
+                        announcementId = Integer.parseInt(idParam);
+                } catch (NumberFormatException e) {
+                        json.addProperty("success", false);
+                        json.addProperty("message", "Invalid announcement ID.");
+                        out.print(json);
+                        return;
+                }
+
+                int deleted = announcementDB.delete(new FilterCondition<>(AnnouncementField.ID, Operator.EQUALS, announcementId));
+
+                if (deleted==1) {
+                        json.addProperty("success", true);
+                        json.addProperty("message", "Announcement deleted successfully.");
+                } else {
+                        json.addProperty("success", false);
+                        json.addProperty("message", "Announcement not found or deletion failed.");
+                }
+                out.print(json);
 
         }
 }
+
+
+
+
+/*
+* function deleteAnnouncement(announcementId) {
+    if (!confirm("Are you sure you want to delete this announcement?")) return;
+
+    fetch( `/announcements?id=${announcementId}`, {
+        method: "DELETE",
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Announcement deleted successfully.");
+          location.reload();
+
+        } else {
+            alert("Something went wrong" );
+        }
+    })
+    .catch(err => {
+        alert("Failed to delete announcement. Server error.");
+        console.error(err);
+    });
+}
+
+* */
