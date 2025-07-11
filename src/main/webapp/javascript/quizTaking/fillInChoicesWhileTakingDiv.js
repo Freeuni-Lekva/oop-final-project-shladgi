@@ -119,7 +119,6 @@ export async function evalAnswerFillInChoices(div, questionid, quizresultid, use
         return { success: false, message: "Network error" };
     }
 }
-
 export function highlightCorrectionFillInChoices(div, evaluationResult, questionData) {
     if (!evaluationResult || !questionData) return;
     if (!evaluationResult.success || !evaluationResult.userAnswer) return;
@@ -135,6 +134,22 @@ export function highlightCorrectionFillInChoices(div, evaluationResult, question
             index < userChoices.length &&
             userChoices[index] === correctChoices[index];
 
-        select.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
+        select.classList.add(isCorrect ? 'correct-answer' : 'incorrect-answer');
+
+        // Add feedback icon
+        const feedbackSpan = document.createElement('span');
+        feedbackSpan.className = 'feedback-icon';
+        select.parentNode.insertBefore(feedbackSpan, select.nextSibling);
+
+        // Show correct answer if wrong
+        if (!isCorrect && index < correctChoices.length) {
+            const correctOption = select.querySelector(`option[value="${correctChoices[index]}"]`);
+            if (correctOption) {
+                const correctMarker = document.createElement('div');
+                correctMarker.className = 'correct-answer-marker';
+                correctMarker.textContent = `Correct: ${correctOption.textContent}`;
+                select.parentNode.insertBefore(correctMarker, select.nextSibling);
+            }
+        }
     });
 }

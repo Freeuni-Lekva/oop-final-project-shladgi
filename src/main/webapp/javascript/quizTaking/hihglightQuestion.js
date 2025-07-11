@@ -18,15 +18,21 @@ export function highlightQuestionDiv(div, evalResult, questionData) {
     switch (questionData.type) {
         case QType.SingleChoice:
             highlightCorrectionSingleChoice(div, evalResult, questionData);
+            return;
         case QType.MultiChoice:
             highlightCorrectionMultiChoice(div, evalResult, questionData);
+            return;
         case QType.TextAnswer:
             highlightCorrectionTextAnswer(div, evalResult, questionData);
+            return;
         case QType.MultiTextAnswer:
             highlightCorrectionMultiTextAnswer(div, evalResult, questionData);
+            return;
         case QType.FillInBlanks:
             highlightCorrectionFillInBlanks(div, evalResult, questionData);
+            return;
         case QType.FillChoices:
             highlightCorrectionFillInChoices(div, evalResult, questionData);
+            return;
     }
 }

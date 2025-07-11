@@ -102,13 +102,39 @@ export async function evalAnswerFillInBlanks(div, questionid, quizresultid, user
 }
 
 export function highlightCorrectionFillInBlanks(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData) return;
-    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
 
     const inputs = div.querySelectorAll('input[type="text"].answer-input');
-    inputs.forEach(input => input.readOnly = true);
+    const correctAnswersList = questionData.correctAnswers || [];
 
-    // Note: Similar to multi-text, we'd need server feedback for per-blank correctness
-    const overallClass = evaluationResult.points > 0 ? 'partially-correct' : 'incorrect-choice';
-    inputs.forEach(input => input.classList.add(overallClass));
+    inputs.forEach((input, index) => {
+        input.readOnly = true; // Make input read-only after submission
+
+        const userAnswer = input.value.trim();
+        const correctAnswers = correctAnswersList[index] || [];
+
+        let isCorrect = false;
+        if (questionData.exactMatch) {
+            isCorrect = correctAnswers.includes(userAnswer);
+        } else {
+            const normalizedUser = userAnswer.toLowerCase().replace(/\s+/g, '');
+            isCorrect = correctAnswers.some(
+                correct => normalizedUser === correct.toLowerCase().replace(/\s+/g, '')
+            );
+        }
+
+        // Remove prior highlights if any
+        input.classList.remove("correct-answer", "incorrect-answer");
+
+        // Apply styling
+        input.classList.add(isCorrect ? "correct-answer" : "incorrect-answer");
+
+        // Add correct answer info only if wrong
+        if (!isCorrect && correctAnswers.length > 0) {
+            const correctAnswerText = document.createElement("span");
+            correctAnswerText.className = "correct-answer-text";
+            correctAnswerText.textContent = ` (Correct: ${correctAnswers.join(' OR ')})`;
+            input.parentNode.appendChild(correctAnswerText);
+        }
+    });
 }
