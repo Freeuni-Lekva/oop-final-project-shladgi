@@ -9,6 +9,7 @@ function addAdminButton(admin, receiverUsername, btnGroup, div) {
         adminBtn.textContent = "Remove User";
         adminBtn.addEventListener("click", async () => {
             try {
+                if (!confirm("Are you sure you want to delete this user?")) return;
                 const res1 = await fetch("/get-quiz-ids", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -42,6 +43,25 @@ function addAdminButton(admin, receiverUsername, btnGroup, div) {
             }
         });
 
+        const promote = document.createElement("button");
+        promote.className = "btn btn-primary btn-sm";
+        promote.textContent = "Promote User";
+        promote.addEventListener("click", ()=>{
+            if (!confirm("Are you sure you want to promote this user?")) return;
+            fetch("/promoteUser",{
+                method : "POST",
+                headers :{
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body : new URLSearchParams({
+                    username: receiverUsername,
+                })
+            }).then(res => res.json())
+                .then(data => {
+                    if(data.success)alert(`You successfully promoted ${receiverUsername} to Admin.`);
+                    else alert(data.message)
+                }).catch(err => console.log(err))
+        });
 
 
 
@@ -52,7 +72,7 @@ function addAdminButton(admin, receiverUsername, btnGroup, div) {
 
 
 
-
+        btnGroup.appendChild(promote);
         btnGroup.appendChild(adminBtn);
     }
 }
