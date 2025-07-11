@@ -8,10 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     button.addEventListener("click", async () => {
-        document.getElementById("userMenuItem").classList.remove("active");
-        document.getElementById("statisticsMenuItem").classList.add("active");
-        document.getElementById("friendRequestMenuItem").classList.remove("active");
-        document.getElementById("friendsMenuItem").classList.remove("active");
+
+        const userBtn = document.getElementById("userMenuItem");
+        const statBtn = document.getElementById("statisticsMenuItem");
+        const frnReqBtn = document.getElementById("friendRequestMenuItem");
+        const frnBtn = document.getElementById("friendsMenuItem");
+
+        if(userBtn) userBtn.classList.remove("active");
+        if(statBtn) statBtn.classList.add("active");
+        if(frnReqBtn) frnReqBtn.classList.remove("active");
+        if(frnBtn) frnBtn.classList.remove("active");
 
         document.getElementById("friend-requests-container").style.display = "none";
         document.getElementById("friends-container").style.display = "none";

@@ -10,10 +10,15 @@ function setupUserButtonListener() {
         document.getElementById("friends-container").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none"
 
-        document.getElementById("userMenuItem").classList.add("active");
-        document.getElementById("statisticsMenuItem").classList.remove("active");
-        document.getElementById("friendRequestMenuItem").classList.remove("active");
-        document.getElementById("friendsMenuItem").classList.remove("active");
+        const statBtn = document.getElementById("statisticsMenuItem");
+        const frnReqBtn = document.getElementById("friendRequestMenuItem");
+        const frnBtn = document.getElementById("friendsMenuItem");
+
+        if(button) button.classList.add("active");
+        if(statBtn) statBtn.classList.remove("active");
+        if(frnReqBtn) frnReqBtn.classList.remove("active");
+        if(frnBtn) frnBtn.classList.remove("active");
+
     });
 }
 
