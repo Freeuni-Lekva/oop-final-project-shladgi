@@ -2,6 +2,8 @@ export function getTextAnswerWhileTakingDiv(data) {
 
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Question text
     const questionText = document.createElement('p');
@@ -138,7 +140,7 @@ export function populateTextAnswerDiv(div, questionData, userAnswer) {
     }
 
     input.value = userText;
-    input.disabled = true; // Make it read-only for review
+    //input.disabled = true; // Make it read-only for review
 }
 
 

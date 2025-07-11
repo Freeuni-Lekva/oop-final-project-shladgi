@@ -1,6 +1,8 @@
 export function getMultiTextAnswerWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Question text
     const questionText = document.createElement('p');
@@ -174,7 +176,7 @@ export function populateMultiTextAnswerDiv(div, questionData, userAnswer) {
         } else {
             input.value = '';
         }
-        input.disabled = true;
+        // input.disabled = true;
     });
 }
 

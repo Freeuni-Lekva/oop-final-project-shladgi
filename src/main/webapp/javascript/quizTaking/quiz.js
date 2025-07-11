@@ -2,6 +2,7 @@
     import {loadSessionValue} from "../getSessionInfo.js";
     import {evalAnswer} from "./answerSaveWhileTaking.js";
     import {highlightQuestionDiv} from "./hihglightQuestion.js";
+    import {loadSavedAnswers, startAutoSave} from "./quizAutoSave.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
         const startTime = Date.now();
@@ -104,6 +105,9 @@
                     };
 
                     renderSinglePage();
+                    loadSavedAnswers(quizResultId);
+                    startAutoSave(30, quizResultId, userid);
+
 
                     const submitBtn = document.createElement("button");
                     submitBtn.textContent = "Submit All";
@@ -362,7 +366,7 @@
     function getResultDiv(totalScore, maxScore, isPractice){
         const resultDiv = document.createElement("div");
         if(isPractice) resultDiv.innerHTML = `<h3>Practice Finished</h3>`;
-        else resultDiv.innerHTML = `<h3>Your Score: ${totalScgiore} / ${maxScore}</h3>`;
+        else resultDiv.innerHTML = `<h3>Your Score: ${totalScore} / ${maxScore}</h3>`;
         return resultDiv;
     }
 

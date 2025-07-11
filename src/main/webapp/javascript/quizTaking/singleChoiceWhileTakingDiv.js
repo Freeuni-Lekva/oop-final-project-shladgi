@@ -6,6 +6,8 @@ export function getSingleChoiceWhileTakingDiv(data) {
     }
 
     const container = document.createElement('div');
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
     container.className = 'question-container single-choice-question';
 
     // Question text with aria-label
@@ -99,6 +101,7 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
         resultId: quizresultid,
         userAnswer: userAnswer,
         save: save
+
     };
 
     try {
@@ -204,7 +207,7 @@ export function populateSingleChoiceDiv(div, questionData, userAnswer) {
     }
 
     inputs.forEach((input, index) => {
-        input.disabled = true;
+        //input.disabled = true;
         if (parseInt(input.value) === selectedIndex) {
             input.checked = true;
             input.setAttribute("aria-checked", "true");

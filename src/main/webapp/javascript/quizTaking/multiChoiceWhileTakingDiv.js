@@ -1,6 +1,8 @@
 export function getMultiChoiceWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Question text
     const questionText = document.createElement('p');
@@ -169,7 +171,7 @@ export function populateMultiChoiceDiv(div, questionData, userAnswer) {
 
     checkboxes.forEach((checkbox) => {
         const index = parseInt(checkbox.value);
-        checkbox.disabled = true;
+        //checkbox.disabled = true;
 
         if (selectedIndices.includes(index)) {
             checkbox.checked = true;

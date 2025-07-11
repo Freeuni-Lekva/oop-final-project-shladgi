@@ -1,6 +1,8 @@
 export function getFillInChoicesWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Display the question text
     const questionText = document.createElement('div');
@@ -192,7 +194,7 @@ export function populateFillInChoicesDiv(div, questionData, userAnswer) {
             select.selectedIndex = selectedIndex + 1;
         }
 
-        select.disabled = true;
+       // select.disabled = true;
     });
 }
 
