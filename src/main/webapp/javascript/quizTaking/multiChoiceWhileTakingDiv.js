@@ -51,7 +51,7 @@ export function getMultiChoiceWhileTakingDiv(data) {
 }
 
 
-export async function evalAnswerMultiChoice(div, questionid, quizresultid, userid) {
+export async function evalAnswerMultiChoice(div, questionid, quizresultid, userid, save = true) {
     const checkedBoxes = div.querySelectorAll(`input[type="checkbox"]:checked`);
 
     if (!checkedBoxes || checkedBoxes.length === 0) {
@@ -67,7 +67,8 @@ export async function evalAnswerMultiChoice(div, questionid, quizresultid, useri
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: userAnswer
+        userAnswer: userAnswer,
+        save: save
     };
 
     try {
@@ -131,74 +132,48 @@ export function highlightCorrectionMultiChoice(div, evaluationResult, questionDa
         }
     });
 }
+
 export function populateMultiChoiceDiv(div, questionData, userAnswer) {
-    // Validate required data
-    if (!div || !questionData || !questionData.question || !questionData.choices ||
-        questionData.choices.length === 0 || !userAnswer || !userAnswer.choices) {
-        console.error("Invalid data for populating multi-choice question");
+    if (!div || !questionData || !questionData.choices || questionData.choices.length === 0 || !userAnswer) {
+        console.error("Invalid input to populateMultiChoiceDiv");
         return;
     }
 
-    // Clear the div if it has any content
-    div.innerHTML = '';
-    div.className = 'question-container';
+    let selectedIndices = [];
 
-    // Question text
-    const questionText = document.createElement('p');
-    questionText.textContent = questionData.question;
-    questionText.className = 'question-text';
-    div.appendChild(questionText);
-
-    // Optional image
-    if (questionData.imageLink) {
-        const img = document.createElement('img');
-        img.src = questionData.imageLink;
-        img.alt = 'Question image';
-        img.className = 'question-image';
-        div.appendChild(img);
+    try {
+        if (userAnswer.isString && userAnswer.strAnswer?.list?.length > 0) {
+            // Convert string values to their corresponding indices in choices
+            selectedIndices = userAnswer.strAnswer.list.map(val => questionData.choices.indexOf(val)).filter(i => i !== -1);
+        } else if (!userAnswer.isString && userAnswer.intAnswer?.list?.length > 0) {
+            // Use integer values directly as indices
+            selectedIndices = userAnswer.intAnswer.list.map(val => parseInt(val)).filter(i => !isNaN(i));
+        }
+    } catch (err) {
+        console.error("Error extracting choices from userAnswer", err);
+        return;
     }
 
-    // Show weight
-    if (questionData.weight !== undefined) {
-        const weightInfo = document.createElement('p');
-        weightInfo.textContent = `Weight: ${questionData.weight}`;
-        weightInfo.className = 'question-weight';
-        div.appendChild(weightInfo);
+    if (selectedIndices.length === 0) {
+        console.warn("No valid choices found in userAnswer");
+        return;
     }
 
-    // Checkboxes for choices
-    const choiceList = document.createElement('div');
-    choiceList.className = 'choice-list';
+    // Find all checkboxes
+    const checkboxes = div.querySelectorAll('input[type="checkbox"][name="multiChoice"]');
 
-    questionData.choices.forEach((choice, index) => {
-        const label = document.createElement('label');
-        label.className = 'choice-item';
+    if (checkboxes.length === 0) {
+        console.warn("No checkbox inputs found in div to populate");
+        return;
+    }
 
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.name = 'multiChoice';
-        input.value = index;
-        input.disabled = true; // Make it read-only
-        input.checked = userAnswer.choices.includes(index);
+    checkboxes.forEach((checkbox) => {
+        const index = parseInt(checkbox.value);
+        checkbox.disabled = true;
 
-        const span = document.createElement('span');
-        span.textContent = choice;
-
-        label.appendChild(input);
-        label.appendChild(span);
-        choiceList.appendChild(label);
+        if (selectedIndices.includes(index)) {
+            checkbox.checked = true;
+        }
     });
-
-    div.appendChild(choiceList);
-
-    // If we have evaluation data, highlight the correction
-    if (userAnswer.points !== undefined && questionData.correctChoices) {
-        highlightCorrectionMultiChoice(div, {
-            success: true,
-            userAnswer: userAnswer,
-            points: userAnswer.points
-        }, questionData);
-    }
-
-    return div;
 }
+
