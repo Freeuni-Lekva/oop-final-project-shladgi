@@ -51,7 +51,9 @@ public abstract class DataBase<T, TField extends SqlField>{
      */
     public void add(T entity){
         try{
+            System.out.println(11);
             DatabaseAdder.Add(entity, con);
+
         }catch (Exception e){
             throw new RuntimeException("ADD ERROR \n" + e.getMessage());
         }
