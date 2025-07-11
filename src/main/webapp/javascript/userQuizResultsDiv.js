@@ -37,7 +37,7 @@ export function userQuizResultsDiv(data, wantTitle = false) {
     return row;
 }
 
-export async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
+export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amount = 5) {
     const listContainer = document.createElement("div");
 
     try {
@@ -60,12 +60,16 @@ export async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
             return row;
         }
 
+        let counter = 0;
         for (const id of filteredIds) {
             try {
+                counter++;
+                if(counter > amount) break;
                 const result = await fetchQuizResultData(id);
                 result.quizResultId = id;
                 const card = userQuizResultsDiv(result);
                 listContainer.appendChild(card);
+
             } catch (err) {
                 console.error("Error loading result:", err);
             }

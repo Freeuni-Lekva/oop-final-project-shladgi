@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static utils.Constants.ANNOUNCEMENTDB;
+import static utils.Constants.ANNOUNCEMENTSDB;
 
 @WebServlet("/get-announcement")
 public class SetAnnouncementsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTDB);
+        AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTSDB);
 
         List<Announcement> announcements = announcementDB.getAllAnnouncements();
 
