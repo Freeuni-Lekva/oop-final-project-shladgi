@@ -2,14 +2,17 @@ import { loadSessionValue } from "../getSessionInfo.js";
 import { getAchievementDiv } from "../achievementDivGetter.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    document.getElementById("userMenuItem").classList.add("active");
+    document.getElementById("statisticsMenuItem").classList.remove("active");
+    document.getElementById("friendRequestMenuItem").classList.remove("active");
+    document.getElementById("friendsMenuItem").classList.remove("active");
+
     const ids = [
         "user",
         "friends-container",
         "friend-requests-container",
         "statistics"
     ];
-
-    console.log("VVVRRR")
 
     const info = {};
 

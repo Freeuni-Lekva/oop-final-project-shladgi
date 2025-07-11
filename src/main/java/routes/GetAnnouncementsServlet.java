@@ -16,7 +16,7 @@ import java.util.List;
 import static utils.Constants.ANNOUNCEMENTSDB;
 
 @WebServlet("/get-announcement")
-public class SetAnnouncementsServlet extends HttpServlet {
+public class GetAnnouncementsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTSDB);
 
