@@ -32,6 +32,7 @@ public class AnnouncementDB extends DataBase<Announcement, AnnouncementField> {
                         rs.getString("author"),
                         rs.getString("imagelink"),
                         rs.getTimestamp("creationdate").toLocalDateTime());
+                ann.setId(rs.getInt("id"));
                 announcements.add(ann);
             }
 

@@ -107,27 +107,3 @@ public class AnnouncementsServlet extends HttpServlet {
 
 
 
-/*
-* function deleteAnnouncement(announcementId) {
-    if (!confirm("Are you sure you want to delete this announcement?")) return;
-
-    fetch( `/announcements?id=${announcementId}`, {
-        method: "DELETE",
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert("Announcement deleted successfully.");
-          location.reload();
-
-        } else {
-            alert("Something went wrong" );
-        }
-    })
-    .catch(err => {
-        alert("Failed to delete announcement. Server error.");
-        console.error(err);
-    });
-}
-
-* */
