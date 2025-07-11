@@ -1,6 +1,7 @@
 package routes;
 
 import databases.implementations.*;
+import objects.user.UserToken;
 
 import javax.naming.Context;
 import javax.servlet.ServletContext;
@@ -36,7 +37,7 @@ public class AppContextListener implements ServletContextListener {
             context.setAttribute(USERANSWERDB, new UserAnswerDB(conn));
             context.setAttribute(QUESTIONDB, new  QuestionDB(conn));
             context.setAttribute(FRIENDREQUESTDB, new FriendRequestDB(conn));
-
+            context.setAttribute(USERTOKENDB, new UserTokenDB(conn));
             context.setAttribute(ANNOUNCEMENTSDB, new AnnouncementDB(conn));
 
 

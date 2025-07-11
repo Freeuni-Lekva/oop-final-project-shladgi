@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS achievements;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_token;
 
 -- CREATE TABLES
 CREATE TABLE users
@@ -165,4 +166,16 @@ CREATE TABLE announcements(
     author       VARCHAR(255) NOT NULL,
     creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author) REFERENCES users (username)
-)
+);
+
+
+CREATE TABLE user_tokens
+(
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    token      VARCHAR(255) NOT NULL ,
+    userid     INT  NOT NULL,
+    expiredate  TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 1 DAY),
+    FOREIGN KEY (userid) REFERENCES users (id)
+
+);
+
