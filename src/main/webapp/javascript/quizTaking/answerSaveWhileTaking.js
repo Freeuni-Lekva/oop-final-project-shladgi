@@ -14,20 +14,20 @@ const QType = {
     FillChoices: "FillChoices"
 };
 
-export function evalAnswer(type, div, questionid, quizResultid, userid) {
+export function evalAnswer(type, div, questionid, quizResultid, userid, save = true) {
     switch (type) {
         case QType.SingleChoice:
-            return evalAnswerSingleChoice(div, questionid, quizResultid, userid);
+            return evalAnswerSingleChoice(div, questionid, quizResultid, userid, save);
         case QType.MultiChoice:
-            return evalAnswerMultiChoice(div, questionid, quizResultid, userid);
+            return evalAnswerMultiChoice(div, questionid, quizResultid, userid, save);
         case QType.TextAnswer:
-            return evalAnswerTextAnswer(div, questionid, quizResultid, userid);
+            return evalAnswerTextAnswer(div, questionid, quizResultid, userid, save);
         case QType.MultiTextAnswer:
-            return evalAnswerMultiTextAnswer(div, questionid, quizResultid, userid);
+            return evalAnswerMultiTextAnswer(div, questionid, quizResultid, userid, save);
         case QType.FillInBlanks:
-            return evalAnswerFillInBlanks(div, questionid, quizResultid, userid);
+            return evalAnswerFillInBlanks(div, questionid, quizResultid, userid, save);
         case QType.FillChoices:
-            return evalAnswerFillInChoices(div, questionid, quizResultid, userid);
+            return evalAnswerFillInChoices(div, questionid, quizResultid, userid, save);
         default:
             console.warn("Unknown question type:", type);
             return null;

@@ -1,4 +1,4 @@
-import { highlightCorrectionSingleChoice } from "./singleChoiceWhileTakingDiv.js";
+import { highlightCorrectionSingleChoice, populateSingleChoiceDiv } from "./singleChoiceWhileTakingDiv.js";
 import {highlightCorrectionMultiChoice, populateMultiChoiceDiv} from "./multiChoiceWhileTakingDiv.js";
 import {highlightCorrectionTextAnswer, populateTextAnswerDiv} from "./textAnswerWhileTakingDiv.js";
 import {highlightCorrectionMultiTextAnswer, populateMultiTextAnswerDiv} from "./multiTextAnswerWhileTakingDiv.js";
@@ -14,7 +14,7 @@ const QType = {
     FillChoices: "FillChoices"
 };
 
-export function populateSingleChoiceDiv(div, questionData, userAnswer) {
+export function populateQuestionDiv(div, questionData, userAnswer) {
     switch (questionData.type) {
         case QType.SingleChoice:
             populateSingleChoiceDiv(div, questionData, userAnswer);
