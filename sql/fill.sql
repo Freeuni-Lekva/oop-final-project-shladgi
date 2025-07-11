@@ -81,3 +81,15 @@ INSERT INTO notes (senderid, recipientid, text, viewed) VALUES
                                                             (4, 5, 'How did you solve question 4 on the Math test?', false),
                                                             (5, 4, 'Check out this new geography quiz I created!', false),
                                                             (2, 4, 'Your history knowledge is impressive!', false)
+
+INSERT INTO achievements (id, title, description, iconlink, rarity) VALUES
+                                                                        (1, 'Amateur Author', 'Create a quiz', 'https://i.pinimg.com/originals/20/6d/71/206d71d869aeb22b8f9e0e7a6a4f7b54.png', 'Common'),
+                                                                        (2, 'Prolific Author', 'Create five quizzes', 'icon2.png', 'Rare'),
+                                                                        (3, 'Prodigious Author', 'Create ten quizzes', 'icon3.png', 'Epic'),
+                                                                        (4, 'Quiz Machine', 'The user took ten quizzes.', 'icon4.png', 'Common'),
+                                                                        (5, 'I am the Greatest', 'The user had the highest score on a quiz', 'icon5.png', 'Legendary'),
+                                                                        (6, 'Practice Makes Perfect', 'The user took a quiz in practice mode', 'icon6.png', 'Epic'),
+                                                                        (7, 'Newbie', 'The user took first quiz', 'https://www.shutterstock.com/image-vector/vector-illustration-badge-newbie-label-260nw-1188260409.jpg', 'Common'),
+                                                                        (8, 'Amateur Quizzer', 'The user took five quizzes', 'icon7.png', 'Epic'),
+                                                                        (9, 'Quiz Master', 'The user took 50 quizzes', 'icon8.png', 'Legendary'),
+                                                                        (10, 'Quiz Legend', 'The user took 100 quizzes', 'icon9.png', 'Legendary');

@@ -60,6 +60,16 @@ public class AchievementsServlet extends HttpServlet {
                     userAchievement = new UserAchievement(userId, 4, LocalDateTime.now());
                     userAchievementDB.add(userAchievement);
                     break;
+                case 50:
+                    userAchievement = new UserAchievement(userId, 9, LocalDateTime.now());
+                    userAchievementDB.add(userAchievement);
+                    break;
+                case 100:
+                    userAchievement = new UserAchievement(userId, 10, LocalDateTime.now());
+                    userAchievementDB.add(userAchievement);
+                    break;
+
+
                 default:
                     break;
             }
