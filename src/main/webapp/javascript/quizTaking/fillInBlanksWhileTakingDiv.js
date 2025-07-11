@@ -2,8 +2,6 @@ export function getFillInBlanksWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
 
-
-
     // Display the question text
     const questionText = document.createElement('div');
     questionText.className = 'question-text';
@@ -27,12 +25,10 @@ export function getFillInBlanksWhileTakingDiv(data) {
         container.appendChild(weightInfo);
     }
 
-
-    // Create answer fields based on correctAnswers or choices
+    // Create answer fields
     const answersContainer = document.createElement('div');
     answersContainer.className = 'answers-container';
 
-    // Determine how many answer fields to create
     const answerCount = data.correctAnswers?.length || data.choices?.length || 1;
 
     for (let i = 0; i < answerCount; i++) {
@@ -45,6 +41,7 @@ export function getFillInBlanksWhileTakingDiv(data) {
 
         const input = document.createElement('input');
         input.type = 'text';
+        input.className = 'answer-input';
         input.style.width = '100px';
         input.style.margin = '0 5px';
         input.dataset.answerIndex = i;
@@ -59,6 +56,85 @@ export function getFillInBlanksWhileTakingDiv(data) {
 }
 
 
-export function evalAnswerFillInBlanks(div, questionid, userresultid, userid){
+export async function evalAnswerFillInBlanks(div, questionid, quizresultid, userid) {
+    const inputs = div.querySelectorAll('input[type="text"].answer-input');
+    const answers = Array.from(inputs).map(input => input.value.trim());
 
+    if (answers.length === 0 || answers.every(a => !a)) {
+        return { success: false, message: "No answers provided" };
+    }
+
+    const userAnswer = {
+        isString: true,
+        choices: answers
+    };
+
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
+    };
+
+    try {
+        const response = await fetch('/evalAndSaveUserAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+        });
+
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
+        }
+
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
+
+    } catch (error) {
+        return { success: false, message: "Network error" };
+    }
+}
+
+export function highlightCorrectionFillInBlanks(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const inputs = div.querySelectorAll('input[type="text"].answer-input');
+    const correctAnswersList = questionData.correctAnswers || [];
+
+    inputs.forEach((input, index) => {
+        input.readOnly = true; // Make input read-only after submission
+
+        const userAnswer = input.value.trim();
+        const correctAnswers = correctAnswersList[index] || [];
+
+        let isCorrect = false;
+        if (questionData.exactMatch) {
+            isCorrect = correctAnswers.includes(userAnswer);
+        } else {
+            const normalizedUser = userAnswer.toLowerCase().replace(/\s+/g, '');
+            isCorrect = correctAnswers.some(
+                correct => normalizedUser === correct.toLowerCase().replace(/\s+/g, '')
+            );
+        }
+
+        // Remove prior highlights if any
+        input.classList.remove("correct-answer", "incorrect-answer");
+
+        // Apply styling
+        input.classList.add(isCorrect ? "correct-answer" : "incorrect-answer");
+
+        // Add correct answer info only if wrong
+        if (!isCorrect && correctAnswers.length > 0) {
+            const correctAnswerText = document.createElement("span");
+            correctAnswerText.className = "correct-answer-text";
+            correctAnswerText.textContent = ` (Correct: ${correctAnswers.join(' OR ')})`;
+            input.parentNode.appendChild(correctAnswerText);
+        }
+    });
 }

@@ -1,6 +1,4 @@
 import { loadSessionValue } from './getSessionInfo.js';
-//import { loadRequests } from './userPage/loadFriendRequests.js';
-//import { loadFriendsSection } from './userPage/loadFriendsSection.js';
 
 function addAdminButton(admin, receiverUsername, btnGroup, div) {
     if (admin === "Admin") {
@@ -9,6 +7,7 @@ function addAdminButton(admin, receiverUsername, btnGroup, div) {
         adminBtn.textContent = "Remove User";
         adminBtn.addEventListener("click", async () => {
             try {
+                if (!confirm("Are you sure you want to delete this user?")) return;
                 const res1 = await fetch("/get-quiz-ids", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -41,6 +40,37 @@ function addAdminButton(admin, receiverUsername, btnGroup, div) {
                 alert(err.message);
             }
         });
+
+        const promote = document.createElement("button");
+        promote.className = "btn btn-primary btn-sm";
+        promote.textContent = "Promote User";
+        promote.addEventListener("click", ()=>{
+            if (!confirm("Are you sure you want to promote this user?")) return;
+            fetch("/promoteUser",{
+                method : "POST",
+                headers :{
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body : new URLSearchParams({
+                    username: receiverUsername,
+                })
+            }).then(res => res.json())
+                .then(data => {
+                    if(data.success)alert(`You successfully promoted ${receiverUsername} to Admin.`);
+                    else alert(data.message)
+                }).catch(err => console.log(err))
+        });
+
+
+
+
+
+
+
+
+
+
+        btnGroup.appendChild(promote);
         btnGroup.appendChild(adminBtn);
     }
 }
@@ -169,7 +199,7 @@ export async function getUserDiv(receiverUsername) {
     div.className = "user-div alert alert-info d-flex align-items-center justify-content-between mb-2 p-2";
     const myName = await loadSessionValue("username");
     const userLink = document.createElement("a");
-    userLink.href = `/user.html?username=${encodeURIComponent(receiverUsername)}`;
+    userLink.href = `/user?username=${encodeURIComponent(receiverUsername)}`;
     userLink.textContent = receiverUsername;
     userLink.classList.add("fw-bold", "text-decoration-none", "text-dark");
     div.appendChild(userLink);
@@ -188,9 +218,9 @@ export async function getUserDiv(receiverUsername) {
         });
 
         if (!response.ok) throw new Error("Failed to fetch friend status");
-
+        console.log(response);
         const status = await response.json();
-        if(myName !== receiverUsername){
+        if(myName != null||  myName.length !==0||  myName !== receiverUsername){
             await updateButtons(status, btnGroup, receiverUsername, admin, div);
         }
     } catch (error) {

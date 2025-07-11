@@ -8,8 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const practiceModeSection = document.getElementById("practiceModeSection");
     const statusDiv = document.getElementById("quizStatus");
 
-    const leaderboardContainer = document.getElementById("leaderboard-container");
-
     const quizId = new URLSearchParams(window.location.search).get("id");
 
     if (!quizId) {
@@ -32,11 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 creatorLink.href = "/user?id=" + data.creatorId;
                 creatorLink.textContent = data.creatorName;
 
-
                 // get my past results.
                 getUserQuizResultsDiv(data.userId, quizId, null).then(userResultsDiv => {
                     const container = document.getElementById("userAttemptsList");
-                    container.innerHTML = ""; // Optional
+                    container.innerHTML = "";
                     container.appendChild(userResultsDiv);
                 });
 
@@ -65,9 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("editDeleteSection").style.display = "block";
                 }
 
-                document.getElementById("editQuizBtn").onclick = () => {
-                    window.location.href = "/editQuiz?id=" + quizId;
-                };
+                // Handle quiz buttons state
+                updateQuizButtons(data.ongoingResult, data.ongoingPractice, quizId);
 
                 document.getElementById("deleteQuizBtn").addEventListener("click", () => {
                     if (!confirm("Are you sure you want to delete this quiz? This action cannot be undone.")) return;
@@ -85,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         .then(data => {
                             if (data.success) {
                                 alert("Quiz deleted successfully!");
-                                window.location.href = "/"; // redirect to homepage or quiz list
+                                window.location.href = "/";
                             } else {
                                 alert("Error: " + data.message);
                             }
@@ -103,10 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
             titleEl.textContent = "❌ Failed to load quiz.";
         });
 
-    // Start Quiz button click handler
     document.getElementById("startQuizButton").addEventListener("click", () => {
         const practice = document.getElementById("practiceMode").checked;
-        console.log(practice);
         fetch("startQuiz", {
             method: "POST",
             headers: {
@@ -120,13 +114,21 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // es merea dasaweri
-
                     window.location.href = `/quiz?id=${encodeURIComponent(quizId)}&practice=${encodeURIComponent(practice)}`;
-
                 } else {
-                    statusDiv.textContent = "❌ " + data.message;
-                    statusDiv.style.color = "red";
+                    // Check if this is an unfinished quiz error
+                    if (data.hasUnfinished) {
+                        // Create a div with the HTML message
+                        const messageDiv = document.createElement("div");
+                        messageDiv.innerHTML = data.message;
+                        messageDiv.className = "alert alert-warning";
+                        statusDiv.innerHTML = "";
+                        statusDiv.appendChild(messageDiv);
+                    } else {
+                        // Regular error message
+                        statusDiv.textContent = "❌ " + data.message;
+                        statusDiv.style.color = "red";
+                    }
                 }
             })
             .catch(() => {
@@ -134,8 +136,51 @@ document.addEventListener("DOMContentLoaded", function () {
                 statusDiv.style.color = "red";
             });
     });
+
+    // Cancel Quiz button click handler
+    document.getElementById("cancelQuizButton")?.addEventListener("click", () => {
+        if (!confirm("Are you sure you want to cancel this quiz? Your progress will be lost.")) return;
+
+        fetch("cancelQuiz", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                quizId: quizId
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    updateQuizButtons(false);
+                } else {
+                    alert("Cancel failed: " + data.message);
+                }
+            })
+            .catch(() => {
+                alert("❌ Server error while canceling quiz.");
+            });
+    });
+
+    // Continue Quiz button click handler
+    document.getElementById("continueQuizButton")?.addEventListener("click", () => {
+        const practice = document.getElementById("practiceMode").checked;
+        window.location.href = `/quiz?id=${encodeURIComponent(quizId)}&practice=${encodeURIComponent(practice)}&continue=true`;
+    });
 });
 
+function updateQuizButtons(hasOngoingQuiz, isPractice = false, quizId = null) {
+    if (hasOngoingQuiz) {
+        document.getElementById("cancelQuizButton").style.display = "inline-block";
+        document.getElementById("continueQuizButton").style.display = "inline-block";
+        document.getElementById("startQuizButton").style.display = "none";
+    } else {
+        document.getElementById("cancelQuizButton").style.display = "none";
+        document.getElementById("continueQuizButton").style.display = "none";
+        document.getElementById("startQuizButton").style.display = "inline-block";
+    }
+}
 
 function renderList(id, data, detailed = false) {
     const ul = document.getElementById(id);

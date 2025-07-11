@@ -40,8 +40,8 @@ export function getFillInChoicesWhileTakingDiv(data) {
         label.textContent = `Answer ${i + 1}:`;
         answerGroup.appendChild(label);
 
-
         const select = document.createElement('select');
+        select.className = 'answer-select'; // Added this class
         select.style.margin = '0 5px';
         select.dataset.answerIndex = i;
         select.required = true;
@@ -73,8 +73,83 @@ export function getFillInChoicesWhileTakingDiv(data) {
 }
 
 
-export function evalAnswerFillInChoices(div, questionid, userresultid, userid){
+export async function evalAnswerFillInChoices(div, questionid, quizresultid, userid) {
+    const selects = div.querySelectorAll('select.answer-select');
+    const answers = Array.from(selects).map(select =>
+        select.value === "" ? null : parseInt(select.value)
+    );
 
+    if (answers.some(a => a === null)) {
+        return { success: false, message: "Please answer all dropdowns" };
+    }
+
+    const userAnswer = {
+        isString: false,
+        choices: answers
+    };
+
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
+    };
+
+    try {
+        const response = await fetch('/evalAndSaveUserAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+        });
+
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
+        }
+
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
+
+    } catch (error) {
+        return { success: false, message: "Network error" };
+    }
 }
+export function highlightCorrectionFillInChoices(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData) return;
+    if (!evaluationResult.success || !evaluationResult.userAnswer) return;
 
+    const selects = div.querySelectorAll('select.answer-select');
+    selects.forEach(select => select.disabled = true);
 
+    const userChoices = evaluationResult.userAnswer.choices;
+    const correctChoices = questionData.correctIndexes || [];
+
+    selects.forEach((select, index) => {
+        const isCorrect = index < correctChoices.length &&
+            index < userChoices.length &&
+            userChoices[index] === correctChoices[index];
+
+        select.classList.add(isCorrect ? 'correct-answer' : 'incorrect-answer');
+
+        // Add feedback icon
+        const feedbackSpan = document.createElement('span');
+        feedbackSpan.className = 'feedback-icon';
+        select.parentNode.insertBefore(feedbackSpan, select.nextSibling);
+
+        // Show correct answer if wrong
+        if (!isCorrect && index < correctChoices.length) {
+            const correctOption = select.querySelector(`option[value="${correctChoices[index]}"]`);
+            if (correctOption) {
+                const correctMarker = document.createElement('div');
+                correctMarker.className = 'correct-answer-marker';
+                correctMarker.textContent = `Correct: ${correctOption.textContent}`;
+                select.parentNode.insertBefore(correctMarker, select.nextSibling);
+            }
+        }
+    });
+}

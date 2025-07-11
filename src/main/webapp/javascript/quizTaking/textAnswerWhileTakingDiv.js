@@ -43,7 +43,67 @@ export function getTextAnswerWhileTakingDiv(data) {
 
 
 
+export async function evalAnswerTextAnswer(div, questionid, quizresultid, userid) {
+    const input = div.querySelector('input[type="text"]');
+    if (!input || !input.value.trim()) {
+        return { success: false, message: "No answer provided" };
+    }
 
-export function evalAnswerTextAnswer(div, questionid, userresultid, userid){
+    const userAnswer = {
+        isString: true,
+        choices: [input.value.trim()]
+    };
 
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
+    };
+
+    try {
+        const response = await fetch('/evalAndSaveUserAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+        });
+
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
+        }
+
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
+
+    } catch (error) {
+        return { success: false, message: "Network error" };
+    }
 }
+
+
+export function highlightCorrectionTextAnswer(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const input = div.querySelector('input[type="text"]');
+    if (!input) return;
+
+    input.readOnly = true;
+    const isCorrect = evaluationResult.points > 0;
+    input.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
+
+    // Show all possible correct answers next to input if user's answer was wrong
+    if (!isCorrect && Array.isArray(questionData.correctAnswers) && questionData.correctAnswers.length > 0) {
+        const correctText = questionData.correctAnswers.join(" OR ");
+        const span = document.createElement('span');
+        span.className = 'correct-answer-text';
+        span.textContent = ` (Correct: ${correctText})`;
+        input.parentNode.insertBefore(span, input.nextSibling);
+    }
+}
+

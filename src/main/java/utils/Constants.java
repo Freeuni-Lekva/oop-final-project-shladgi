@@ -9,9 +9,9 @@ public class Constants {
     public static String FRIENDSHIPDB = "FRIENDSHIPDB";
     public static String USERANSWERDB = "USERANSWERDB";
     public static String QUESTIONDB = "QUESTIONDB";
-    public static String ANNOUNCEMENTDB = "ANNOUNCEMENTDB";
     public static String USERACHIEVEMENTDB = "USERACHIEVEMENTDB";
     public static String ACHIEVEMENTSDB = "ACHIEVEMENTSDB";
     public static String FRIENDREQUESTDB = "FRIENDREQUESTDB";
+    public static String ANNOUNCEMENTSDB = "ANNOUNCEMENTSDB";
 }
 

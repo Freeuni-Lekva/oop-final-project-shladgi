@@ -42,7 +42,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
     // Radio buttons for choices with proper accessibility
     const choiceList = document.createElement('div');
     choiceList.className = 'choice-list';
-    choiceList.setAttribute('role', 'radiogroup');
+    choiceList.setAttribute('role', `radiogroup`);
     choiceList.setAttribute('aria-labelledby', questionText.id);
 
     data.choices.forEach((choice, index) => {
@@ -55,7 +55,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
         const input = document.createElement('input');
         input.type = 'radio';
         input.id = choiceId;
-        input.name = 'singleChoice';
+        input.name = `singleChoice-${data.id}`;
         input.value = index;
         input.required = true; // At least one option must be selected
         input.setAttribute('aria-checked', 'false');
@@ -71,6 +71,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
             });
         });
 
+
         label.appendChild(input);
         label.appendChild(span);
         choiceList.appendChild(label);
@@ -80,10 +81,80 @@ export function getSingleChoiceWhileTakingDiv(data) {
     return container;
 }
 
-export function evalAnswerSingleChoice(div, questionid, userresultid, userid){
+export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid) {
+    const selectedRadio = div.querySelector(`input[type="radio"][name="singleChoice-${questionid}"]:checked`);
 
+    if (!selectedRadio) {
+        return { success: false, message: "No answer selected" };
+    }
 
+    const userAnswer = {
+        isString: false,
+        choices: [parseInt(selectedRadio.value)]
+    };
 
+    const submissionData = {
+        userId: userid,
+        questionId: questionid,
+        resultId: quizresultid,
+        userAnswer: userAnswer
+    };
+
+    try {
+        const response = await fetch('/evalAndSaveUserAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+        });
+
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            return { success: false, message: responseData.message };
+        }
+
+        return {
+            success: true,
+            userAnswer: userAnswer,
+            points: responseData.points,
+            message: responseData.message
+        };
+
+    } catch (error) {
+        return { success: false, message: "Network error" };
+    }
 }
 
+export function highlightCorrectionSingleChoice(div, evaluationResult, questionData) {
+    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
+
+    const userChoice = evaluationResult.userAnswer.choices[0];
+    const correctId = questionData.correctId;
+
+    // Disable all radio inputs
+    const allInputs = div.querySelectorAll(`input[name="singleChoice-${questionData.id}"]`);
+    allInputs.forEach(input => input.disabled = true);
+
+    // Clear previous highlights
+    div.querySelectorAll('.correct-choice, .incorrect-choice').forEach(label => {
+        label.classList.remove('correct-choice', 'incorrect-choice');
+    });
+
+    // Highlight user's selected choice
+    const userInput = div.querySelector(`input[name="singleChoice-${questionData.id}"][value="${userChoice}"]`);
+    if (userInput) {
+        const label = userInput.closest('label');
+        const isCorrect = userChoice === correctId;
+        label.classList.add(isCorrect ? 'correct-choice' : 'incorrect-choice');
+    }
+
+    // Also highlight correct choice if user's answer was wrong
+    if (userChoice !== correctId && correctId !== undefined) {
+        const correctInput = div.querySelector(`input[name="singleChoice-${questionData.id}"][value="${correctId}"]`);
+        if (correctInput) {
+            const label = correctInput.closest('label');
+            label.classList.add('correct-choice');
+        }
+    }
+}
 

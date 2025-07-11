@@ -71,6 +71,7 @@ public class Converter {
                 setField(f, obj, rs, a.name());
             }
 
+            int x = 5;
             // if the object had HasJson annotation, then save the json data in the ibject
             // the object must alse implement ObjectWithJson interface or an error will be thrown
             if(jsonColumnName != null){

@@ -1,6 +1,6 @@
 body{
-min-height: 100vh;
-    position: relative;
+
+
 }
 
 
@@ -21,8 +21,8 @@ header nav li:hover{
 footer {
     background-color: #0382f1;
     padding: 10px;
-    position: absolute;
-    bottom: 0;
+
+
     width: 100%;
 
 }

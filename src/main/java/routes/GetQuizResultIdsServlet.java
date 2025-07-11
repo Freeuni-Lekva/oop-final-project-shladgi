@@ -25,6 +25,12 @@ public class GetQuizResultIdsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(request.getParameter("userid") == null){
+            System.out.println("userid nullll");
+        }
+        if(request.getParameter("quizid") == null){
+            System.out.println("quizid nullll");
+        }
         int userId = Integer.parseInt(request.getParameter("userid"));
         int quizId = Integer.parseInt(request.getParameter("quizid"));
 

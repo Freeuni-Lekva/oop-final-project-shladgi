@@ -37,4 +37,23 @@ public class QuizResultDB extends DataBase<QuizResult, QuizResultField> {
 
         return list;
     }
+
+    public boolean  updateQuizResult(int id, int timeTaken, double totalScore){
+        String sql = "UPDATE quiz_results SET timetaken = ?, totalscore = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, timeTaken);
+            stmt.setDouble(2, totalScore);
+            stmt.setInt(3, id);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) return true;
+            else return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+
+
+    }
 }

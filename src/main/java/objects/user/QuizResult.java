@@ -54,4 +54,10 @@ public class QuizResult {
     public LocalDateTime getCreationDate() {return creationDate;}
     public double getTotalScore() {return totalScore;}
     public int getTimeTaken() {return this.timeTaken;}
+    public void setTimeTaken(int seconds) {this.timeTaken = seconds;}
+    public void setTotalScore(double points){this.totalScore = points;}
+    public void setQuizId(int quizId){this.quizId = quizId;}
+    public void setUserId(int userId){this.userId = userId;};
+    public void setCreationDate(LocalDateTime time){this.creationDate = time;}
+
 }

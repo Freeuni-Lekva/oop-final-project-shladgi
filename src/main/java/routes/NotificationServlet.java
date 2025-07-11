@@ -11,6 +11,7 @@ import objects.user.Challenge;
 import objects.user.Note;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,22 +25,30 @@ import static utils.Constants.NOTEDB;
 
 @WebServlet("/notifications")
 public class NotificationServlet extends HttpServlet {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        req.getRequestDispatcher("/notifications.html").forward(req, res);
+    }
+
+
+
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+       try {
         String id = req.getParameter("id");
         String act = req.getParameter("act");
         ServletContext context = req.getServletContext();
         NoteDB noteDB = (NoteDB) context.getAttribute(NOTEDB);
         ChallengeDB challengeDB = (ChallengeDB)  context.getAttribute(CHALLENGEDB);
-        List<Note> notes = noteDB.query(new FilterCondition<>(NoteField.RECIPIENTID, Operator.EQUALS, id));
-        List<Challenge> challenges = challengeDB.query(new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, id));
-        JsonObject jo = new JsonObject();
-
 
         if(act != null && act.equals("hasUnseen") ){
-            res.setContentType("application/json");
-            jo.addProperty("hasUnseen", checkViews(notes,challenges));
-            res.getWriter().write(jo.toString());
+            checkViews(res,noteDB,challengeDB,id);
         }
+
+       } catch (Exception e) {
+           JsonObject jo = new JsonObject();
+           res.setContentType("application/json");
+           jo.addProperty("success", false );
+           res.getWriter().write(jo.toString());
+       }
 
 
 
@@ -49,18 +58,22 @@ public class NotificationServlet extends HttpServlet {
 
 
 
-    private boolean checkViews(List<Note> notes,List<Challenge> challenges){
-        for(Note note : notes){
-            if(!note.isViewed()){
-                return true;
-            }
-        }
-       for(Challenge challenge : challenges) {
-           if (!challenge.isViewed()) {
-               return true;
-           }
-       }
-      return false;
+    private void checkViews(HttpServletResponse res, NoteDB noteDB, ChallengeDB challengeDB, String id ) throws IOException {
+        List<Note> notes = noteDB.query(List.of(
+                new FilterCondition<>(NoteField.RECIPIENTID, Operator.EQUALS, id),
+                new FilterCondition<>(NoteField.VIEWED, Operator.EQUALS, false))
+        );
+        List<Challenge> challenges = challengeDB.query( List.of(
+                new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, id),
+                new FilterCondition<>(ChallengeField.VIEWED, Operator.EQUALS, false))
+        );
+        JsonObject jo = new JsonObject();
+        res.setContentType("application/json");
+        jo.addProperty("success", true );
+
+        jo.addProperty("hasUnseen",notes.size()>0 || challenges.size()>0 );
+        res.getWriter().write(jo.toString());
+
     }
 
 

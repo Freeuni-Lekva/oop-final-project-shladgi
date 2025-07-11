@@ -162,7 +162,7 @@ public class QuestionMultiTextAnswer extends Question{
             JsonArray jsonEach = jsonArray.get(i).getAsJsonArray();
             List<String> each = new ArrayList<>();
             for(int j = 0; j < jsonEach.size(); j++){
-                each.add(jsonEach.get(i).getAsString());
+                each.add(jsonEach.get(j).getAsString());
             }
             this.correctAnswers.add(each);
         }
