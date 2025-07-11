@@ -2,7 +2,7 @@
     import {loadSessionValue} from "../getSessionInfo.js";
     import {evalAnswer} from "./answerSaveWhileTaking.js";
     import {highlightQuestionDiv} from "./hihglightQuestion.js";
-    import {loadSavedAnswers, startAutoSave} from "./quizAutoSave.js";
+    import {loadSavedAnswers, startAutoSave, stopSavingGracefully} from "./quizAutoSave.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
         const startTime = Date.now();
@@ -190,7 +190,7 @@
                                 return;
                             }
                         }
-
+                        stopSavingGracefully();
                         await saveResult(quizResultId, userid, totalScore, timeTakenSeconds, practiceMode);
 
                         bottomContainer.appendChild(homeLink);

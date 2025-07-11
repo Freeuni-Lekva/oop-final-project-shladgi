@@ -2,6 +2,9 @@
 import {populateQuestionDiv} from "./populateQuestionDiv.js";
 import {evalAnswer} from "./answerSaveWhileTaking.js";
 
+let autosaveFunctionId = null;
+let isRunning = false;
+
 export async function loadSavedAnswers(quizResultId) {
     try {
         console.log("load");
@@ -34,11 +37,14 @@ export async function loadSavedAnswers(quizResultId) {
     }
 }
 
+
+
 // Utility: Auto-save answers every N minutes
 export function startAutoSave(intervalSeconds = 30, quizResultId, userId) {
     const saveInterval = intervalSeconds  * 1000;
 
-    setInterval(async () => {
+     autosaveFunctionId = setInterval(async () => {
+         isRunning = true;
         const container = document.getElementById('all-questions-container');
         if (!container) return;
 
@@ -58,5 +64,22 @@ export function startAutoSave(intervalSeconds = 30, quizResultId, userId) {
                 evalAnswer(type, div, questionId, quizResultId, userId, true);
             }
         }
+        isRunning = false;
     }, saveInterval);
+
+}
+
+export function stopSavingGracefully(){
+    if(autosaveFunctionId == null) return;
+    const checkAndStop = () => {
+        if (!isRunning) {
+            clearInterval(autosaveFunctionId);
+            console.log("Interval stopped gracefully.");
+        } else {
+            console.log("Waiting for running task to finish...");
+            setTimeout(checkAndStop, 200); // check again shortly
+        }
+    };
+
+    checkAndStop();
 }
