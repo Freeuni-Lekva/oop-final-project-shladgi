@@ -14,30 +14,37 @@ export function fetchQuizResultData(quizResultId) {
 
 export function userQuizResultsDiv(data, wantTitle = false) {
     const row = document.createElement("div");
-    row.className = "border rounded p-3 mb-3";
+    row.className = "border rounded p-2 mb-2 shadow-sm bg-light small"; // smaller padding + font size
 
-    if(wantTitle){
-        row.innerHTML = `
-        <p><strong>Title:</strong> ${data.title}</p>
-        <p><strong>Score:</strong> ${data.totalscore}</p>
-        <p><strong>Time Taken:</strong> ${data.timetaken}</p>
-        <p><strong>Date:</strong> ${data.creationdate}</p>
-        <a href="/quizResult?id=${data.quizResultId}">View Details</a>
-    `;
-    }else{
-    row.innerHTML = `
-        <p><strong>Score:</strong> ${data.totalscore}</p>
-        <p><strong>Time Taken:</strong> ${data.timetaken}</p>
-        <p><strong>Date:</strong> ${data.creationdate}</p>
-        <a href="/quizResult?id=${data.quizResultId}">View Details</a>
-    `;
+    let infoItems = '';
+
+    if (wantTitle) {
+        infoItems += `<div class="me-3"><strong>Title:</strong> ${data.title}</div>`;
     }
 
+    infoItems += `
+        <div class="me-3"><strong>Score:</strong> ${data.totalscore}</div>
+        <div class="me-3"><strong>Time:</strong> ${data.timetaken}</div>
+        <div class="me-3"><strong>Date:</strong> ${data.creationdate}</div>
+    `;
+
+    row.innerHTML = `
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="d-flex flex-wrap align-items-center">
+                ${infoItems}
+            </div>
+            <a class="btn btn-sm btn-link ms-auto mt-1 mt-md-0" href="/quizResult?id=${data.quizResultId}">
+                View
+            </a>
+        </div>
+    `;
 
     return row;
 }
 
-export async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
+
+
+export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amount = 5) {
     const listContainer = document.createElement("div");
 
     try {
@@ -60,12 +67,16 @@ export async function getUserQuizResultsDiv(userId, quizId, currentResultId) {
             return row;
         }
 
+        let counter = 0;
         for (const id of filteredIds) {
             try {
+                counter++;
+                if(counter > amount) break;
                 const result = await fetchQuizResultData(id);
                 result.quizResultId = id;
                 const card = userQuizResultsDiv(result);
                 listContainer.appendChild(card);
+
             } catch (err) {
                 console.error("Error loading result:", err);
             }

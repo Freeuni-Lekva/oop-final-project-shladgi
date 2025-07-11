@@ -16,7 +16,7 @@ import java.util.List;
 import static utils.Constants.QUIZRESULTDB;
 
 @WebServlet("/get-top-rated-people")
-public class GetTopRatedServlet extends HttpServlet {
+public class GetTopRatedPeopleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);

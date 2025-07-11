@@ -149,7 +149,7 @@ public class QuizInfoServlet extends HttpServlet {
 
         // Calculate statistics using streams
         double avgScore = allResults.stream()
-                .filter(qr -> qr.getTimeTaken() != -1)  // Only completed attempts
+                .filter(qr -> qr.getTimeTaken() >= 0)  // Only completed attempts
                 .mapToDouble(QuizResult::getTotalScore)
                 .average()
                 .orElse(0);
@@ -168,6 +168,7 @@ public class QuizInfoServlet extends HttpServlet {
             if(!ongoing.isEmpty()) {
                 QuizResult qr = ongoing.getFirst();
                 json.addProperty("ongoingPractice", qr.getTimeTaken() == -2);
+                json.addProperty("ongoingResultId", qr.getId());
             }
         }
 

@@ -23,6 +23,7 @@ public class AppContextListener implements ServletContextListener {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizKhana", "root", "root" );
 
+
             ServletContext context = sce.getServletContext();
             context.setAttribute(USERACHIEVEMENTDB, new UserAchievementDB(conn));
             context.setAttribute(ACHIEVEMENTSDB, new AchievementDB(conn));
@@ -35,7 +36,10 @@ public class AppContextListener implements ServletContextListener {
             context.setAttribute(USERANSWERDB, new UserAnswerDB(conn));
             context.setAttribute(QUESTIONDB, new  QuestionDB(conn));
             context.setAttribute(FRIENDREQUESTDB, new FriendRequestDB(conn));
+
             context.setAttribute(ANNOUNCEMENTSDB, new AnnouncementDB(conn));
+
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
