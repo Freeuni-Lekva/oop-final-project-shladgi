@@ -131,4 +131,74 @@ export function highlightCorrectionMultiChoice(div, evaluationResult, questionDa
         }
     });
 }
+export function populateMultiChoiceDiv(div, questionData, userAnswer) {
+    // Validate required data
+    if (!div || !questionData || !questionData.question || !questionData.choices ||
+        questionData.choices.length === 0 || !userAnswer || !userAnswer.choices) {
+        console.error("Invalid data for populating multi-choice question");
+        return;
+    }
 
+    // Clear the div if it has any content
+    div.innerHTML = '';
+    div.className = 'question-container';
+
+    // Question text
+    const questionText = document.createElement('p');
+    questionText.textContent = questionData.question;
+    questionText.className = 'question-text';
+    div.appendChild(questionText);
+
+    // Optional image
+    if (questionData.imageLink) {
+        const img = document.createElement('img');
+        img.src = questionData.imageLink;
+        img.alt = 'Question image';
+        img.className = 'question-image';
+        div.appendChild(img);
+    }
+
+    // Show weight
+    if (questionData.weight !== undefined) {
+        const weightInfo = document.createElement('p');
+        weightInfo.textContent = `Weight: ${questionData.weight}`;
+        weightInfo.className = 'question-weight';
+        div.appendChild(weightInfo);
+    }
+
+    // Checkboxes for choices
+    const choiceList = document.createElement('div');
+    choiceList.className = 'choice-list';
+
+    questionData.choices.forEach((choice, index) => {
+        const label = document.createElement('label');
+        label.className = 'choice-item';
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.name = 'multiChoice';
+        input.value = index;
+        input.disabled = true; // Make it read-only
+        input.checked = userAnswer.choices.includes(index);
+
+        const span = document.createElement('span');
+        span.textContent = choice;
+
+        label.appendChild(input);
+        label.appendChild(span);
+        choiceList.appendChild(label);
+    });
+
+    div.appendChild(choiceList);
+
+    // If we have evaluation data, highlight the correction
+    if (userAnswer.points !== undefined && questionData.correctChoices) {
+        highlightCorrectionMultiChoice(div, {
+            success: true,
+            userAnswer: userAnswer,
+            points: userAnswer.points
+        }, questionData);
+    }
+
+    return div;
+}

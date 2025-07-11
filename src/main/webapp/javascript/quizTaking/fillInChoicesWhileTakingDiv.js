@@ -153,3 +153,96 @@ export function highlightCorrectionFillInChoices(div, evaluationResult, question
         }
     });
 }
+
+
+export function populateFillInChoicesDiv(div, questionData, userAnswer) {
+    // Validate required data
+    if (!div || !questionData || !questionData.question || !userAnswer ||
+        !userAnswer.choices) {
+        console.error("Invalid data for populating fill-in-choices question");
+        return;
+    }
+
+    // Clear the div if it has any content
+    div.innerHTML = '';
+    div.className = 'question-container';
+
+    // Display the question text
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = questionData.question;
+    div.appendChild(questionText);
+
+    // Optional image
+    if (questionData.imageLink) {
+        const img = document.createElement('img');
+        img.src = questionData.imageLink;
+        img.alt = 'Question image';
+        img.className = 'question-image';
+        div.appendChild(img);
+    }
+
+    // Show weight
+    if (questionData.weight !== undefined) {
+        const weightInfo = document.createElement('p');
+        weightInfo.textContent = `Weight: ${questionData.weight}`;
+        weightInfo.className = 'question-weight';
+        div.appendChild(weightInfo);
+    }
+
+    // Create answer fields based on user's answers
+    const answersContainer = document.createElement('div');
+    answersContainer.className = 'answers-container';
+
+    userAnswer.choices.forEach((choiceIndex, answerIndex) => {
+        const answerGroup = document.createElement('div');
+        answerGroup.className = 'answer-group';
+
+        const label = document.createElement('label');
+        label.textContent = `Answer ${answerIndex + 1}:`;
+        answerGroup.appendChild(label);
+
+        const select = document.createElement('select');
+        select.className = 'answer-select';
+        select.disabled = true;
+        select.style.margin = '0 5px';
+        select.dataset.answerIndex = answerIndex;
+
+        // Add default empty option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "-- Select --";
+        defaultOption.disabled = true;
+        select.appendChild(defaultOption);
+
+        // Add options from choices (use choices[answerIndex] if available, otherwise empty)
+        if (questionData.choices && questionData.choices[answerIndex]) {
+            questionData.choices[answerIndex].forEach((choice, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = choice;
+                if (index === choiceIndex) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        }
+
+        answerGroup.appendChild(select);
+        answersContainer.appendChild(answerGroup);
+    });
+
+    div.appendChild(answersContainer);
+
+    // If we have evaluation data, highlight the correction
+    if (userAnswer.points !== undefined) {
+        highlightCorrectionFillInChoices(div, {
+            success: true,
+            userAnswer: userAnswer,
+            points: userAnswer.points
+        }, questionData);
+    }
+
+    return div;
+}
+
