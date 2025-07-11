@@ -9,6 +9,7 @@ export function getFillInChoicesDiv() {
     container.className = 'fill-in-choices-container';
     container.dataset.qtype = "FillChoices";
 
+
     const containerId = `fill-${fillChoiceGlobalId++}`;  // Unique ID for this question
 
     const deleteBtn = document.createElement('button');
@@ -51,7 +52,7 @@ export function getFillInChoicesDiv() {
     exactMatchCheckbox.className = 'exact-match-checkbox';
     exactMatchCheckbox.checked = true;
     const exactMatchLabel = document.createElement('label');
-    exactMatchLabel.textContent = 'Require exact match (case & space sensitive)';
+    exactMatchLabel.textContent = 'Require exact match';
     exactMatchDiv.appendChild(exactMatchCheckbox);
     exactMatchDiv.appendChild(exactMatchLabel);
     container.appendChild(exactMatchDiv);
@@ -71,14 +72,17 @@ export function getFillInChoicesDiv() {
         optionsContainer.className = 'options-container';
         section.appendChild(optionsContainer);
 
+
         // Add two default options
-        addChoiceOption(optionsContainer, blankCounter, containerId, true);
-        addChoiceOption(optionsContainer, blankCounter, containerId, false);
+
+        addChoiceOption(optionsContainer, section.dataset.blankIndex, containerId, true);
+
+        addChoiceOption(optionsContainer, section.dataset.blankIndex, containerId, false);
 
         const addOptionBtn = document.createElement('button');
         addOptionBtn.textContent = '+ Add Option';
         addOptionBtn.className = 'add-option-btn';
-        addOptionBtn.onclick = () => addChoiceOption(optionsContainer, blankCounter, containerId, false);
+        addOptionBtn.onclick = () => addChoiceOption(optionsContainer, section.dataset.blankIndex, containerId, false);
         section.appendChild(addOptionBtn);
 
         const deleteBlankBtn = document.createElement('button');
@@ -149,7 +153,7 @@ export function getFillInChoicesDiv() {
         const endPos = questionInput.selectionEnd;
 
         const newText = questionInput.value.substring(0, startPos) +
-            '--------' +
+            '________' +
             questionInput.value.substring(endPos);
         questionInput.value = newText;
 
