@@ -24,6 +24,8 @@
             smallMessageContainer.innerText = message;
         };
 
+        document.getElementById("back-to-quiz-btn").href = `/startQuiz?id=${quizId}`;
+
         const body = new URLSearchParams({
             id: quizId,
             practiceMode : practiceMode,
