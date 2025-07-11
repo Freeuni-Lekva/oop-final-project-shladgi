@@ -16,7 +16,7 @@ import java.util.List;
 import static utils.Constants.ANNOUNCEMENTSDB;
 
 @WebServlet("/get-announcement")
-public class SetAnnouncementsServlet extends HttpServlet {
+public class GetAnnouncementsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTSDB);
 
@@ -26,6 +26,7 @@ public class SetAnnouncementsServlet extends HttpServlet {
         for (Announcement announcement : announcements) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("id", announcement.getId());
+
             jsonObject.addProperty("title", announcement.getTitle());
             jsonObject.addProperty("image", announcement.getImageLink());
             jsonObject.addProperty("content", announcement.getContent());

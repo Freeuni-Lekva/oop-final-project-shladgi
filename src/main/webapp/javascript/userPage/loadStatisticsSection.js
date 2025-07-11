@@ -8,6 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     button.addEventListener("click", async () => {
+
+        const userBtn = document.getElementById("userMenuItem");
+        const statBtn = document.getElementById("statisticsMenuItem");
+        const frnReqBtn = document.getElementById("friendRequestMenuItem");
+        const frnBtn = document.getElementById("friendsMenuItem");
+
+        if(userBtn) userBtn.classList.remove("active");
+        if(statBtn) statBtn.classList.add("active");
+        if(frnReqBtn) frnReqBtn.classList.remove("active");
+        if(frnBtn) frnBtn.classList.remove("active");
+
         document.getElementById("friend-requests-container").style.display = "none";
         document.getElementById("friends-container").style.display = "none";
         document.getElementById("user").style.display = "none";
@@ -36,10 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (ids.length === 0) {
                 statisticsSection.innerHTML = "<p>No quiz results found.</p>";
             } else {
-                const statHeader = document.createElement("h4");
-                statHeader.textContent = "Quiz Results:";
-                statisticsSection.appendChild(statHeader);
-
                 for (const id of ids) {
                     try {
                         const data = await fetchQuizResultData(id);
@@ -51,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             }
-
         } catch (error) {
             console.error("Error loading statistics:", error);
         }

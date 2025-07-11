@@ -25,6 +25,7 @@ public class AppContextListener implements ServletContextListener {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizKhana", "root", "2005TiriTiri" );
 
 
+
             ServletContext context = sce.getServletContext();
             context.setAttribute(USERACHIEVEMENTDB, new UserAchievementDB(conn));
             context.setAttribute(ACHIEVEMENTSDB, new AchievementDB(conn));

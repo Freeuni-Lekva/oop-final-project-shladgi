@@ -81,7 +81,7 @@ async function loadUsers(page, filters) {
         }
 
         const data = await response.json();
-        console.log(data);
+        //console.log(data);
 
         loadingSpinner.classList.add('d-none');
 
@@ -105,8 +105,7 @@ async function renderUsers(users) {
     usersList.innerHTML = '';
 
     for (const user of users) {
-
-        const userCard = await getUserDiv(user.name);
+        const userCard = await getUserDiv(user.name, user.type);
         usersList.appendChild(userCard);
     }
 

@@ -2,18 +2,18 @@ import { getUserDiv } from '../userDivSmallJS.js';
 
 async function loadFriendsHTML() {
     try {
-        console.log(88);
+
         const response = await fetch("userDivSmall.html");
-        console.log(88);
+
         if (!response.ok) {
-            console.log(88);
+
             throw new Error("Failed to load userDivSmall.html: " + response.status);
         }
-        console.log(88);
+
         const html = await response.text();
-        console.log(88);
+
         document.getElementById("friends-container").innerHTML = html;
-        console.log(88);
+
     } catch (error) {
         console.error(error);
     }
@@ -41,10 +41,6 @@ export async function loadFriendsSection(username) {
         peopleDiv.style.display = "block";
         peopleDiv.innerHTML = "";
 
-        const heading = document.createElement("h4");
-        heading.textContent = "FRIENDS:";
-        peopleDiv.appendChild(heading);
-
         for (const friend of friends) {
             const friendDiv = await getUserDiv(friend);
             peopleDiv.appendChild(friendDiv);
@@ -71,6 +67,15 @@ async function setupFriendsButtonListener() {
         document.getElementById("statistics").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none";
         document.getElementById("friends-container").style.display = "block";
+
+        const userBtn = document.getElementById("userMenuItem");
+        const frBtn = document.getElementById("friendRequestMenuItem");
+        const statBtn = document.getElementById("statisticsMenuItem");
+
+        userBtn.classList.remove("active");
+        if(frBtn)frBtn.classList.remove("active");
+        statBtn.classList.remove("active");
+        button.classList.add("active");
 
         await loadFriendsSection(username);
     });

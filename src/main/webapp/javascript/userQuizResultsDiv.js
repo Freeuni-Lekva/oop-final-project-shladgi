@@ -35,6 +35,8 @@ export function userQuizResultsDiv(data, wantTitle = false) {
     return row;
 }
 
+
+
 export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amount = 5) {
     const listContainer = document.createElement("div");
     listContainer.className = "list-group";

@@ -1,6 +1,14 @@
 import { getUserDiv } from '../userDivSmallJS.js';
 
 export async function loadRequests() {
+    const reqBtn = document.getElementById("friendRequestMenuItem");
+
+    document.getElementById("userMenuItem").classList.remove("active");
+    document.getElementById("statisticsMenuItem").classList.remove("active");
+    if(reqBtn)reqBtn.classList.add("active");
+    document.getElementById("friendsMenuItem").classList.remove("active");
+
+
     const params = new URLSearchParams(window.location.search);
     const username = params.get("username");
 

@@ -60,10 +60,12 @@ public class GetQuizzesServlet extends HttpServlet {
             // Validate request parameters
             if (qr.page < 1) qr.page = 1;
             if (qr.pageSize < 1) qr.pageSize = 8;
+            if(qr.sortBy== null||qr.sortBy.equals(""))qr.sortBy = "dateAsc";
 
             List<FilterCondition<QuizField>> filters = getFilters(qr, id);
-
-            List<Quiz> quizes = quizDB.query(filters,QuizField.CREATIONDATE,true,qr.pageSize,(qr.page-1)*qr.pageSize);
+            QuizField qf = qr.sortBy.contains("date")? QuizField.CREATIONDATE : QuizField.TITLE;
+            boolean b = qr.sortBy.contains("Asc");
+            List<Quiz> quizes = quizDB.query(filters,qf,b,qr.pageSize,(qr.page-1)*qr.pageSize);
 
 
             int size = quizDB.query(new FilterCondition<>(QuizField.ID, Operator.NOTEQ,-1)).size();
@@ -107,6 +109,7 @@ public class GetQuizzesServlet extends HttpServlet {
         public String dateFrom;
         public String dateTo;
         public String searchQuery;
+        public String sortBy;
     }
 
 
@@ -119,6 +122,7 @@ public class GetQuizzesServlet extends HttpServlet {
         } else if (qr.creator.equals("other")) {
             ans.add(new FilterCondition<>(QuizField.USERID, Operator.NOTEQ,userid ));
         }
+
 
         ans.add(new FilterCondition<>(QuizField.TITLE, Operator.LIKE, "%"+qr.searchQuery.trim()+"%"));
 
