@@ -215,7 +215,11 @@ export async function getUserDiv(receiverUsername) {
     const amount = await res.json();
 
     const statsText = document.createElement("span");
-    statsText.textContent = ` - Solved ${amount.solved} quizzes, Created ${amount.created} quizzes`;
+    if(amount.solved == 1){
+        statsText.textContent = ` - Solved ${amount.solved} quizz, Created ${amount.created} quizzes`;
+    }else{
+        statsText.textContent = ` - Solved ${amount.solved} quizzes, Created ${amount.created} quizzes`;
+    }
     statsText.classList.add("ms-2", "text-muted");
     div.appendChild(statsText);
 
