@@ -362,7 +362,7 @@
     function getResultDiv(totalScore, maxScore, isPractice){
         const resultDiv = document.createElement("div");
         if(isPractice) resultDiv.innerHTML = `<h3>Practice Finished</h3>`;
-        else resultDiv.innerHTML = `<h3>Your Score: ${totalScgigit ore} / ${maxScore}</h3>`;
+        else resultDiv.innerHTML = `<h3>Your Score: ${totalScgiore} / ${maxScore}</h3>`;
         return resultDiv;
     }
 
