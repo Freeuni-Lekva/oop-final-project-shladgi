@@ -2,6 +2,7 @@
     import {loadSessionValue} from "../getSessionInfo.js";
     import {evalAnswer} from "./answerSaveWhileTaking.js";
     import {highlightQuestionDiv} from "./hihglightQuestion.js";
+    import {loadSavedAnswers, startAutoSave} from "./quizAutoSave.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
         const startTime = Date.now();
@@ -15,6 +16,12 @@
         const bigMessageContainer = document.getElementById("big-message-container");
         const smallMessageContainer = document.getElementById("small-message-container")
 
+        const homeLink = document.createElement("a");
+        homeLink.href = "/home";
+        homeLink.textContent = "Go Home";
+        homeLink.style.display = "block";
+        homeLink.style.marginTop = "1em";
+
         console.log(bigMessageContainer);
 
         const  showSmallMessage = (isOk, message) => {
@@ -23,6 +30,8 @@
             else smallMessageContainer.classList.add("error-message");
             smallMessageContainer.innerText = message;
         };
+
+        document.getElementById("back-to-quiz-btn").href = `/startQuiz?id=${quizId}`;
 
         const body = new URLSearchParams({
             id: quizId,
@@ -69,6 +78,13 @@
                 const quizResultId = data.quizresultid;
                 const allQuestionsDiv = document.getElementById("all-questions-container");
 
+                const resultLink = document.createElement("a");
+                resultLink.href = `/quizResult?id=${quizResultId}`;
+                resultLink.textContent = "Detailed Result";
+                resultLink.style.display = "block";
+                resultLink.style.marginTop = "1em";
+
+
                 if (isRandom) {
                     shuffleArray(questions);
                 }
@@ -93,12 +109,18 @@
                         questions.forEach((q) => {
                             const questionDiv = getQuestionWhileTaking(q);
                             questionDiv.classList.add("question");
+
+                            if(practiceMode) addCorrectCount(q, questionDiv);
+
                             allQuestionsDiv.appendChild(questionDiv);
                             questionDivs.push({div: questionDiv, question: q});
                         });
                     };
 
                     renderSinglePage();
+                    loadSavedAnswers(quizResultId);
+                    startAutoSave(30, quizResultId, userid);
+
 
                     const submitBtn = document.createElement("button");
                     submitBtn.textContent = "Submit All";
@@ -118,7 +140,7 @@
                                 if (practiceMode && json.points === question.weight) {
                                     question.correctCount++;
                                 }
-
+                                smallMessageContainer.innerText = "";
 
                             } else {
                                 responses.length = 0;
@@ -128,9 +150,7 @@
 
                                 showSmallMessage(false, json.message);
 
-
-
-                                // TODO: washale userResultebi databasedan
+                                deleteUserAnswersForResult(quizResultId);
 
                                 return;
                             }
@@ -138,14 +158,14 @@
                         }
                         submitBtn.style.display = "none";
 
-                        const resultDiv = document.createElement("div");
-                        resultDiv.innerHTML = `<h3>Your Score: ${totalScore} / ${maxScore}</h3>`;
+
+                        const resultDiv = getResultDiv(totalScore, maxScore, practiceMode);
+
                         bottomContainer.appendChild(resultDiv);
-                        const homeLink = document.createElement("a");
-                        homeLink.href = "/home";
-                        homeLink.textContent = "Go Home";
-                        homeLink.style.display = "block";
-                        homeLink.style.marginTop = "1em";
+
+
+
+
                         const endTime = Date.now(); // current time
                         const timeTakenSeconds = Math.floor((endTime - startTime) / 1000); // assuming you store startTime earlier
                         qid = 0;
@@ -171,23 +191,10 @@
                             }
                         }
 
-
-                        fetch("/updatequizresult", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body: new URLSearchParams({
-                                quizresultid: quizResultId,
-                                userid: userid,               // pass user id if needed
-                                totalScore: totalScore,
-                                timeTaken: timeTakenSeconds,
-                                practice: practiceMode
-                            })
-                        })
+                        await saveResult(quizResultId, userid, totalScore, timeTakenSeconds, practiceMode);
 
                         bottomContainer.appendChild(homeLink);
-
+                        bottomContainer.appendChild(resultLink);
 
                     };
 
@@ -195,10 +202,13 @@
                     let totalscore = 0;
                     let maxscore = 0;
                     let currentIndex = 0;
-
+                    let originalQuestions = [...questions];
                     // Initialize correctCount for each question
                     if (practiceMode) {
                         questions.forEach(q => q.correctCount = 0);
+                    }
+                    for(let i = 0; i < questions.length; i++){
+                        questions[i].arrayId = i;
                     }
 
                     const renderQuestion = () => {
@@ -212,13 +222,12 @@
                         currentIndex = currentIndex % questions.length;
 
                         const q = questions[currentIndex];
-                        quizContainer.innerHTML = `
-                        <h2>${data.title}</h2>
-                        <p>${data.description}</p>
-                        `;
 
                         const qDiv = getQuestionWhileTaking(q, currentIndex);
                         qDiv.classList.add("question");
+
+                        if(practiceMode) addCorrectCount(q, qDiv);
+
                         allQuestionsDiv.appendChild(qDiv);
 
                         const submitBtn = document.createElement("button");
@@ -226,10 +235,20 @@
 
                         submitBtn.onclick = async () => {
                             const json = await evaluateAnswer(qDiv, q, quizResultId, userid);
+                            if(!json.success){
+                                qDiv.classList.add("invalid-input");
+                                showSmallMessage(false, json.message);
+                                return;
+                            }
+                            smallMessageContainer.innerText = "";
+                            qDiv.classList.remove("invalid-input");
+                            responses[q.arrayId] = json;
                             totalscore += json.points;
                             maxscore += q.weight;
 
-                            if (practiceMode && points === q.weight) {
+
+
+                            if (practiceMode && json.points === q.weight) {
                                 q.correctCount++;
                             }
 
@@ -245,20 +264,14 @@
                                 currentIndex++;
                             }
 
-
-
                             if (immediateCorrection) {
-                                submitBtn.style.display = "none";
-                                const feedback = document.createElement("div");
-                                console.log(json);
-                                feedback.textContent = json.points > 0 ? "Correct!" : "Incorrect!";
-                                bottomContainer.appendChild(feedback);
+                                submitBtn.remove();
+                                highlightQuestionDiv(qDiv, json, q);
 
                                 const nextBtn = document.createElement("button");
                                 nextBtn.textContent = "Next Question";
                                 nextBtn.onclick = () => {
                                     qDiv.remove();
-                                    feedback.remove();
                                     nextBtn.remove();
                                     renderQuestion(); // proceed to next
                                 };
@@ -272,31 +285,32 @@
                     };
 
                     const showFinalSubmit = () => {
-                        quizContainer.innerHTML = "<h3>All questions completed!</h3>";
+                        allQuestionsDiv.innerHTML = "<h3>All questions completed!</h3>";
                         const finalBtn = document.createElement("button");
-                        finalBtn.textContent = "Submit Quiz";
-                        finalBtn.onclick = () => {
-                            const resultDiv = document.createElement("div");
-                            resultDiv.innerHTML = `<h3>Your Score: ${totalscore} / ${maxscore}</h3>`;
+                        finalBtn.textContent = "Submit And View Result";
+                        finalBtn.onclick = async () => {
+                            const resultDiv = getResultDiv(totalscore, maxscore, practiceMode);
                             bottomContainer.appendChild(resultDiv);
                             finalBtn.remove();
+
+                            const endTime = Date.now(); // current time
+                            const timeTakenSeconds = Math.floor((endTime - startTime) / 1000);
+                            await saveResult(quizResultId, userid, totalscore, timeTakenSeconds, practiceMode);
+
+
+                            bottomContainer.appendChild(homeLink);
+                            if (!practiceMode) bottomContainer.appendChild(resultLink);
                         };
                         bottomContainer.appendChild(finalBtn);
 
-                        const homeLink = document.createElement("a");
-                        homeLink.href = "/home";
-                        homeLink.textContent = "Go Home";
-                        homeLink.style.display = "block";
-                        homeLink.style.marginTop = "1em";
-                        bottomContainer.appendChild(homeLink);
+
                     };
 
-                    renderQuestion(); // initial render
+                    renderQuestion();
                 }
 
             })
             .catch(error => {
-                console.log("SAKDLJSALKJD");
                 console.error("Fetch failed", error);
             });
     });
@@ -310,12 +324,64 @@
 
 
 
+    export async function deleteUserAnswersForResult(resultId) {
+        try {
+            const response = await fetch('/delete-user-answers-for-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `resultId=${encodeURIComponent(resultId)}`
+            });
+
+            console.log(response);
+            const json = await response.json();
+
+            if (json.success) {
+                console.log(`Deleted ${json.deleted} user answers.`);
+            } else {
+                console.error("Failed to delete answers:", json.message);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
+    }
+
+    function getResultDiv(totalScore, maxScore, isPractice){
+        const resultDiv = document.createElement("div");
+        if(isPractice) resultDiv.innerHTML = `<h3>Practice Finished</h3>`;
+        else resultDiv.innerHTML = `<h3>Your Score: ${totalScore} / ${maxScore}</h3>`;
+        return resultDiv;
+    }
+
+    function addCorrectCount(q, div){
+        const correctCountDisplay = document.createElement("div");
+        correctCountDisplay.classList.add("correct-count-display");
+        correctCountDisplay.textContent = `Correect : ${q.correctCount || 0} / 3`;
+        correctCountDisplay.style.marginBottom = "1em";
+        correctCountDisplay.style.fontSize = "0.9em";
+        correctCountDisplay.style.color = "#007bff";
+        div.prepend(correctCountDisplay);
+    }
+
+    function saveResult(quizResultId, userid, totalScore, timeTakenSeconds, practiceMode){
+        fetch("/updatequizresult", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                quizresultid: quizResultId,
+                userid: userid,               // pass user id if needed
+                totalScore: totalScore,
+                timeTaken: timeTakenSeconds,
+                practice: practiceMode
+            })
+        });
+    }
 
 
 
-
-    async function evaluateAnswer(div, questionData, quizResultId, userid) {
-        const msg = await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
-        console.log(msg);
-        return msg;  // Replace with real evaluation
+    export async function evaluateAnswer(div, questionData, quizResultId, userid) {
+        return await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
     }

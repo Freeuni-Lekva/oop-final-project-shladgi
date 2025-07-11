@@ -10,6 +10,7 @@ import databases.filters.fields.QuizResultField;
 import databases.implementations.QuestionDB;
 import databases.implementations.QuizResultDB;
 import databases.implementations.UserAnswerDB;
+import objects.Quiz;
 import objects.questions.Answer;
 import objects.questions.Question;
 import objects.user.QuizResult;
@@ -48,6 +49,7 @@ public class EvalSaveUserAnswerServlet extends HttpServlet {
             return;
         }
 
+        boolean shouldSave = body.get("save").getAsBoolean();
         int userId, resultId, questionId;
 
         try {
@@ -82,11 +84,14 @@ public class EvalSaveUserAnswerServlet extends HttpServlet {
         UserAnswerDB userAnswerDB = (UserAnswerDB) context.getAttribute(USERANSWERDB);
 
 
-        List<QuizResult> results = quizResultDB.query(
-                new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, resultId),
-                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0),
-                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId)
-        );
+        List<FilterCondition<QuizResultField>> f = new ArrayList<>();
+        f.add(new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, resultId));
+        f.add(new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId));
+
+        if(shouldSave) f.add(new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0));
+
+        List<QuizResult> results = quizResultDB.query(f);
+
         if (results.isEmpty()) {
             retErr("Quiz result not found for resultId=" + resultId, response);
             return;
@@ -145,11 +150,15 @@ public class EvalSaveUserAnswerServlet extends HttpServlet {
         int totalCnt = curQuestion.getMaxScore();
         double points = curQuestion.getWeight() * correctCnt / totalCnt;
 
-        if(quizResult.getTimeTaken() != -2) userAnswerDB.add(userAns);
+        String saveStr = "";
+        if(quizResult.getTimeTaken() != -2 && shouldSave){
+            userAnswerDB.add(userAns);
+            saveStr = "saved and";
+        }
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("success", true);
-        jsonObject.addProperty("message", "Successfully saved and evaluated");
+        jsonObject.addProperty("message", "Successfully" + saveStr + " evaluated");
         jsonObject.addProperty("points", points);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

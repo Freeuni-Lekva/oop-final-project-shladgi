@@ -1,6 +1,8 @@
 export function getFillInBlanksWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Display the question text
     const questionText = document.createElement('div');
@@ -56,7 +58,7 @@ export function getFillInBlanksWhileTakingDiv(data) {
 }
 
 
-export async function evalAnswerFillInBlanks(div, questionid, quizresultid, userid) {
+export async function evalAnswerFillInBlanks(div, questionid, quizresultid, userid, save = true) {
     const inputs = div.querySelectorAll('input[type="text"].answer-input');
     const answers = Array.from(inputs).map(input => input.value.trim());
 
@@ -73,7 +75,8 @@ export async function evalAnswerFillInBlanks(div, questionid, quizresultid, user
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: userAnswer
+        userAnswer: userAnswer,
+        save: save
     };
 
     try {
@@ -141,75 +144,38 @@ export function highlightCorrectionFillInBlanks(div, evaluationResult, questionD
 
 
 export function populateFillInBlanksDiv(div, questionData, userAnswer) {
-    // Validate required data
-    if (!div || !questionData || !questionData.question || !userAnswer ||
-        !userAnswer.choices) {
-        console.error("Invalid data for populating fill-in-blanks question");
+    if (!div || !questionData || !userAnswer || questionData.type !== 'FillInBlanks') {
+        console.error("Invalid input to populateFillInBlanksDiv");
         return;
     }
 
-    // Clear the div if it has any content
-    div.innerHTML = '';
-    div.className = 'question-container';
+    // Extract list of user-entered strings
+    let userTexts = [];
 
-    // Display the question text
-    const questionText = document.createElement('div');
-    questionText.className = 'question-text';
-    questionText.textContent = questionData.question;
-    div.appendChild(questionText);
-
-    // Optional image
-    if (questionData.imageLink) {
-        const img = document.createElement('img');
-        img.src = questionData.imageLink;
-        img.alt = 'Question image';
-        img.className = 'question-image';
-        div.appendChild(img);
+    try {
+        if (userAnswer.isString && userAnswer.strAnswer?.list?.length > 0) {
+            userTexts = userAnswer.strAnswer.list;
+        } else {
+            console.warn("FillInTheBlanks userAnswer does not contain a valid string list");
+            return;
+        }
+    } catch (err) {
+        console.error("Error extracting fill-in-the-blanks answers from userAnswer", err);
+        return;
     }
 
-    // Show weight
-    if (questionData.weight !== undefined) {
-        const weightInfo = document.createElement('p');
-        weightInfo.textContent = `Weight: ${questionData.weight}`;
-        weightInfo.className = 'question-weight';
-        div.appendChild(weightInfo);
+    // Select inputs by class or data attribute
+    const inputs = div.querySelectorAll('input.answer-input');
+
+    if (inputs.length === 0) {
+        console.warn("No fill-in-the-blanks inputs found in div");
+        return;
     }
 
-    // Create answer fields based on user's answers
-    const answersContainer = document.createElement('div');
-    answersContainer.className = 'answers-container';
-
-    userAnswer.choices.forEach((answer, index) => {
-        const answerGroup = document.createElement('div');
-        answerGroup.className = 'answer-group';
-
-        const label = document.createElement('label');
-        label.textContent = `Answer ${index + 1}:`;
-        answerGroup.appendChild(label);
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'answer-input';
-        input.value = answer;
-        input.readOnly = true;
-        input.style.width = '100px';
-        input.style.margin = '0 5px';
-        input.dataset.answerIndex = index;
-        answerGroup.appendChild(input);
-
-        answersContainer.appendChild(answerGroup);
+    // Populate and disable each input
+    inputs.forEach((input, index) => {
+        input.value = index < userTexts.length ? userTexts[index] : '';
+       // input.disabled = true;
     });
-
-    div.appendChild(answersContainer);
-
-    // If we have evaluation data, highlight the correction
-    if (userAnswer.points !== undefined) {
-        highlightCorrectionFillInBlanks(div, {
-            success: true,
-            userAnswer: userAnswer,
-            points: userAnswer.points
-        }, questionData);
-    }
-
-    return div;
 }
+

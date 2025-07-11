@@ -11,7 +11,6 @@ export function fetchQuizResultData(quizResultId) {
     });
 }
 
-
 export function userQuizResultsDiv(data, wantTitle = false) {
     const row = document.createElement("div");
     row.className = "border rounded p-2 mb-2 shadow-sm bg-light small"; // smaller padding + font size
@@ -44,8 +43,10 @@ export function userQuizResultsDiv(data, wantTitle = false) {
 
 
 
+
 export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amount = 5) {
     const listContainer = document.createElement("div");
+    listContainer.className = "list-group";
 
     try {
         const response = await fetch("/userQuizResults", {
@@ -63,8 +64,10 @@ export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amo
 
         if(filteredIds.length === 0){
             const row = document.createElement("div");
-            row.innerHTML = `<p><strong>No results!</strong></p>`;
-            return row;
+            row.className = "list-group-item";
+            row.innerHTML = `<p class="mb-0"><strong>No previous attempts found</strong></p>`;
+            listContainer.appendChild(row);
+            return listContainer;
         }
 
         let counter = 0;
@@ -75,18 +78,20 @@ export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amo
                 const result = await fetchQuizResultData(id);
                 result.quizResultId = id;
                 const card = userQuizResultsDiv(result);
+                card.classList.add("list-group-item");
                 listContainer.appendChild(card);
-
             } catch (err) {
                 console.error("Error loading result:", err);
             }
         }
 
         return listContainer;
-
     } catch (err) {
         console.error("Error fetching previous result IDs:", err);
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "list-group-item text-danger";
+        errorDiv.textContent = "Error loading previous attempts";
+        listContainer.appendChild(errorDiv);
         return listContainer;
     }
 }
-

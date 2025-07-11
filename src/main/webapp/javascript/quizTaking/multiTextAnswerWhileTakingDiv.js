@@ -1,6 +1,8 @@
 export function getMultiTextAnswerWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Question text
     const questionText = document.createElement('p');
@@ -54,7 +56,7 @@ export function getMultiTextAnswerWhileTakingDiv(data) {
     return container;
 }
 
-export async function evalAnswerMultiTextAnswer(div, questionid, quizresultid, userid) {
+export async function evalAnswerMultiTextAnswer(div, questionid, quizresultid, userid, save = true) {
     const inputs = div.querySelectorAll('input[type="text"]');
     const answers = Array.from(inputs).map(input => input.value.trim()).filter(a => a);
 
@@ -71,7 +73,8 @@ export async function evalAnswerMultiTextAnswer(div, questionid, quizresultid, u
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: userAnswer
+        userAnswer: userAnswer,
+        save: save
     };
 
     try {
@@ -138,74 +141,44 @@ export function highlightCorrectionMultiTextAnswer(div, evaluationResult, questi
 
 
 export function populateMultiTextAnswerDiv(div, questionData, userAnswer) {
-    // Validate required data
-    if (!div || !questionData || !questionData.question || !userAnswer ||
-        !userAnswer.choices) {
-        console.error("Invalid data for populating multi-text answer question");
+    if (!div || !questionData || !userAnswer || questionData.type !== 'MultiTextAnswer') {
+        console.error("Invalid input to populateMultiTextAnswerDiv");
         return;
     }
 
-    // Clear the div if it has any content
-    div.innerHTML = '';
-    div.className = 'question-container';
+    // Extract list of user-entered strings
+    let userTexts = [];
 
-    // Question text
-    const questionText = document.createElement('p');
-    questionText.textContent = questionData.question;
-    questionText.className = 'question-text';
-    div.appendChild(questionText);
-
-    // Optional image
-    if (questionData.imageLink) {
-        const img = document.createElement('img');
-        img.src = questionData.imageLink;
-        img.alt = 'Question image';
-        img.className = 'question-image';
-        div.appendChild(img);
+    try {
+        if (userAnswer.isString && userAnswer.strAnswer?.list?.length > 0) {
+            userTexts = userAnswer.strAnswer.list; // Array of strings
+        } else {
+            console.warn("MultiTextAnswer userAnswer does not contain a string list");
+            return;
+        }
+    } catch (err) {
+        console.error("Error extracting multi-text answers from userAnswer", err);
+        return;
     }
 
-    // Show weight
-    if (questionData.weight !== undefined) {
-        const weightInfo = document.createElement('p');
-        weightInfo.textContent = `Weight: ${questionData.weight}`;
-        weightInfo.className = 'question-weight';
-        div.appendChild(weightInfo);
+    // Find all inputs in the div that match the structure
+    const inputs = div.querySelectorAll('input.multi-text-answer');
+
+    if (inputs.length === 0) {
+        console.warn("No multi-text inputs found in div");
+        return;
     }
 
-    // Create answer fields based on user's answers
-    userAnswer.choices.forEach((answer, index) => {
-        const answerGroup = document.createElement('div');
-        answerGroup.className = 'answer-group';
-
-        const label = document.createElement('label');
-        label.textContent = `Answer ${index + 1}:`;
-        answerGroup.appendChild(label);
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'multi-text-answer';
-        input.value = answer;
-        input.readOnly = true;
-        input.dataset.answerIndex = index;
-        input.style.width = '100%';
-        input.style.padding = '8px';
-        input.style.margin = '5px 0';
-        input.style.boxSizing = 'border-box';
-        answerGroup.appendChild(input);
-
-        div.appendChild(answerGroup);
+    // Fill inputs with user answers and disable them
+    inputs.forEach((input, index) => {
+        if (index < userTexts.length) {
+            input.value = userTexts[index];
+        } else {
+            input.value = '';
+        }
+        // input.disabled = true;
     });
-
-    // If we have evaluation data, highlight the correction
-    if (userAnswer.points !== undefined) {
-        highlightCorrectionMultiTextAnswer(div, {
-            success: true,
-            userAnswer: userAnswer,
-            points: userAnswer.points
-        }, questionData);
-    }
-
-    return div;
 }
+
 
 

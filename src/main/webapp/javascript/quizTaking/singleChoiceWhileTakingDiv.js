@@ -6,6 +6,8 @@ export function getSingleChoiceWhileTakingDiv(data) {
     }
 
     const container = document.createElement('div');
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
     container.className = 'question-container single-choice-question';
 
     // Question text with aria-label
@@ -81,7 +83,7 @@ export function getSingleChoiceWhileTakingDiv(data) {
     return container;
 }
 
-export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid) {
+export async function evalAnswerSingleChoice(div, questionid, quizresultid, userid, save = true) {
     const selectedRadio = div.querySelector(`input[type="radio"][name="singleChoice-${questionid}"]:checked`);
 
     if (!selectedRadio) {
@@ -97,7 +99,9 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: userAnswer
+        userAnswer: userAnswer,
+        save: save
+
     };
 
     try {
@@ -126,8 +130,9 @@ export async function evalAnswerSingleChoice(div, questionid, quizresultid, user
 }
 
 export function highlightCorrectionSingleChoice(div, evaluationResult, questionData) {
+    console.log(div, evaluationResult, questionData);
     if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
-
+    console.log("SKIPPPEEEDD");
     const userChoice = evaluationResult.userAnswer.choices[0];
     const correctId = questionData.correctId;
 
@@ -158,96 +163,58 @@ export function highlightCorrectionSingleChoice(div, evaluationResult, questionD
     }
 }
 
-
 export function populateSingleChoiceDiv(div, questionData, userAnswer) {
-    // Validate required data
-    if (!div || !questionData || !questionData.question || !questionData.choices ||
-        questionData.choices.length === 0 || !userAnswer || !userAnswer.choices) {
-        console.error("Invalid data for populating single choice question");
+    if (!div || !questionData || !questionData.choices || questionData.choices.length === 0 || !userAnswer) {
+        console.error("Invalid input to populateSingleChoiceDiv");
         return;
     }
 
-    // Clear the div if it has any content
-    div.innerHTML = '';
-    div.className = 'question-container single-choice-question';
+    // Try to extract selected index from jsondata (fallback-safe)
+    let selectedIndex = -1;
 
-    // Question text with aria-label
-    const questionText = document.createElement('p');
-    questionText.textContent = questionData.question;
-    questionText.className = 'question-text';
-    questionText.id = 'question-text-' + Math.random().toString(36).substr(2, 9);
-    div.appendChild(questionText);
-
-    // Optional image with alt text
-    if (questionData.imageLink) {
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'question-image-container';
-
-        const img = document.createElement('img');
-        img.src = questionData.imageLink;
-        img.alt = questionData.imageAltText || 'Question illustration';
-        img.className = 'question-image';
-        img.setAttribute('aria-describedby', questionText.id);
-        imgContainer.appendChild(img);
-
-        div.appendChild(imgContainer);
-    }
-
-    // Show weight if available
-    if (questionData.weight !== undefined) {
-        const weightInfo = document.createElement('p');
-        weightInfo.textContent = `Weight: ${questionData.weight}`;
-        weightInfo.className = 'question-weight';
-        div.appendChild(weightInfo);
-    }
-
-    // Radio buttons for choices with proper accessibility
-    const choiceList = document.createElement('div');
-    choiceList.className = 'choice-list';
-    choiceList.setAttribute('role', 'radiogroup');
-    choiceList.setAttribute('aria-labelledby', questionText.id);
-
-    questionData.choices.forEach((choice, index) => {
-        const choiceId = 'choice-' + Math.random().toString(36).substr(2, 9);
-
-        const label = document.createElement('label');
-        label.className = 'choice-item';
-        label.htmlFor = choiceId;
-
-        const input = document.createElement('input');
-        input.type = 'radio';
-        input.id = choiceId;
-        input.name = `singleChoice-${questionData.id}`;
-        input.value = index;
-        input.disabled = true; // Make it read-only
-        input.setAttribute('aria-checked', 'false');
-        input.setAttribute('role', 'radio');
-
-        // Check if this is the user's selected choice
-        if (index === userAnswer.choices[0]) {
-            input.checked = true;
-            input.setAttribute('aria-checked', 'true');
+    try {
+        let choices;
+        if(userAnswer.isString){
+            choices = userAnswer.strAnswer.list;
+        }else{
+            choices = userAnswer.intAnswer.list;
         }
 
-        const span = document.createElement('span');
-        span.textContent = choice;
-
-        label.appendChild(input);
-        label.appendChild(span);
-        choiceList.appendChild(label);
-    });
-
-    div.appendChild(choiceList);
-
-    // If we have evaluation data, highlight the correction
-    if (userAnswer.points !== undefined && questionData.correctId !== undefined) {
-        highlightCorrectionSingleChoice(div, {
-            success: true,
-            userAnswer: userAnswer,
-            points: userAnswer.points
-        }, questionData);
+        if (Array.isArray(choices) && choices.length > 0) {
+            if (userAnswer.isString) {
+                const selectedValue = choices[0];
+                selectedIndex = questionData.choices.indexOf(selectedValue);
+            } else {
+                selectedIndex = parseInt(choices[0]);
+            }
+        }
+    } catch (err) {
+        console.error("Failed to extract user answer index from userAnswer object", err);
+        return;
+    }
+    console.log(selectedIndex)
+    if (selectedIndex < 0 || selectedIndex >= questionData.choices.length) {
+        console.warn("Selected index out of range or not found");
+        return;
     }
 
-    return div;
+    // Set the correct radio input as checked
+    const inputSelector = `input[type="radio"][name="singleChoice-${questionData.id}"]`;
+    const inputs = div.querySelectorAll(inputSelector);
+
+    if (inputs.length === 0) {
+        console.warn("No radio inputs found in div to populate");
+    }
+
+    inputs.forEach((input, index) => {
+        //input.disabled = true;
+        if (parseInt(input.value) === selectedIndex) {
+            input.checked = true;
+            input.setAttribute("aria-checked", "true");
+        } else {
+            input.setAttribute("aria-checked", "false");
+        }
+    });
 }
+
 

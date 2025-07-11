@@ -1,5 +1,6 @@
 import { loadSessionValue } from "../getSessionInfo.js";
 import { getAchievementDiv } from "../achievementDivGetter.js";
+import {getQuizDiv} from "../getQuizDiv.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("userMenuItem").classList.add("active");
@@ -18,14 +19,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     ids.forEach(id => {
         const el = document.getElementById(id);
-        if (el) {
-            // Get computed display style
-            const display = window.getComputedStyle(el).display;
-            info[id] = (display !== "none");
-        } else {
-            info[id] = null; // if the element is missing
-        }
+        info[id] = el ? (window.getComputedStyle(el).display !== "none") : null;
     });
+
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
 
@@ -50,10 +46,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (userSection && viewedUsername) {
         userSection.style.display = "block";
 
-        // Clear old username display
-        const oldUsernameDisplay = userSection.querySelector(".username-display");
-        if (oldUsernameDisplay) oldUsernameDisplay.remove();
+        // Remove previous displays to avoid duplicates
+        userSection.querySelectorAll(".username-display, .achievement-title, .achievement-container, .no-achievements")
+            .forEach(el => el.remove());
 
+        // Show username
         const usernameDisplay = document.createElement("p");
         usernameDisplay.textContent = `Username: ${viewedUsername}`;
         usernameDisplay.classList.add("username-display");
@@ -72,14 +69,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const achievements = await response.json();
 
-            // Remove old elements
-            userSection.querySelectorAll(".achievement-title, .achievement-container, .no-achievements")
-                .forEach(el => el.remove());
-
             if (achievements.length > 0) {
                 const achTitle = document.createElement("h4");
                 achTitle.textContent = "Achievements:";
-                achTitle.classList.add("achievement-title");
+                achTitle.classList.add("achievement-title", "mt-3");
                 userSection.appendChild(achTitle);
 
                 const achContainer = document.createElement("div");
@@ -93,11 +86,32 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else {
                 const noAch = document.createElement("p");
                 noAch.textContent = "No achievements yet.";
-                noAch.classList.add("no-achievements");
+                noAch.classList.add("no-achievements", "mt-3");
                 userSection.appendChild(noAch);
             }
+
+            const res = await fetch("/current-quiz", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `username=${encodeURIComponent(viewedUsername)}`
+            });
+            console.log("in");
+            if (!res.ok) throw new Error("Failed to fetch current quizzes");
+            console.log("out");
+            const currentQuiz = await res.json();
+            if(currentQuiz !== "no curr"){
+                const div = await getQuizDiv(currentQuiz);
+                userSection.appendChild(div);
+            }
+
         } catch (error) {
             console.error("Error loading achievements:", error);
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "alert alert-danger mt-3";
+            errorDiv.textContent = "Failed to load achievements.";
+            userSection.appendChild(errorDiv);
         }
     }
 

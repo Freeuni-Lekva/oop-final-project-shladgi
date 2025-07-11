@@ -1,6 +1,8 @@
 export function getFillInChoicesWhileTakingDiv(data) {
     const container = document.createElement('div');
     container.className = 'question-container';
+    container.setAttribute('data-question-id', `${data.id}`);
+    container.setAttribute('data-question-type', `${data.type}`);
 
     // Display the question text
     const questionText = document.createElement('div');
@@ -73,7 +75,7 @@ export function getFillInChoicesWhileTakingDiv(data) {
 }
 
 
-export async function evalAnswerFillInChoices(div, questionid, quizresultid, userid) {
+export async function evalAnswerFillInChoices(div, questionid, quizresultid, userid, save = true) {
     const selects = div.querySelectorAll('select.answer-select');
     const answers = Array.from(selects).map(select =>
         select.value === "" ? null : parseInt(select.value)
@@ -92,7 +94,8 @@ export async function evalAnswerFillInChoices(div, questionid, quizresultid, use
         userId: userid,
         questionId: questionid,
         resultId: quizresultid,
-        userAnswer: userAnswer
+        userAnswer: userAnswer,
+        save: save
     };
 
     try {
@@ -156,93 +159,43 @@ export function highlightCorrectionFillInChoices(div, evaluationResult, question
 
 
 export function populateFillInChoicesDiv(div, questionData, userAnswer) {
-    // Validate required data
-    if (!div || !questionData || !questionData.question || !userAnswer ||
-        !userAnswer.choices) {
-        console.error("Invalid data for populating fill-in-choices question");
+    if (!div || !questionData || !userAnswer || questionData.type !== 'FillChoices') {
+        console.error("Invalid input to populateFillInChoicesDiv");
         return;
     }
 
-    // Clear the div if it has any content
-    div.innerHTML = '';
-    div.className = 'question-container';
+    // Extract selected choice indices from userAnswer
+    let selectedIndices = [];
 
-    // Display the question text
-    const questionText = document.createElement('div');
-    questionText.className = 'question-text';
-    questionText.textContent = questionData.question;
-    div.appendChild(questionText);
-
-    // Optional image
-    if (questionData.imageLink) {
-        const img = document.createElement('img');
-        img.src = questionData.imageLink;
-        img.alt = 'Question image';
-        img.className = 'question-image';
-        div.appendChild(img);
+    try {
+        if (!userAnswer.isString && userAnswer.intAnswer?.list?.length > 0) {
+            selectedIndices = userAnswer.intAnswer.list.map(val => parseInt(val));
+        } else {
+            console.warn("FillInChoices userAnswer does not contain a valid int list");
+            return;
+        }
+    } catch (err) {
+        console.error("Error extracting selected indices from userAnswer", err);
+        return;
     }
 
-    // Show weight
-    if (questionData.weight !== undefined) {
-        const weightInfo = document.createElement('p');
-        weightInfo.textContent = `Weight: ${questionData.weight}`;
-        weightInfo.className = 'question-weight';
-        div.appendChild(weightInfo);
+    const selects = div.querySelectorAll('select.answer-select');
+
+    if (selects.length === 0) {
+        console.warn("No <select> elements found in div to populate");
+        return;
     }
 
-    // Create answer fields based on user's answers
-    const answersContainer = document.createElement('div');
-    answersContainer.className = 'answers-container';
+    selects.forEach((select, index) => {
+        const selectedIndex = selectedIndices[index];
 
-    userAnswer.choices.forEach((choiceIndex, answerIndex) => {
-        const answerGroup = document.createElement('div');
-        answerGroup.className = 'answer-group';
-
-        const label = document.createElement('label');
-        label.textContent = `Answer ${answerIndex + 1}:`;
-        answerGroup.appendChild(label);
-
-        const select = document.createElement('select');
-        select.className = 'answer-select';
-        select.disabled = true;
-        select.style.margin = '0 5px';
-        select.dataset.answerIndex = answerIndex;
-
-        // Add default empty option
-        const defaultOption = document.createElement('option');
-        defaultOption.value = "";
-        defaultOption.textContent = "-- Select --";
-        defaultOption.disabled = true;
-        select.appendChild(defaultOption);
-
-        // Add options from choices (use choices[answerIndex] if available, otherwise empty)
-        if (questionData.choices && questionData.choices[answerIndex]) {
-            questionData.choices[answerIndex].forEach((choice, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = choice;
-                if (index === choiceIndex) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
+        if (selectedIndex !== undefined && select.options[selectedIndex + 1]) {
+            // +1 because first option is the default "-- Select --"
+            select.selectedIndex = selectedIndex + 1;
         }
 
-        answerGroup.appendChild(select);
-        answersContainer.appendChild(answerGroup);
+       // select.disabled = true;
     });
-
-    div.appendChild(answersContainer);
-
-    // If we have evaluation data, highlight the correction
-    if (userAnswer.points !== undefined) {
-        highlightCorrectionFillInChoices(div, {
-            success: true,
-            userAnswer: userAnswer,
-            points: userAnswer.points
-        }, questionData);
-    }
-
-    return div;
 }
+
 
