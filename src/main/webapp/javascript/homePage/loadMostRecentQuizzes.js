@@ -1,20 +1,17 @@
+import { getQuizDiv } from "../getQuizDiv.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("most-recent-quizzes-container");
 
     try {
         const response = await fetch("/recent-quizzes", {
             method: "POST"
-            // no need for headers if no body
+            // no need for headers/content-type if no body
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const quizzes = await response.json();
-
-        if (quizzes.length === 0) {
-            container.innerHTML = "<p>No recent quizzes found.</p>";
-            return;
-        }
 
         container.innerHTML = ""; // clear before adding new content
 
@@ -23,41 +20,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         heading.textContent = "Recent Quizzes:";
         container.appendChild(heading);
 
+        if (quizzes.length === 0) {
+            const p = document.createElement("p");
+            p.textContent = "No recent quizzes found.";
+            container.appendChild(p);
+            return;
+        }
+
         const row = document.createElement("div");
         row.className = "row g-3";
 
-        quizzes.forEach((quiz) => {
+        for (const quiz of quizzes) {
             const col = document.createElement("div");
             col.className = "col-md-4";
 
-            const card = document.createElement("div");
-            card.className = "card h-100";
+            // Use helper to create consistent quiz card (with remove button etc.)
+            const quizDiv = await getQuizDiv(quiz);
 
-            const cardBody = document.createElement("div");
-            cardBody.className = "card-body";
-
-            // Title as link
-            const title = document.createElement("h5");
-            title.className = "card-title";
-
-            const link = document.createElement("a");
-            link.href = `/quiz?id=${quiz.id}`;
-            link.textContent = quiz.title;
-            link.className = "text-decoration-none link-dark"; // clean Bootstrap styling
-
-            title.appendChild(link);
-
-            // Creation date
-            const info = document.createElement("p");
-            info.className = "card-text text-muted small";
-            info.textContent = `Created: ${quiz.creationTime}`;
-
-            cardBody.appendChild(title);
-            cardBody.appendChild(info);
-            card.appendChild(cardBody);
-            col.appendChild(card);
+            col.appendChild(quizDiv);
             row.appendChild(col);
-        });
+        }
 
         container.appendChild(row);
 

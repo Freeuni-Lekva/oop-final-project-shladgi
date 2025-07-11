@@ -1,3 +1,5 @@
+import { getQuizDiv } from "../getQuizDiv.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("popular-quizzes-container");
 
@@ -11,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const quizzes = await response.json();
 
-        container.innerHTML = ""; // clear before adding new content
+        container.innerHTML = "";
 
         // Add heading first
         const heading = document.createElement("h2");
@@ -28,43 +30,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         const row = document.createElement("div");
         row.className = "row g-3";
 
-        quizzes.forEach((quiz) => {
+        for (const quiz of quizzes) {
             const col = document.createElement("div");
             col.className = "col-md-4";
 
-            const card = document.createElement("div");
-            card.className = "card h-100";
+            const quizDiv = await getQuizDiv(quiz);
 
-            const cardBody = document.createElement("div");
-            cardBody.className = "card-body";
-
-            // Title as link
-            const title = document.createElement("h5");
-            title.className = "card-title";
-
-            const link = document.createElement("a");
-            link.href = `/quiz?id=${quiz.id}`; // adjust path if needed
-            link.textContent = quiz.title;
-            link.className = "text-decoration-none link-dark"; // bootstrap classes
-
-            title.appendChild(link);
-
-            // Additional info (e.g., creation date)
-            const info = document.createElement("p");
-            info.className = "card-text text-muted small";
-            info.textContent = `Created: ${quiz.creationTime}`;
-
-            cardBody.appendChild(title);
-            cardBody.appendChild(info);
-            card.appendChild(cardBody);
-            col.appendChild(card);
+            col.appendChild(quizDiv);
             row.appendChild(col);
-        });
+        }
 
         container.appendChild(row);
 
     } catch (error) {
-        container.innerHTML = `<p class="text-danger">Failed to load recent quizzes: ${error.message}</p>`;
-        console.error("Error loading recent quizzes:", error);
+        container.innerHTML = `<p class="text-danger">Failed to load popular quizzes: ${error.message}</p>`;
+        console.error("Error loading popular quizzes:", error);
     }
 });
