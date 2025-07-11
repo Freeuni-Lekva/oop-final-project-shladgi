@@ -40,7 +40,7 @@ public class AppContextListener implements ServletContextListener {
             context.setAttribute(QUESTIONDB, new  QuestionDB(conn));
             context.setAttribute(FRIENDREQUESTDB, new FriendRequestDB(conn));
 
-            context.setAttribute(ANNOUNCEMENTDB, new AnnouncementDB(conn));
+            context.setAttribute(ANNOUNCEMENTSDB, new AnnouncementDB(conn));
 
 
 
