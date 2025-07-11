@@ -168,6 +168,7 @@ public class QuizInfoServlet extends HttpServlet {
             if(!ongoing.isEmpty()) {
                 QuizResult qr = ongoing.getFirst();
                 json.addProperty("ongoingPractice", qr.getTimeTaken() == -2);
+                json.addProperty("ongoingResultId", qr.getId());
             }
         }
 
