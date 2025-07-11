@@ -1,7 +1,7 @@
 import {getUserDiv} from "../userDivSmallJS.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const topRatedContainer = document.getElementById("top-rated-people");
+    const topRatedContainer = document.getElementById("top-rated-people-container");
     try {
         const response = await fetch("/get-top-rated-people", {
             method: "POST",
@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const list = await response.json();
 
         topRatedContainer.innerHTML = "";
-        console.log("movida");
         for(const name of list){
             const div = await getUserDiv(name);
             topRatedContainer.appendChild(div);

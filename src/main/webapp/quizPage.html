@@ -11,10 +11,8 @@
     <script type="module" src="javascript/navFoot.js" defer></script>
     <script src="javascript/getTopPerformers.js" type="module"></script>
     <script src="javascript/quizPage.js" type="module" defer></script>
-
 </head>
 <body>
-
 <header class="position-relative text-uppercase">
     <nav class="navbar navbar-expand-lg navbar-light"></nav>
 </header>
@@ -24,7 +22,6 @@
 </header>
 
 <main>
-
     <section class="quiz-info">
         <h2><span class="label">Quiz Title:</span> <span id="quizTitle">Loading...</span></h2>
 
@@ -39,7 +36,7 @@
         <p id="quizDescription"></p>
         <p>Created by: <a id="creatorLink" href="#">Loading...</a></p>
 
-        <h3>Your Attempts:</h3>
+        <h3>Your Last Attempts:</h3>
         <ul id="userAttemptsList"></ul>
 
         <h3>Top Performers (All Time):</h3>
@@ -54,18 +51,16 @@
         <p>Average Score: <span id="avgScore"></span></p>
 
         <div id="editDeleteSection" style="display:none">
-            <button id="deleteQuizBtn">Delete Quiz</button>
+            <button id="deleteQuizBtn" class="btn btn-danger">Delete Quiz</button>
         </div>
 
-
-        <button id="startQuizButton">Start Quiz</button>
-
-        <button id="cancelQuizButton" class="btn btn-danger">Cancel Quiz</button>
-
+        <div class="quiz-actions">
+            <button id="startQuizButton" class="btn btn-primary">Start Quiz</button>
+            <button id="continueQuizButton" class="btn btn-primary" style="display: none;">Continue Quiz</button>
+            <button id="cancelQuizButton" class="btn btn-danger" style="display: none;">Cancel Quiz</button>
+        </div>
 
         <div id="quizStatus" class="mt-3 fw-bold"></div>
-
-
     </section>
 </main>
 

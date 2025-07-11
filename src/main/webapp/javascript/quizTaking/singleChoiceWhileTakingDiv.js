@@ -158,3 +158,96 @@ export function highlightCorrectionSingleChoice(div, evaluationResult, questionD
     }
 }
 
+
+export function populateSingleChoiceDiv(div, questionData, userAnswer) {
+    // Validate required data
+    if (!div || !questionData || !questionData.question || !questionData.choices ||
+        questionData.choices.length === 0 || !userAnswer || !userAnswer.choices) {
+        console.error("Invalid data for populating single choice question");
+        return;
+    }
+
+    // Clear the div if it has any content
+    div.innerHTML = '';
+    div.className = 'question-container single-choice-question';
+
+    // Question text with aria-label
+    const questionText = document.createElement('p');
+    questionText.textContent = questionData.question;
+    questionText.className = 'question-text';
+    questionText.id = 'question-text-' + Math.random().toString(36).substr(2, 9);
+    div.appendChild(questionText);
+
+    // Optional image with alt text
+    if (questionData.imageLink) {
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'question-image-container';
+
+        const img = document.createElement('img');
+        img.src = questionData.imageLink;
+        img.alt = questionData.imageAltText || 'Question illustration';
+        img.className = 'question-image';
+        img.setAttribute('aria-describedby', questionText.id);
+        imgContainer.appendChild(img);
+
+        div.appendChild(imgContainer);
+    }
+
+    // Show weight if available
+    if (questionData.weight !== undefined) {
+        const weightInfo = document.createElement('p');
+        weightInfo.textContent = `Weight: ${questionData.weight}`;
+        weightInfo.className = 'question-weight';
+        div.appendChild(weightInfo);
+    }
+
+    // Radio buttons for choices with proper accessibility
+    const choiceList = document.createElement('div');
+    choiceList.className = 'choice-list';
+    choiceList.setAttribute('role', 'radiogroup');
+    choiceList.setAttribute('aria-labelledby', questionText.id);
+
+    questionData.choices.forEach((choice, index) => {
+        const choiceId = 'choice-' + Math.random().toString(36).substr(2, 9);
+
+        const label = document.createElement('label');
+        label.className = 'choice-item';
+        label.htmlFor = choiceId;
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.id = choiceId;
+        input.name = `singleChoice-${questionData.id}`;
+        input.value = index;
+        input.disabled = true; // Make it read-only
+        input.setAttribute('aria-checked', 'false');
+        input.setAttribute('role', 'radio');
+
+        // Check if this is the user's selected choice
+        if (index === userAnswer.choices[0]) {
+            input.checked = true;
+            input.setAttribute('aria-checked', 'true');
+        }
+
+        const span = document.createElement('span');
+        span.textContent = choice;
+
+        label.appendChild(input);
+        label.appendChild(span);
+        choiceList.appendChild(label);
+    });
+
+    div.appendChild(choiceList);
+
+    // If we have evaluation data, highlight the correction
+    if (userAnswer.points !== undefined && questionData.correctId !== undefined) {
+        highlightCorrectionSingleChoice(div, {
+            success: true,
+            userAnswer: userAnswer,
+            points: userAnswer.points
+        }, questionData);
+    }
+
+    return div;
+}
+

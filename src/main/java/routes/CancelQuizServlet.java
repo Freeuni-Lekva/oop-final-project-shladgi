@@ -41,7 +41,7 @@ public class CancelQuizServlet extends HttpServlet {
         List<QuizResult> results = quizResultDB.query(List.of(
                 new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
                 new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
-                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.EQUALS, -1)
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0)
         ));
 
         if (results.isEmpty()) {

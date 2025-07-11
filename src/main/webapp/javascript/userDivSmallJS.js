@@ -1,6 +1,4 @@
 import { loadSessionValue } from './getSessionInfo.js';
-// import { loadRequests } from './userPage/loadFriendRequests.js';
-//import { loadFriendsSection } from './userPage/loadFriendsSection.js';
 
 function addAdminButton(admin, receiverUsername, btnGroup, div) {
     if (admin === "Admin") {
@@ -200,7 +198,6 @@ export async function getUserDiv(receiverUsername) {
     const div = document.createElement("div");
     div.className = "user-div alert alert-info d-flex align-items-center justify-content-between mb-2 p-2";
     const myName = await loadSessionValue("username");
-    console.log(myName);
     const userLink = document.createElement("a");
     userLink.href = `/user?username=${encodeURIComponent(receiverUsername)}`;
     userLink.textContent = receiverUsername;
@@ -229,6 +226,5 @@ export async function getUserDiv(receiverUsername) {
     } catch (error) {
         alert(error.message);
     }
-
     return div;
 }
