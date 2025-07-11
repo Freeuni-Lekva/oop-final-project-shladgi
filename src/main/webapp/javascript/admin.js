@@ -45,11 +45,9 @@ async function loadStats(period = "all") {
             body: new URLSearchParams({ period })
 
         });
-console.log(66)
+
 
         const data = await res.json();
-        console.log(555);
-        console.log(data.success)
         if (!data.success) {
             alert("Failed to load statistics: " + data.message);
            // return;

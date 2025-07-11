@@ -12,7 +12,7 @@ export async function getQuizDiv(quiz){
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <h5 class="card-title">${quiz.title}</h5>
-                        <a  href="/user?userName=${quiz.creatorName}" class="badge bg-primary">${quiz.creatorName || 'Unknown'}</a>
+                        <a  href="/user?username=${quiz.creatorName}" class="badge bg-primary">${quiz.creatorName || 'Unknown'}</a>
                     </div>
                 
                     <div  class="d-flex justify-content-between align-items-center">

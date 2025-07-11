@@ -29,7 +29,7 @@ public class DeleteUser extends HttpServlet {
             FriendshipDB friendshipDB = (FriendshipDB) getServletContext().getAttribute(FRIENDSHIPDB);
             FriendRequestDB friendRequestDB = (FriendRequestDB) getServletContext().getAttribute(FRIENDREQUESTDB);
             UserAchievementDB userAchievementDB = (UserAchievementDB)  getServletContext().getAttribute(USERACHIEVEMENTDB);
-
+            AnnouncementDB announcementDB = (AnnouncementDB) getServletContext().getAttribute(ANNOUNCEMENTSDB);
             if (userDB == null) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database not initialized");
                 return;
@@ -58,6 +58,7 @@ public class DeleteUser extends HttpServlet {
             challengeDB.delete(new FilterCondition<>(ChallengeField.SENDERID, Operator.EQUALS, user.getId()));
             challengeDB.delete(new FilterCondition<>(ChallengeField.RECIPIENTID, Operator.EQUALS, user.getId()));
             userAchievementDB.delete(new FilterCondition<>(UserAchievementField.USERID, Operator.EQUALS, user.getId()));
+            announcementDB.delete(new FilterCondition<>(AnnouncementField.AUTHOR, Operator.EQUALS, user.getUserName()));
             userDB.delete(new FilterCondition<>(UserField.ID, Operator.EQUALS, user.getId()));
 
             response.setStatus(HttpServletResponse.SC_OK);

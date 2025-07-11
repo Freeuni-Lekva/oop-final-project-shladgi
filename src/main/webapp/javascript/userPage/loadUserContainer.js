@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         "statistics"
     ];
 
+    console.log("VVVRRR")
+
     const info = {};
 
     ids.forEach(id => {
@@ -23,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
+    console.log(viewedUsername)
 
     const sessionUsername = await loadSessionValue("username");
 
