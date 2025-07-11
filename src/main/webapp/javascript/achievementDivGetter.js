@@ -10,7 +10,7 @@ function getRarityColor(rarity) {
 
 export async function getAchievementDiv(achievementId) {
     try {
-        const response = await fetch("achievement", {
+        const response = await fetch("/achievement", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -29,22 +29,22 @@ export async function getAchievementDiv(achievementId) {
 
         const icon = document.createElement("img");
         icon.src = achievement.iconLink;
-        icon.alt = "Achievement Icon";
+        icon.alt = achievement.title || "Achievement Icon";
         icon.className = "me-3";
         icon.style.width = "64px";
         icon.style.height = "64px";
 
-
         const content = document.createElement("div");
 
         const title = document.createElement("h5");
-        title.textContent = achievement.title;
+        title.textContent = achievement.title || "Untitled Achievement";
 
         const desc = document.createElement("p");
-        desc.textContent = achievement.description;
+        desc.textContent = achievement.description || "";
 
         const rarity = document.createElement("span");
-        rarity.textContent = `Rarity: ${achievement.rarity}`;
+        console.log(achievement.rarity);
+        rarity.textContent = `Rarity: ${achievement.rarity || "Unknown"}`;
         rarity.className = `badge bg-${getRarityColor(achievement.rarity)}`;
 
         content.appendChild(title);
