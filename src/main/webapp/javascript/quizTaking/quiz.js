@@ -16,6 +16,12 @@
         const bigMessageContainer = document.getElementById("big-message-container");
         const smallMessageContainer = document.getElementById("small-message-container")
 
+        const homeLink = document.createElement("a");
+        homeLink.href = "/home";
+        homeLink.textContent = "Go Home";
+        homeLink.style.display = "block";
+        homeLink.style.marginTop = "1em";
+
         console.log(bigMessageContainer);
 
         const  showSmallMessage = (isOk, message) => {
@@ -71,6 +77,13 @@
                 const immediateCorrection = data.immediatecorrection;
                 const quizResultId = data.quizresultid;
                 const allQuestionsDiv = document.getElementById("all-questions-container");
+
+                const resultLink = document.createElement("a");
+                resultLink.href = `/quizResult?id=${quizResultId}`;
+                resultLink.textContent = "Detailed Result";
+                resultLink.style.display = "block";
+                resultLink.style.marginTop = "1em";
+
 
                 if (isRandom) {
                     shuffleArray(questions);
@@ -149,17 +162,8 @@
                         const resultDiv = getResultDiv(totalScore, maxScore, practiceMode);
 
                         bottomContainer.appendChild(resultDiv);
-                        const homeLink = document.createElement("a");
-                        homeLink.href = "/home";
-                        homeLink.textContent = "Go Home";
-                        homeLink.style.display = "block";
-                        homeLink.style.marginTop = "1em";
 
-                        const resultLink = document.createElement("a");
-                        resultLink.href = `/quizResult?id=${quizResultId}`;
-                        resultLink.textContent = "Detailed Result";
-                        resultLink.style.display = "block";
-                        resultLink.style.marginTop = "1em";
+
 
 
                         const endTime = Date.now(); // current time
@@ -187,23 +191,10 @@
                             }
                         }
 
-
-                        fetch("/updatequizresult", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body: new URLSearchParams({
-                                quizresultid: quizResultId,
-                                userid: userid,               // pass user id if needed
-                                totalScore: totalScore,
-                                timeTaken: timeTakenSeconds,
-                                practice: practiceMode
-                            })
-                        })
+                        await saveResult(quizResultId, userid, totalScore, timeTakenSeconds, practiceMode);
 
                         bottomContainer.appendChild(homeLink);
-
+                        bottomContainer.appendChild(resultLink);
 
                     };
 
@@ -297,28 +288,22 @@
                         allQuestionsDiv.innerHTML = "<h3>All questions completed!</h3>";
                         const finalBtn = document.createElement("button");
                         finalBtn.textContent = "Submit And View Result";
-                        finalBtn.onclick = () => {
-
-                            if(practiceMode){
-
-                            }
-
-
+                        finalBtn.onclick = async () => {
                             const resultDiv = getResultDiv(totalscore, maxscore, practiceMode);
                             bottomContainer.appendChild(resultDiv);
                             finalBtn.remove();
+
+                            const endTime = Date.now(); // current time
+                            const timeTakenSeconds = Math.floor((endTime - startTime) / 1000);
+                            await saveResult(quizResultId, userid, totalscore, timeTakenSeconds, practiceMode);
+
+
+                            bottomContainer.appendChild(homeLink);
+                            if (!practiceMode) bottomContainer.appendChild(resultLink);
                         };
                         bottomContainer.appendChild(finalBtn);
 
-                        const homeLink = document.createElement("a");
-                        homeLink.href = "/home";
-                        homeLink.textContent = "Go Home";
-                        homeLink.style.display = "block";
-                        homeLink.style.marginTop = "1em";
 
-
-
-                        bottomContainer.appendChild(homeLink);
                     };
 
                     renderQuestion();
@@ -341,7 +326,6 @@
 
     export async function deleteUserAnswersForResult(resultId) {
         try {
-            console.log("CALLING")
             const response = await fetch('/delete-user-answers-for-result', {
                 method: 'POST',
                 headers: {
@@ -378,6 +362,22 @@
         correctCountDisplay.style.fontSize = "0.9em";
         correctCountDisplay.style.color = "#007bff";
         div.prepend(correctCountDisplay);
+    }
+
+    function saveResult(quizResultId, userid, totalScore, timeTakenSeconds, practiceMode){
+        fetch("/updatequizresult", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                quizresultid: quizResultId,
+                userid: userid,               // pass user id if needed
+                totalScore: totalScore,
+                timeTaken: timeTakenSeconds,
+                practice: practiceMode
+            })
+        });
     }
 
 
