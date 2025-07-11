@@ -89,14 +89,7 @@ header h1 {
     margin-top: 2rem;
 }
 
-/* Footer Consistency */
-footer {
-    background-color: #0382f1;
-    padding: 10px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
+
 
 .footer-content {
     color: white;
@@ -109,6 +102,27 @@ footer {
     font-weight: bold;
     color: #444;
 }
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    max-width: 700px;
+    margin: 0 auto;           /* Remove vertical margins */
+    padding: 3rem 1rem 1rem;  /* Add top padding instead for spacing */
+}
+
+/* Your existing styles for quiz info, buttons, headers, etc. */
 
 
 

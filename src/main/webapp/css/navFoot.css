@@ -18,20 +18,38 @@ header nav li:hover{
 
 }
 
-footer {
-    background-color: #0382f1;
-    padding: 10px;
-
-
-    width: 100%;
-
-}
 .footer-content {
     color: white;
     display: flex;
     justify-content: space-between;
     font-size: 14px;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #0382f1; /* or #f8f9fa if you want lighter footer */
+    padding: 10px;             /* or 1rem, be consistent */
+    width: 100%;
+    text-align: center;
+    flex-shrink: 0;
+    color: white;              /* add this if footer text should be white */
+}
+
+
 
 
 
