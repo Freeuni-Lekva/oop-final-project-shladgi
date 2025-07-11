@@ -25,7 +25,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
+
             if (!append) content.innerHTML = "";
+            if(data.items.length==0 && page ==1) {
+                content.innerHTML =`
+                    <div class="card text-center mt-4">
+    <div class="card-body">
+        <h5 class="card-title text-muted">No Information</h5>
+        <p class="card-text">There’s nothing to show here yet.</p>
+    </div>
+</div>
+`;
+
+            }
 
             // Render notifications
             data.items.forEach(item => {
