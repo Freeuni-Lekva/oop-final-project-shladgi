@@ -43,58 +43,31 @@ public class QuizServlet extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response){
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String quizIdStr = request.getParameter("id");
+        Boolean practiceMode = Boolean.parseBoolean(request.getParameter("practiceMode"));
+
         JsonObject json = new JsonObject();
 
         HttpSession session = request.getSession();
 
-        if(session == null){
-            json.addProperty("success", false);
-            json.addProperty("message", "User not logged in!");
-            try {
-                response.getWriter().write(json.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-
-        }
 
         Integer userId = (Integer)session.getAttribute("userid");
+
+
 
         if(userId == null){
             json.addProperty("success", false);
             json.addProperty("message", "User not logged in!");
-            try {
-                response.getWriter().write(json.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            response.getWriter().write(json.toString());
             return;
         }
 
-
-        if(session == null){
-            json.addProperty("success", false);
-            json.addProperty("message", "User not logged in!");
-            try {
-                response.getWriter().write(json.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-
-        }
 
         if (quizIdStr == null) {
             json.addProperty("success", false);
             json.addProperty("message", "Quiz ID not provided");
-            try {
-                response.getWriter().write(json.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            response.getWriter().write(json.toString());
             return;
         }
 
@@ -104,11 +77,7 @@ public class QuizServlet extends HttpServlet {
        }catch (Exception e){
            json.addProperty("success", false);
            json.addProperty("message", "Invalid Quiz ID");
-           try {
-               response.getWriter().write(json.toString());
-           } catch (IOException r) {
-               throw new RuntimeException(r);
-           }
+           response.getWriter().write(json.toString());
            return;
         }
 
@@ -119,17 +88,60 @@ public class QuizServlet extends HttpServlet {
         if(quizzes.isEmpty()){
             json.addProperty("success", false);
             json.addProperty("message", "Quiz with this ID does not exist!");
-            try {
-                response.getWriter().write(json.toString());
-            } catch (IOException r) {
-                throw new RuntimeException(r);
-            }
+            response.getWriter().write(json.toString());
             return;
         }
 
         Quiz quiz = quizzes.getFirst();
 
+        if(!quiz.isPracticeMode() && practiceMode){
+            json.addProperty("success", false);
+            json.addProperty("message", "This Quiz has no Practice Mode!");
+            response.getWriter().write(json.toString());
+            return;
+        }
 
+
+
+
+        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
+
+        List<QuizResult> userCurrentQuizes = quizResultDB.query(
+                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
+                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0)
+        );
+
+        if(userCurrentQuizes.isEmpty()){
+            json.addProperty("success", false);
+            json.addProperty("message", "You arent writing any Quizzes at the moment");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        QuizResult curUserQuizResult = userCurrentQuizes.getFirst();
+        if(curUserQuizResult.getQuizId() != quizId){
+            json.addProperty("success", false);
+            json.addProperty("message", "You are in another Quiz already!");
+            json.addProperty("showLink", true);
+            json.addProperty("runningQuizId", curUserQuizResult.getQuizId());
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+
+        if(practiceMode && curUserQuizResult.getTimeTaken() != -2){
+            json.addProperty("success", false);
+            json.addProperty("message", "This is practice Mode while You started the quiz in normal mode!");
+            response.getWriter().write(json.toString());
+            return;
+        }
+
+        if(!practiceMode && curUserQuizResult.getTimeTaken() == -2){
+            json.addProperty("success", false);
+            json.addProperty("message", "This is not practice Mode while you started the quiz in practice mode!");
+            response.getWriter().write(json.toString());
+            return;
+        }
 
 
         QuestionDB questionDB = (QuestionDB) getServletContext().getAttribute(QUESTIONDB);
@@ -155,24 +167,15 @@ public class QuizServlet extends HttpServlet {
         json.addProperty("timelimit", quiz.getTimeLimit());
         json.addProperty("description", quiz.getDescription());
 
-        QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
 
-        List<QuizResult> quizResults = quizResultDB.query(
-                new FilterCondition<>(QuizResultField.QUIZID, Operator.EQUALS, quizId),
-                new FilterCondition<>(QuizResultField.USERID, Operator.EQUALS, userId),
-                new FilterCondition<>(QuizResultField.TIMETAKEN, Operator.LESS, 0));
 
-        QuizResult quizResult = quizResults.getFirst();
 
-        json.addProperty("quizresultid", quizResult.getId());
+        json.addProperty("quizresultid", curUserQuizResult.getId());
 
-        try {
-            response.getWriter().write(json.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
+        response.getWriter().write(json.toString());
 
     }
+
 
 }

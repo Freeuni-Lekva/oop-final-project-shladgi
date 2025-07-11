@@ -197,12 +197,32 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin, d
 export async function getUserDiv(receiverUsername) {
     const div = document.createElement("div");
     div.className = "user-div alert alert-info d-flex align-items-center justify-content-between mb-2 p-2";
+
     const myName = await loadSessionValue("username");
+
     const userLink = document.createElement("a");
     userLink.href = `/user?username=${encodeURIComponent(receiverUsername)}`;
     userLink.textContent = receiverUsername;
     userLink.classList.add("fw-bold", "text-decoration-none", "text-dark");
     div.appendChild(userLink);
+
+    const res = await fetch("/solved-created-quizzes", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `username=${encodeURIComponent(receiverUsername)}`
+    });
+
+    const amount = await res.json();
+
+    const statsText = document.createElement("span");
+    if(amount.solved == 1){
+        statsText.textContent = ` - Solved ${amount.solved} quizz, Created ${amount.created} quizzes`;
+    }else{
+        statsText.textContent = ` - Solved ${amount.solved} quizzes, Created ${amount.created} quizzes`;
+    }
+    statsText.classList.add("ms-2", "text-muted");
+    div.appendChild(statsText);
+
 
     const btnGroup = document.createElement("div");
     btnGroup.classList.add("d-flex", "gap-2");
@@ -218,9 +238,10 @@ export async function getUserDiv(receiverUsername) {
         });
 
         if (!response.ok) throw new Error("Failed to fetch friend status");
-        console.log(response);
+
         const status = await response.json();
-        if(myName != null||  myName.length !==0||  myName !== receiverUsername){
+
+        if(status !== "guest" &&  myName !== receiverUsername){
             await updateButtons(status, btnGroup, receiverUsername, admin, div);
         }
     } catch (error) {
