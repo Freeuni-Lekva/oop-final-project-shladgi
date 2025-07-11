@@ -132,7 +132,7 @@
 
 
 
-                                // TODO: washale userResultebi databasedan
+                                deleteUserAnswersForResult(quizResultId);
 
                                 return;
                             }
@@ -312,12 +312,32 @@
 
 
 
+    export async function deleteUserAnswersForResult(resultId) {
+        try {
+            console.log("CALLING")
+            const response = await fetch('/delete-user-answers-for-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `resultId=${encodeURIComponent(resultId)}`
+            });
+
+            console.log(response);
+            const json = await response.json();
+
+            if (json.success) {
+                console.log(`Deleted ${json.deleted} user answers.`);
+            } else {
+                console.error("Failed to delete answers:", json.message);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
+    }
 
 
 
-
-    async function evaluateAnswer(div, questionData, quizResultId, userid) {
-        const msg = await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
-        console.log(msg);
-        return msg;  // Replace with real evaluation
+    export async function evaluateAnswer(div, questionData, quizResultId, userid) {
+        return await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
     }
