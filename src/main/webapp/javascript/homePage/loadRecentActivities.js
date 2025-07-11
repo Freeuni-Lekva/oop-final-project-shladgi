@@ -12,8 +12,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         const container = document.getElementById("most-recent-activities-container");
 
         if (container) {
+            container.innerHTML = ""; // clear before adding new content
+
+            const heading = document.createElement("h2");
+            heading.textContent = "Recent Activities:";
+            container.appendChild(heading);
+
             if (activities === "notInAcc" || activities.length === 0) {
-                container.innerHTML = "<p>No recent activities found.</p>";
+                const p = document.createElement("p");
+                p.textContent = "No recent activities found.";
+                container.appendChild(p);
                 return;
             }
 
@@ -21,12 +29,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const div = document.createElement("div");
                 div.className = "activity mb-3 p-2 border rounded";
 
-                // Friend username (plain text)
                 let content = `<p><strong>${act.friendUsername}</strong> `;
 
                 if (act.type === "quiz_created") {
-                    // quiz title is a clickable link (adjust href if needed)
-                    content += `<a href="/quiz?id=${encodeURIComponent(act.title ? act.title : '')}" class="text-decoration-none">${act.title}</a>`;
+                    // Remove prefix if present and only keep the title
+                    const cleanTitle = act.title.replace(/^Created quiz:\s*/i, '');
+                    content += `created quiz: <a href="/startQuiz?id=${encodeURIComponent(act.id)}" class="text-decoration-none">${cleanTitle}</a>`;
                 } else if (act.type === "achievement_earned") {
                     content += `earned an achievement.`;
                 } else if (act.type === "quiz_result_earned") {

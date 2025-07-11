@@ -41,10 +41,6 @@ export async function loadFriendsSection(username) {
         peopleDiv.style.display = "block";
         peopleDiv.innerHTML = "";
 
-        const heading = document.createElement("h4");
-        heading.textContent = "FRIENDS:";
-        peopleDiv.appendChild(heading);
-
         for (const friend of friends) {
             const friendDiv = await getUserDiv(friend);
             peopleDiv.appendChild(friendDiv);
@@ -71,6 +67,15 @@ async function setupFriendsButtonListener() {
         document.getElementById("statistics").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none";
         document.getElementById("friends-container").style.display = "block";
+
+        const userBtn = document.getElementById("userMenuItem");
+        const frBtn = document.getElementById("friendRequestMenuItem");
+        const statBtn = document.getElementById("statisticsMenuItem");
+
+        userBtn.classList.remove("active");
+        frBtn.classList.remove("active");
+        statBtn.classList.remove("active");
+        button.classList.add("active");
 
         await loadFriendsSection(username);
     });

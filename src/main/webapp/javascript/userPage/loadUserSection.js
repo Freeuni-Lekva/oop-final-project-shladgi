@@ -9,7 +9,11 @@ function setupUserButtonListener() {
         document.getElementById("statistics").style.display = "none";
         document.getElementById("friends-container").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none"
-        //console.log("User section shown");
+
+        document.getElementById("userMenuItem").classList.add("active");
+        document.getElementById("statisticsMenuItem").classList.remove("active");
+        document.getElementById("friendRequestMenuItem").classList.remove("active");
+        document.getElementById("friendsMenuItem").classList.remove("active");
     });
 }
 

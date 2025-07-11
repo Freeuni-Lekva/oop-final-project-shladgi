@@ -27,12 +27,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function showStartLink(message, quizId) {
-    const body = document.body;
-    const info = document.createElement("div");
-    info.innerHTML = `
-        <p>${message}</p>
-        <a href="/startQuiz?id=${quizId}">Go back to start page</a>
-    `;
-    body.innerHTML = ""; // Optional: clear old content
-    body.appendChild(info);
+
 }

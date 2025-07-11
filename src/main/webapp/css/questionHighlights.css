@@ -8,6 +8,7 @@
     background-color: #d4edda !important;
     border-left: 4px solid #28a745;
 }
+
 .incorrect-choice {
     background-color: #f8d7da !important;
     border-left: 4px solid #dc3545;
@@ -45,4 +46,17 @@
     padding: 8px;
     background-color: #f8f9fa;
     border-radius: 4px;
+}
+
+.invalid-input{
+    border: 2px solid red !important;
+    background-color: #ffe6e6;
+}
+
+.error-message{
+    color: red;
+}
+
+.success-message{
+    color: #28a745;
 }
