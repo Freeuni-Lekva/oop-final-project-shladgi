@@ -195,4 +195,3 @@ function renderList(id, data, detailed = false) {
         ul.appendChild(li);
     }
 }
-
