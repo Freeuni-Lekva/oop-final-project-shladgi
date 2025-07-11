@@ -11,12 +11,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const quizzes = await response.json();
 
+        container.innerHTML = ""; // clear before adding new content
+
+        // Add heading first
+        const heading = document.createElement("h2");
+        heading.textContent = "Top Rated Quizzes:";
+        container.appendChild(heading);
+
         if (quizzes.length === 0) {
-            container.innerHTML = "<p>No recent quizzes found.</p>";
+            const p = document.createElement("p");
+            p.textContent = "No recent quizzes found.";
+            container.appendChild(p);
             return;
         }
-
-        container.innerHTML = ""; // clear before adding new content
 
         const row = document.createElement("div");
         row.className = "row g-3";

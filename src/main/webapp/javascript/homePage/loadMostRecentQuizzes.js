@@ -18,6 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         container.innerHTML = ""; // clear before adding new content
 
+        // Add heading first
+        const heading = document.createElement("h2");
+        heading.textContent = "Recent Quizzes:";
+        container.appendChild(heading);
+
         const row = document.createElement("div");
         row.className = "row g-3";
 
