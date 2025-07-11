@@ -41,8 +41,20 @@ function addAdminButton(admin, receiverUsername, btnGroup, div, receiverType = "
             }
         });
 
+        btnGroup.appendChild(adminBtn);
 
-        if(receiverType !=="Admin") {
+
+        fetch("/getUserType",{
+            method: 'POST',
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `username=${encodeURIComponent(receiverUsername)}`
+        }).then(res => {
+            if(res.ok)return res.json()
+            else console.log(res.message)
+
+        }).then(data => {
+
+        if(data.type !=="Admin") {
             const promote = document.createElement("button");
             promote.className = "btn btn-primary btn-sm";
             promote.textContent = "Promote User";
@@ -58,16 +70,23 @@ function addAdminButton(admin, receiverUsername, btnGroup, div, receiverType = "
                     })
                 }).then(res => res.json())
                     .then(data => {
-                        if (data.success) alert(`You successfully promoted ${receiverUsername} to Admin.`);
-                        else alert(data.message)
+                        if (data.success){
+                            alert(`You successfully promoted ${receiverUsername} to Admin.`);
+                            location.reload()
+                        }
+                        else {
+                            console.log(77);
+                            alert(data.message)
+                        }
                     }).catch(err => console.log(err))
             });
 
             btnGroup.appendChild(promote);
         }
-        btnGroup.appendChild(adminBtn);
-    }
-}
+
+
+}).catch(err=> console.log(err));
+}}
 
 export async function updateButtons(status, btnGroup, receiverUsername, admin, div, receiverType = "Basic") {
     btnGroup.innerHTML = ""; // clear buttons

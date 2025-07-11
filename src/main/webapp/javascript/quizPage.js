@@ -91,6 +91,36 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
                 });
 
+
+                document.getElementById("deleteHistory").addEventListener("click", () => {
+                    if (!confirm("Are you sure you want to delete this quiz's History? This action cannot be undone.")) return;
+
+                    fetch("deleteQuiz", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: new URLSearchParams({
+                            id: quizId,
+                            s : "save"
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Quiz's History deleted successfully!");
+                                window.location.href = "/";
+                            } else {
+                                alert("Error: " + data.message);
+                            }
+                        })
+                        .catch(() => {
+                            alert("❌ Server error while trying to delete quiz's history.");
+                        });
+                });
+
+
+
             } else {
                 titleEl.textContent = "❌ " + data.message;
             }

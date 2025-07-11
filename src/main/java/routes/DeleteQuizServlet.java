@@ -24,9 +24,11 @@ public class DeleteQuizServlet extends HttpServlet {
         JsonObject json = new JsonObject();
 
         String userIdStr = request.getSession().getAttribute("userid")==null?null:request.getSession().getAttribute("userid").toString();
-        Integer userId = userIdStr==null?null:Integer.parseInt(userIdStr);
+        Integer userId = userIdStr==null|| userIdStr.isEmpty()?null:Integer.parseInt(userIdStr);
         // quiz id.
         String idStr = request.getParameter("id");
+
+
 
         if (userId == null) {
             json.addProperty("success", false);
@@ -35,7 +37,7 @@ public class DeleteQuizServlet extends HttpServlet {
             return;
         }
 
-        if (idStr == null) {
+        if (idStr == null || idStr.isEmpty()) {
             json.addProperty("success", false);
             json.addProperty("message", "Missing quiz ID.");
             response.getWriter().write(json.toString());
@@ -109,11 +111,11 @@ public class DeleteQuizServlet extends HttpServlet {
         ));
 
         // Delete the quiz itself
-        quizDB.delete(List.of(
-                new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId)
-        ));
 
+        String s = request.getParameter("s");
+        if(s == null || s.isEmpty() || !s.equals("save")) {
         quizDB.delete(new FilterCondition<>(QuizField.ID, Operator.EQUALS, quizId));
+        }
 
         json.addProperty("success", true);
         json.addProperty("message", "Quiz deleted successfully.");
