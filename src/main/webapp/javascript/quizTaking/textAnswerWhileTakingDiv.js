@@ -107,3 +107,60 @@ export function highlightCorrectionTextAnswer(div, evaluationResult, questionDat
     }
 }
 
+export function populateTextAnswerDiv(div, questionData, userAnswer) {
+    // Validate required data
+    if (!div || !questionData || !questionData.question || !userAnswer ||
+        !userAnswer.choices || userAnswer.choices.length === 0) {
+        console.error("Invalid data for populating text answer question");
+        return;
+    }
+
+    // Clear the div if it has any content
+    div.innerHTML = '';
+    div.className = 'question-container';
+
+    // Question text
+    const questionText = document.createElement('p');
+    questionText.textContent = questionData.question;
+    questionText.className = 'question-text';
+    div.appendChild(questionText);
+
+    // Optional image
+    if (questionData.imageLink) {
+        const img = document.createElement('img');
+        img.src = questionData.imageLink;
+        img.alt = 'Question image';
+        img.className = 'question-image';
+        div.appendChild(img);
+    }
+
+    // Show weight
+    if (questionData.weight !== undefined) {
+        const weightInfo = document.createElement('p');
+        weightInfo.textContent = `Weight: ${questionData.weight}`;
+        weightInfo.className = 'question-weight';
+        div.appendChild(weightInfo);
+    }
+
+    // Text input for answer
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = userAnswer.choices[0];
+    input.readOnly = true;
+    input.style.width = '100%';
+    input.style.padding = '8px';
+    input.style.margin = '10px 0';
+    input.style.boxSizing = 'border-box';
+    div.appendChild(input);
+
+    // If we have evaluation data, highlight the correction
+    if (userAnswer.points !== undefined) {
+        highlightCorrectionTextAnswer(div, {
+            success: true,
+            userAnswer: userAnswer,
+            points: userAnswer.points
+        }, questionData);
+    }
+
+    return div;
+}
