@@ -52,7 +52,6 @@ async function loadStats(period = "all") {
             alert("Failed to load statistics: " + data.message);
            // return;
         }
-        console.log(55)
 
         const statsTable = document.getElementById("statsTable").querySelector("tbody");
         statsTable.innerHTML = "";

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
 
-        console.log("Recent activities loaded");
+
     } catch (error) {
         console.error("Failed to load recent activities:", error);
     }

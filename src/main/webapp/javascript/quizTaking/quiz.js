@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 const renderQuestion = () => {
-                    console.log("Current id " + currentIndex + "total " + questions.length)
+
                     if (questions.length === 0 || (!practiceMode && currentIndex >= questions.length)) {
                         showFinalSubmit();
                         return;
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (immediateCorrection) {
                             submitBtn.style.display = "none";
                             const feedback = document.createElement("div");
-                            console.log(json);
+
                             feedback.textContent = json.points > 0 ? "Correct!" : "Incorrect!";
                             document.body.appendChild(feedback);
 
@@ -265,6 +265,6 @@ function shuffleArray(array) {
 
 async function evaluateAnswer(div, questionData, quizResultId, userid) {
     const msg = await evalAnswer(questionData.type, div, questionData.id, quizResultId, userid);
-    console.log(msg);
+   // console.log(msg);
     return msg;  // Replace with real evaluation
 }

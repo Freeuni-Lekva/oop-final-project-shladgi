@@ -111,7 +111,6 @@ export function highlightCorrectionMultiTextAnswer(div, evaluationResult, questi
         let isCorrect = false;
 
         // Debug log
-        console.log(`Input ${index}: "${input.value}"`);
 
         // First: use server-provided correctness if available
         if (Array.isArray(evaluationResult.details?.perAnswerCorrectness)) {

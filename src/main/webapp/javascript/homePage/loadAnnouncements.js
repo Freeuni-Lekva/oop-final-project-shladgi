@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
 
-        console.log("Announcements loaded");
+        //console.log("Announcements loaded");
     } catch (error) {
         console.error("Failed to load announcements:", error);
     }

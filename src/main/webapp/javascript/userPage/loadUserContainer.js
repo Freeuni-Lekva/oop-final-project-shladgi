@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "statistics"
     ];
 
-    console.log("VVVRRR")
+    //console.log("VVVRRR")
 
     const info = {};
 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
-    console.log(viewedUsername)
+    //console.log(viewedUsername)
 
     const sessionUsername = await loadSessionValue("username");
 

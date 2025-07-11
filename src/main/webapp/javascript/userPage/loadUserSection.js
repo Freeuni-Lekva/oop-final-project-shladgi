@@ -9,7 +9,7 @@ function setupUserButtonListener() {
         document.getElementById("statistics").style.display = "none";
         document.getElementById("friends-container").style.display = "none";
         document.getElementById("friend-requests-container").style.display = "none"
-        console.log("User section shown");
+        //console.log("User section shown");
     });
 }
 
