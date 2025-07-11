@@ -4,13 +4,32 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/questionHighlights.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/navFoot.css"/>
 </head>
 <body>
 
-<h1>quiiiiiiz</h1>
+<header class="position-relative text-uppercase">
+    <nav class="navbar navbar-expand-lg navbar-light"></nav>
+</header>
+
+<a id="back-to-quiz-btn" href="#" class="btn btn-secondary">Back to Quiz</a>
+<div id="big-message-container"></div>
+
+<div id="quiz-container">
+    <div id="all-questions-container"></div>
+    <div id="small-message-container"></div>
+    <div id="bottom-container"></div>
+    <div id="results-container"></div>
+</div>
 
 
-<script type="module" src="javascript/quizTaking/checkBeforeQuiz.js"></script>
+<footer></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script  type="module"  src="javascript/navFoot.js"></script>
+<!--<script type="module" src="javascript/quizTaking/checkBeforeQuiz.js"></script> -->
 <script type="module" src="javascript/quizTaking/quiz.js"></script>
+
 </body>
 </html>

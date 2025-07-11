@@ -33,13 +33,20 @@ public class UpdateQuizResult extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         int quizResultId = Integer.parseInt(request.getParameter("quizresultid"));
         int userId = Integer.parseInt(request.getParameter("userid"));
-        int totalScore = Integer.parseInt(request.getParameter("totalScore"));
+        double totalScore = Double.parseDouble(request.getParameter("totalScore"));
         int timeTaken = Integer.parseInt(request.getParameter("timeTaken"));
         boolean practice = Boolean.parseBoolean(request.getParameter("practice"));
 
 
         QuizResultDB quizResultDB = (QuizResultDB) getServletContext().getAttribute(QUIZRESULTDB);
-        quizResultDB.updateQuizResult(quizResultId, timeTaken, totalScore);
+        if(practice){
+            int deletedCnt = quizResultDB.delete(new FilterCondition<>(QuizResultField.ID, Operator.EQUALS, quizResultId));
+            if(deletedCnt != 1){
+                throw new RuntimeException("Failed to delete quiz result");
+            }
+        }else{
+            quizResultDB.updateQuizResult(quizResultId, timeTaken, totalScore);
+        }
 
         JsonObject json = new JsonObject();
         json.addProperty("success", true);
@@ -52,3 +59,5 @@ public class UpdateQuizResult extends HttpServlet {
 
     }
 }
+
+
