@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     let viewedUsername = params.get("username");
 
+
     const sessionUsername = await loadSessionValue("username");
 
     const menuItem = document.getElementById("userMenuItem");

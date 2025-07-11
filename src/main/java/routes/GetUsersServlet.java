@@ -90,6 +90,7 @@ public class GetUsersServlet extends HttpServlet {
             for(User user : users) {
                 JsonObject joUser = new JsonObject();
                 joUser.addProperty("name", user.getUserName());
+                joUser.addProperty("type", user.getType().toString());
                 ja.add(joUser);
             }
             jo.add("users", ja);

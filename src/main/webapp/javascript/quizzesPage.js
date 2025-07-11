@@ -8,15 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateFrom = urlParams.get('dateFrom') || '';
     const dateTo = urlParams.get('dateTo') || '';
     const search = urlParams.get('search') || '';
+    const sortBy = urlParams.get('sortby') || '';
 
     // Set form values from URL
     document.getElementById('creator').value = creator;
     document.getElementById('dateFrom').value = dateFrom;
     document.getElementById('dateTo').value = dateTo;
     document.getElementById('search').value = search;
+    document.getElementById('sortby').value = sortBy;
 
     // Load quizzes with current filters
-    loadQuizzes(currentPage, { creator, dateFrom, dateTo, search });
+    loadQuizzes(currentPage, { creator, dateFrom, dateTo, search , sortBy});
 
     // Form submission handler
     document.getElementById('filterForm').addEventListener('submit', function(e) {
@@ -25,7 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             creator: document.getElementById('creator').value,
             dateFrom: document.getElementById('dateFrom').value,
             dateTo: document.getElementById('dateTo').value,
-            search: document.getElementById('search').value
+            search: document.getElementById('search').value,
+            sortBy: document.getElementById("sortby").value
         };
 
         // Reset to page 1 when filters change
@@ -39,7 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
             creator: '',
             dateFrom: '',
             dateTo: '',
-            search: ''
+            search: '',
+            sortBy:''
         };
         updateURL(1, emptyFilters);
         loadQuizzes(1, emptyFilters);
@@ -55,6 +59,7 @@ function updateURL(page, filters) {
     if (filters.dateFrom) urlParams.set('dateFrom', filters.dateFrom);
     if (filters.dateTo) urlParams.set('dateTo', filters.dateTo);
     if (filters.search) urlParams.set('search', filters.search);
+    if (filters.sortby) urlParams.set('sortby', filters.sortBy);
 
     const newUrl = window.location.pathname + '?' + urlParams.toString();
     window.history.pushState({ path: newUrl }, '', newUrl);
@@ -77,7 +82,8 @@ function loadQuizzes(page, filters) {
         creator: filters.creator,
         dateFrom: filters.dateFrom,
         dateTo: filters.dateTo,
-        searchQuery: filters.search
+        searchQuery: filters.search,
+        sortBy: filters.sortBy
     };
 
     // Fetch data from servlet
@@ -96,7 +102,7 @@ function loadQuizzes(page, filters) {
             return response.json();
         })
         .then(data => {
-            console.log(data.quizzes);
+            //console.log(data.quizzes);
             loadingSpinner.classList.add('d-none');
 
             if (data.quizzes && data.quizzes.length > 0) {

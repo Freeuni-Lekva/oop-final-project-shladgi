@@ -1,6 +1,6 @@
 import { loadSessionValue } from './getSessionInfo.js';
 
-function addAdminButton(admin, receiverUsername, btnGroup, div) {
+function addAdminButton(admin, receiverUsername, btnGroup, div, receiverType = "Basic") {
     if (admin === "Admin") {
         const adminBtn = document.createElement("button");
         adminBtn.className = "btn btn-warning btn-sm";
@@ -41,41 +41,54 @@ function addAdminButton(admin, receiverUsername, btnGroup, div) {
             }
         });
 
-        const promote = document.createElement("button");
-        promote.className = "btn btn-primary btn-sm";
-        promote.textContent = "Promote User";
-        promote.addEventListener("click", ()=>{
-            if (!confirm("Are you sure you want to promote this user?")) return;
-            fetch("/promoteUser",{
-                method : "POST",
-                headers :{
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body : new URLSearchParams({
-                    username: receiverUsername,
-                })
-            }).then(res => res.json())
-                .then(data => {
-                    if(data.success)alert(`You successfully promoted ${receiverUsername} to Admin.`);
-                    else alert(data.message)
-                }).catch(err => console.log(err))
-        });
-
-
-
-
-
-
-
-
-
-
-        btnGroup.appendChild(promote);
         btnGroup.appendChild(adminBtn);
-    }
-}
 
-export async function updateButtons(status, btnGroup, receiverUsername, admin, div) {
+
+        fetch("/getUserType",{
+            method: 'POST',
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `username=${encodeURIComponent(receiverUsername)}`
+        }).then(res => {
+            if(res.ok)return res.json()
+            else console.log(res.message)
+
+        }).then(data => {
+
+        if(data.type !=="Admin") {
+            const promote = document.createElement("button");
+            promote.className = "btn btn-primary btn-sm";
+            promote.textContent = "Promote User";
+            promote.addEventListener("click", () => {
+                if (!confirm("Are you sure you want to promote this user?")) return;
+                fetch("/promoteUser", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({
+                        username: receiverUsername,
+                    })
+                }).then(res => res.json())
+                    .then(data => {
+                        if (data.success){
+                            alert(`You successfully promoted ${receiverUsername} to Admin.`);
+                            location.reload()
+                        }
+                        else {
+                            console.log(77);
+                            alert(data.message)
+                        }
+                    }).catch(err => console.log(err))
+            });
+
+            btnGroup.appendChild(promote);
+        }
+
+
+}).catch(err=> console.log(err));
+}}
+
+export async function updateButtons(status, btnGroup, receiverUsername, admin, div, receiverType = "Basic") {
     btnGroup.innerHTML = ""; // clear buttons
 
     if (status === "friends") {
@@ -90,7 +103,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin, d
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    await updateButtons("default", btnGroup, receiverUsername, admin, div);
+                    await updateButtons("default", btnGroup, receiverUsername, admin, div,receiverType);
                 } else {
                     alert("Failed to remove friend");
                 }
@@ -113,7 +126,7 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin, d
                     body: `target=${encodeURIComponent(receiverUsername)}`
                 });
                 if (res.ok) {
-                    await updateButtons("friends", btnGroup, receiverUsername, admin, div);
+                    await updateButtons("friends", btnGroup, receiverUsername, admin, div,receiverType);
                 } else {
                     alert("Failed to accept friend request");
                 }
@@ -191,10 +204,10 @@ export async function updateButtons(status, btnGroup, receiverUsername, admin, d
         btnGroup.appendChild(sendReqBtn);
     }
 
-    addAdminButton(admin, receiverUsername, btnGroup, div);
+    addAdminButton(admin, receiverUsername, btnGroup, div, receiverType );
 }
 
-export async function getUserDiv(receiverUsername) {
+export async function getUserDiv(receiverUsername, receiverType = "Basic") {
     const div = document.createElement("div");
     div.className = "user-div alert alert-info d-flex align-items-center justify-content-between mb-2 p-2";
 
@@ -242,7 +255,7 @@ export async function getUserDiv(receiverUsername) {
         const status = await response.json();
 
         if(status !== "guest" &&  myName !== receiverUsername){
-            await updateButtons(status, btnGroup, receiverUsername, admin, div);
+            await updateButtons(status, btnGroup, receiverUsername, admin, div,receiverType);
         }
     } catch (error) {
         alert(error.message);

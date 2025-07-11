@@ -20,7 +20,7 @@ fetchQuizResultData(quizResultId)
 
         // Call with current result info
         const userId = await loadSessionValue("userid");
-        console.log(userId);
+        //console.log(userId);
         if(userId === "" || userId === null || isNaN(userId)) {
                 const previousResults = document.getElementById("quiz-result-list");
                 const newDiv = document.createElement("div");

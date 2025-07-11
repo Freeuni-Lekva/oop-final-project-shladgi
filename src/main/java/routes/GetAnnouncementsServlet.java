@@ -26,6 +26,7 @@ public class GetAnnouncementsServlet extends HttpServlet {
         for (Announcement announcement : announcements) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("id", announcement.getId());
+
             jsonObject.addProperty("title", announcement.getTitle());
             jsonObject.addProperty("image", announcement.getImageLink());
             jsonObject.addProperty("content", announcement.getContent());

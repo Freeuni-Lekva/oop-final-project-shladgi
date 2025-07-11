@@ -17,7 +17,7 @@ export function getMultiChoiceDiv() {
             // If the last question is deleted, you might want to adjust UI
             if (document.querySelectorAll('.multi-choice-container').length === 0) {
                 // Optionally add a placeholder or re-enable "add question" if all deleted
-                console.log("All multi-choice questions removed.");
+                //console.log("All multi-choice questions removed.");
             }
         }
     };

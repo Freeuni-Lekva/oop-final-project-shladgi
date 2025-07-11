@@ -5,6 +5,7 @@
     <title>Quizzes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="css/navFoot.css"/>
+    <link rel="stylesheet" href="css/quiz.css"/>
 
 
 </head>
@@ -26,7 +27,7 @@
         </div>
         <div class="card-body">
             <form id="filterForm" class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label for="creator" class="form-label">Created by</label>
                     <select id="creator" class="form-select">
                         <option value="">Anyone</option>
@@ -34,6 +35,7 @@
                         <option value="other">Others</option>
                     </select>
                 </div>
+
                 <div class="col-md-3">
                     <label for="dateFrom" class="form-label">From Date</label>
                     <input type="datetime-local" class="form-control" id="dateFrom">
@@ -42,7 +44,16 @@
                     <label for="dateTo" class="form-label">To Date</label>
                     <input type="datetime-local" class="form-control" id="dateTo">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
+                <label for="sortby" class="form-label">Sort By</label>
+                <select id="sortby" class="form-select">
+                    <option value="dateAsc">Create Date Ascending</option>
+                    <option value="dateDes">Create Date Descending</option>
+                    <option value="titleAsc">Title Ascending</option>
+                    <option value="titleDes">Title Descending</option>
+                </select>
+            </div>
+                <div class="col-md-6">
                     <label for="search" class="form-label">Search</label>
                     <input type="text" class="form-control" id="search" placeholder="Search quizzes...">
                 </div>
@@ -62,7 +73,7 @@
     </div>
 
     <div id="quizzesContainer" class="d-none">
-        <div id="quizzesList" class="row row-cols-1 row-cols-md-2 g-4">
+        <div id="quizzesList" class="row row-cols-md-1 ">
 
         </div>
         <nav aria-label="Page navigation" class="mt-4">
