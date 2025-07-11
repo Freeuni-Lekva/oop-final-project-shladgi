@@ -85,8 +85,13 @@ public class StartQuizServlet extends HttpServlet {
         List<QuizResult> unfinishedResults = quizResultDB.query(unfinishedFilters);
 
         if (!unfinishedResults.isEmpty()) {
+            QuizResult unfinishedQuiz = unfinishedResults.get(0);
+            String message = "You have an unfinished quiz. <a href='/startQuiz?id=" + unfinishedQuiz.getQuizId() +
+                    "'>Click here</a> to return to it and complete it before starting a new one.";
             json.addProperty("success", false);
-            json.addProperty("message", "You have an unfinished quiz. Please finish it before starting a new one.");
+            json.addProperty("message", message);
+            json.addProperty("hasUnfinished", true);
+            json.addProperty("unfinishedQuizId", unfinishedQuiz.getQuizId());
             response.getWriter().write(json.toString());
             return;
         }
