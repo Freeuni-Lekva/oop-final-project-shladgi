@@ -23,7 +23,7 @@ public class AppContextListener implements ServletContextListener {
         //initialize necessary items
         try {
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizKhana", "root", "2005TiriTiri" );
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/quizKhana", "root", "root" );
 
 
 

@@ -139,6 +139,7 @@
                                 responses[qid] = json;
                                 if (practiceMode && json.points === question.weight) {
                                     question.correctCount++;
+                                    addCorrectCount(question, div);
                                 }
                                 smallMessageContainer.innerText = "";
 
@@ -161,7 +162,6 @@
 
                         const resultDiv = getResultDiv(totalScore, maxScore, practiceMode);
 
-                        bottomContainer.appendChild(resultDiv);
 
 
 
@@ -188,13 +188,15 @@
                                 };
                                 bottomContainer.appendChild(nextTryBtn);
                                 return;
+                            }else{
+                                bottomContainer.appendChild(resultDiv);
                             }
-                        }
+                        }else bottomContainer.appendChild(resultDiv);
                         stopSavingGracefully();
                         await saveResult(quizResultId, userid, totalScore, timeTakenSeconds, practiceMode);
 
                         bottomContainer.appendChild(homeLink);
-                        bottomContainer.appendChild(resultLink);
+                        if(!practiceMode)bottomContainer.appendChild(resultLink);
 
                     };
 
@@ -268,7 +270,7 @@
 
                             if (immediateCorrection) {
                                 highlightQuestionDiv(qDiv, json, q);
-
+                                addCorrectCount(q, qDiv);
                                 const nextBtn = document.createElement("button");
                                 nextBtn.textContent = "Next Question";
                                 nextBtn.onclick = () => {
@@ -350,16 +352,22 @@
     }
 
     function getResultDiv(totalScore, maxScore, isPractice){
+        const prevResDiv = document.getElementById("result-div");
+        if(prevResDiv != null) prevResDiv.remove();
+
         const resultDiv = document.createElement("div");
+        resultDiv.id = "result-div";
         if(isPractice) resultDiv.innerHTML = `<h3>Practice Finished</h3>`;
         else resultDiv.innerHTML = `<h3>Your Score: ${totalScore} / ${maxScore}</h3>`;
         return resultDiv;
     }
 
     function addCorrectCount(q, div){
+        const prevCountDisplay = div.querySelector(".correct-count-display");
+        if(prevCountDisplay !== null) prevCountDisplay.remove();
         const correctCountDisplay = document.createElement("div");
         correctCountDisplay.classList.add("correct-count-display");
-        correctCountDisplay.textContent = `Correect : ${q.correctCount || 0} / 3`;
+        correctCountDisplay.textContent = `Correct : ${q.correctCount || 0} / 3`;
         correctCountDisplay.style.marginBottom = "1em";
         correctCountDisplay.style.fontSize = "0.9em";
         correctCountDisplay.style.color = "#007bff";
