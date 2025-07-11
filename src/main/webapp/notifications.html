@@ -15,22 +15,47 @@
 
 
 <main>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h2>Notes</h2>
-                <div  id="notes"></div>
-                <button id="smn" class="btn btn-primary" >See More</button>
-            </div>
-            <div class="col" >
-                <h2>Challenges</h2>
-                <div id="challenges"></div>
-                <button id="smc" class="btn btn-primary" >See More</button>
-            </div>
-        </div>
+
+    <div class="container mt-5">
+    <h2 class="mb-4">Notifications</h2>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs row" id="notificationTabs">
+        <li class="nav-item active col-lg-3 col-md-6">
+            <a class="nav-link" href="#" data-type="receivedNotes">Received Notes</a>
+        </li>
+        <li class="nav-item col-lg-3 col-md-6">
+            <a class="nav-link" href="#" data-type="receivedChallenges">Received Challenges</a>
+        </li>
+        <li class="nav-item col-lg-3 col-md-6">
+            <a class="nav-link " href="#" data-type="sentNotes">Sent Notes</a>
+        </li>
+        <li class="nav-item col-lg-3 col-md-6">
+            <a class="nav-link" href="#" data-type="sentChallenges">Sent Challenges</a>
+        </li>
+
+    </ul>
+
+    <!-- Content Area -->
+    <div class="mt-4" id="notificationContent">
 
     </div>
+
+    <!-- See More Button -->
+    <div class="text-center mt-3" id="seeMoreContainer" style="display: none;">
+        <button class="btn btn-outline-primary" id="seeMoreBtn">See More</button>
+    </div>
+</div>
 </main>
+
+
+
+
+
+
+
+
+
 
 <footer></footer>
 
