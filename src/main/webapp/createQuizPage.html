@@ -29,11 +29,6 @@
     <label><input type="checkbox" name="immediatecorrection"> Immediate Correction</label><br>
     <label><input type="checkbox" name="practicemode" checked> Practice Mode</label><br>
 
-    <label>
-      Time Limit Hours (default no limit): <input type="number" name="timelimithours" min="0" placeholder="Hours">
-      Minutes: <input type="number" name="timelimitminutes" min="0" placeholder="Minutes">
-    </label><br>
-
     <div id="questionContainer"></div>
     <label for="choices">Choose question type:</label>
     <select id="choices" name="choices">
@@ -49,6 +44,11 @@
     <br>
     <div id="errorText" class="text-danger mb-3"></div>
     <button type="submit" name="createQuizButton">Create Quiz</button>
+
+    <label style="display: none">
+      Time Limit Hours (default no limit): <input type="number" name="timelimithours" min="0" placeholder="Hours">
+      Minutes: <input type="number" name="timelimitminutes" min="0" placeholder="Minutes">
+    </label><br>
   </form>
 
 

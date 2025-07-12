@@ -39,10 +39,15 @@ export function getMultiTextAnswerWhileTakingDiv(data) {
         label.textContent = `Answer ${i + 1}:`;
         answerGroup.appendChild(label);
 
+
+
+
+
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'multi-text-answer';
         input.dataset.answerIndex = i;
+        input.placeholder = 'Type your answer here...';
         input.required = true;
         input.style.width = '100%';
         input.style.padding = '8px';
@@ -103,69 +108,100 @@ export async function evalAnswerMultiTextAnswer(div, questionid, quizresultid, u
 }
 
 export function highlightCorrectionMultiTextAnswer(div, evaluationResult, questionData) {
-    if (!evaluationResult || !questionData || !evaluationResult.success || !evaluationResult.userAnswer) return;
+    if (!evaluationResult || !questionData || !evaluationResult.userAnswer) return;
 
     const inputs = div.querySelectorAll('input[type="text"]');
     const correctAnswers = questionData.correctAnswers || [];
     const exactMatch = !!questionData.exactMatch;
     const ordered = !!questionData.ordered;
 
-    // Helper function: normalize for non-exact match
     function normalize(str) {
         return str.toLowerCase().replace(/\s+/g, '');
     }
 
-    // Helper function: compare with correct options
     function matches(possibleAnswer, userInput) {
-        if (exactMatch) {
-            return possibleAnswer === userInput;
-        } else {
-            return normalize(possibleAnswer) === normalize(userInput);
-        }
+        return exactMatch
+            ? possibleAnswer === userInput
+            : normalize(possibleAnswer) === normalize(userInput);
     }
 
-    // Track which correct groups were used (for unordered mode)
-    const used = new Array(correctAnswers.length).fill(false);
+    // Track which correct answers have been matched
+    const matchedCorrectIndices = new Set();
 
-    inputs.forEach((input, index) => {
-        input.readOnly = true;
+    // First pass: mark all correct answers
+    inputs.forEach((input, userIndex) => {
         const userInput = input.value.trim();
 
-        let isCorrect = false;
-        let matchedGroupIndex = -1;
-
         if (ordered) {
-            // Ordered mode: position matters
-            if (index < correctAnswers.length) {
-                const correctGroup = correctAnswers[index];
-                isCorrect = correctGroup.some(possible => matches(possible, userInput));
+            // Ordered: only check the corresponding correct answer
+            if (userIndex < correctAnswers.length) {
+                const correctGroup = correctAnswers[userIndex];
+                if (correctGroup.some(correct => matches(correct, userInput))) {
+                    matchedCorrectIndices.add(userIndex);
+                }
             }
         } else {
-            // Unordered mode: try to find any unused correct group that matches
-            for (let i = 0; i < correctAnswers.length; i++) {
-                if (used[i]) continue;
-                const group = correctAnswers[i];
-                if (group.some(possible => matches(possible, userInput))) {
-                    used[i] = true;
+            // Unordered: check against all correct answers
+            correctAnswers.forEach((group, groupIndex) => {
+                if (!matchedCorrectIndices.has(groupIndex) &&
+                    group.some(correct => matches(correct, userInput))) {
+                    matchedCorrectIndices.add(groupIndex);
+                }
+            });
+        }
+    });
+
+    // Second pass: apply styling and show corrections
+    inputs.forEach((input, userIndex) => {
+        input.readOnly = true;
+        const userInput = input.value.trim();
+        let isCorrect = false;
+        let correctGroupToShow = null;
+
+        if (ordered) {
+            // Ordered mode logic (unchanged)
+            if (userIndex < correctAnswers.length) {
+                const correctGroup = correctAnswers[userIndex];
+                isCorrect = correctGroup.some(correct => matches(correct, userInput));
+                correctGroupToShow = correctGroup;
+            }
+        } else {
+            // Unordered mode: check if this input matches any correct answer
+            correctAnswers.forEach((group, groupIndex) => {
+                if (group.some(correct => matches(correct, userInput))) {
                     isCorrect = true;
-                    matchedGroupIndex = i;
-                    break;
+                }
+            });
+
+            // For incorrect answers, show all unmatched correct answers
+            if (!isCorrect) {
+                const unmatchedCorrects = correctAnswers
+                    .filter((_, i) => !matchedCorrectIndices.has(i))
+                    .flat();
+
+                if (unmatchedCorrects.length > 0) {
+                    correctGroupToShow = unmatchedCorrects;
                 }
             }
         }
 
+        // Apply styling
         input.classList.add(isCorrect ? "correct-choice" : "incorrect-choice");
 
-        // Show correct answers if incorrect
-        if (!isCorrect && (ordered ? index < correctAnswers.length : matchedGroupIndex !== -1)) {
-            const group = ordered ? correctAnswers[index] : correctAnswers[matchedGroupIndex];
-            if (group && group.length > 0) {
-                const correctText = group.join(" OR ");
-                const span = document.createElement("span");
-                span.className = "correct-answer-text";
-                span.textContent = ` (Correct: ${correctText})`;
-                input.parentNode.insertBefore(span, input.nextSibling);
+        // Show correction if needed
+        if (!isCorrect && correctGroupToShow) {
+            const correctText = correctGroupToShow.join(" OR ");
+            const span = document.createElement("span");
+            span.className = "correct-answer-text";
+            span.textContent = ` (Correct: ${correctText})`;
+
+            // Clean up previous correction if exists
+            const existingSpan = input.nextElementSibling;
+            if (existingSpan?.classList.contains('correct-answer-text')) {
+                existingSpan.remove();
             }
+
+            input.parentNode.insertBefore(span, input.nextSibling);
         }
     });
 }

@@ -44,7 +44,8 @@ export function getFillInBlanksWhileTakingDiv(data) {
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'answer-input';
-        input.style.width = '100px';
+        input.placeholder = 'Type your answer here...';
+        input.style.width = '100%';
         input.style.margin = '0 5px';
         input.dataset.answerIndex = i;
         input.required = true;
