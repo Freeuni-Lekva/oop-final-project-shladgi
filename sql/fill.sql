@@ -86,10 +86,10 @@ INSERT INTO achievements (id, title, description, iconlink, rarity) VALUES
                                                                         (1, 'Amateur Author', 'Create a quiz', 'https://i.pinimg.com/originals/20/6d/71/206d71d869aeb22b8f9e0e7a6a4f7b54.png', 'Common'),
                                                                         (2, 'Prolific Author', 'Create five quizzes', 'icon2.png', 'Rare'),
                                                                         (3, 'Prodigious Author', 'Create ten quizzes', 'icon3.png', 'Epic'),
-                                                                        (4, 'Quiz Machine', 'The user took ten quizzes.', 'icon4.png', 'Common'),
+                                                                        (4, 'Quiz Machine', 'The user took ten quizzes.', 'https://res.cloudinary.com/jerrick/image/upload/c_scale,f_jpg,q_auto/63f6c0563f141d001d7bfe65.jpg', 'Common'),
                                                                         (5, 'I am the Greatest', 'The user had the highest score on a quiz', 'icon5.png', 'Legendary'),
                                                                         (6, 'Practice Makes Perfect', 'The user took a quiz in practice mode', 'icon6.png', 'Epic'),
-                                                                        (7, 'Newbie', 'The user took first quiz', 'https://www.shutterstock.com/image-vector/vector-illustration-badge-newbie-label-260nw-1188260409.jpg', 'Common'),
-                                                                        (8, 'Amateur Quizzer', 'The user took five quizzes', 'icon7.png', 'Epic'),
-                                                                        (9, 'Quiz Master', 'The user took 50 quizzes', 'icon8.png', 'Legendary'),
-                                                                        (10, 'Quiz Legend', 'The user took 100 quizzes', 'icon9.png', 'Legendary');
+                                                                        (7, 'Newbie', 'The user took first quiz', 'https://transforms.stlzoo.org/production/animals/chimpanzee-01.jpg?w=576&h=576&auto=compress%2Cformat&fit=crop&dm=1658432698&s=9138ff00319b661d5a4edfbb733bd8fb', 'Common'),
+                                                                        (8, 'Amateur Quizzer', 'The user took five quizzes', 'https://humanorigins.si.edu/sites/default/files/styles/grid_thumbnail/public/images/landscape/S_tchadensis_front_h_DH.jpg.webp?itok=W_WoKPCh', 'Epic'),
+                                                                        (9, 'Quiz Master', 'The user took 50 quizzes', 'https://i.pinimg.com/736x/88/16/87/881687946e98f0172075051bedbcd301.jpg', 'Legendary'),
+                                                                        (10, 'Quiz Legend', 'The user took 100 quizzes', 'https://shorturl.at/HskqB', 'Legendary');
