@@ -27,8 +27,14 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         if (userType === "Admin") {
             navLinks.innerHTML += getLi("admin","Admin Panel");
         }
-        navLinks.innerHTML+= '<form action="logout" method="post">\n' +
-            '<button type="submit" class="btn btn-danger">Logout</button></form>';
+        navLinks.innerHTML += `
+  <li class="nav-item d-flex align-items-center">
+    <form action="logout" method="post" class="d-inline m-1">
+      <button type="submit" class="btn btn-danger fw-bold">Logout</button>
+    </form>
+  </li>`;
+
+
         document.getElementById("nav-notifications").querySelector("a").innerHTML +=
             '<span id="notificationDot" style="display:none; color: red;">●</span>';
     } else {

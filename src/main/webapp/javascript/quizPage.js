@@ -1,6 +1,64 @@
 import { getTopPerformers } from './getTopPerformers.js';
 import { getUserQuizResultsDiv } from './userQuizResultsDiv.js';
 
+if (!document.getElementById("rendered-list-style")) {
+    const style = document.createElement("style");
+    style.id = "rendered-list-style";
+    style.textContent = `
+    .rendered-list-container {
+        margin-top: 1.5rem;
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .rendered-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .rendered-list li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 0.95rem;
+        color: #333;
+    }
+
+    .rendered-list li:last-child {
+        border-bottom: none;
+    }
+
+    .rendered-list li .user {
+        flex: 1;
+        color: #2d3b8b;
+    }
+
+    .rendered-list li .score,
+    .rendered-list li .time,
+    .rendered-list li .date {
+        margin-left: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+        white-space: nowrap;
+    }
+
+    .rendered-list-container .error {
+        color: #d9534f;
+        font-weight: 500;
+        text-align: center;
+        padding: 0.5rem;
+    }
+  `;
+    document.head.appendChild(style);
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const titleEl = document.getElementById("quizTitle");
     const totalQuestionsEl = document.getElementById("totalQuestions");
@@ -38,12 +96,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 // Use the new getTopPerformers function
-                getTopPerformers(quizId, null, 10).then(div => {
+                getTopPerformers(quizId, null, 5).then(div => {
                     document.getElementById("topPerformersList").parentNode.replaceChild(div, document.getElementById("topPerformersList"));
                     div.id = "topPerformersList";
                 });
 
-                getTopPerformers(quizId, 24, 10).then(div => {
+                getTopPerformers(quizId, 24, 5).then(div => {
                     document.getElementById("recentTopPerformersList").parentNode.replaceChild(div, document.getElementById("recentTopPerformersList"));
                     div.id = "recentTopPerformersList";
                 });
@@ -214,11 +272,31 @@ function updateQuizButtons(hasOngoingQuiz, isPractice = false, quizId = null) {
 
 function renderList(id, data, detailed = false) {
     const ul = document.getElementById(id);
+    ul.className = "rendered-list";       // add this class for styling
     ul.innerHTML = "";
+
+    // Optional: wrap ul with a container div with class "rendered-list-container"
+    if (!ul.parentElement.classList.contains("rendered-list-container")) {
+        const container = document.createElement("div");
+        container.className = "rendered-list-container";
+        ul.parentNode.insertBefore(container, ul);
+        container.appendChild(ul);
+    }
+
+    let n = 0;
     for (let item of data) {
+        n++;
+        if(n === 5) break;
         let li = document.createElement("li");
+
         if (detailed) {
-            li.textContent = `User ${item.userId ?? "You"} - Score: ${item.score}, Time: ${item.timeTaken}s, Date: ${item.date}`;
+            // If you want finer styling, add spans with classes here
+            li.innerHTML = `
+              <span class="user">User ${item.userId ?? "You"}</span> - 
+              <span class="score">Score: ${item.score}</span>, 
+              <span class="time">Time: ${item.timeTaken}s</span>, 
+              <span class="date">Date: ${item.date}</span>
+            `;
         } else {
             li.textContent = `User ${item.userId} - Score: ${item.score}`;
         }

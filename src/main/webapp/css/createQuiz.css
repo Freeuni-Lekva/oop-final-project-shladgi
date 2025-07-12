@@ -1,0 +1,358 @@
+/* Quiz Creation Specific Styles - Won't Affect Navigation */
+:root {
+    --quiz-primary: #3498db;
+    --quiz-primary-hover: #2980b9;
+    --quiz-success: #2ecc71;
+    --quiz-success-hover: #27ae60;
+    --quiz-danger: #e74c3c;
+    --quiz-danger-hover: #c0392b;
+    --quiz-border: #ddd;
+    --quiz-shadow: rgba(0, 0, 0, 0.1);
+    --quiz-text: #333;
+    --quiz-light-bg: #f5f5f5;
+}
+
+/* Container for quiz content only */
+main.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--quiz-shadow);
+}
+
+/* Quiz form styles - scoped to quiz form only */
+#quizForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#quizForm input[type="text"],
+#quizForm input[type="number"],
+#quizForm input[type="url"],
+#quizForm textarea,
+#quizForm select {
+    padding: 0.75rem;
+    border: 1px solid var(--quiz-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 600px;
+    transition: border-color 0.3s;
+}
+
+#quizForm input:focus,
+#quizForm textarea:focus,
+#quizForm select:focus {
+    border-color: var(--quiz-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+#quizForm textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#quizForm label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+/* Question container styles */
+#questionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Question box styles - all types */
+.question-box,
+.single-choice-container,
+.multi-choice-container,
+.text-answer-container,
+.multi-text-answer-container,
+.fill-in-blanks-container,
+.fill-in-choices-container {
+    position: relative;
+    padding: 1.5rem;
+    border: 1px solid var(--quiz-border);
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px var(--quiz-shadow);
+    margin-bottom: 1rem;
+}
+
+/* Delete button in questions */
+.delete-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--quiz-danger);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.delete-btn:hover {
+    background: var(--quiz-danger-hover);
+}
+
+/* Answer options styling */
+.answers-div,
+.answers-list,
+.answers-container,
+.choices-container {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.answer-option,
+.answer-item,
+.answer-group,
+.option-group,
+.choice-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+/* Quiz-specific buttons */
+#addQuestion,
+.add-answer-btn,
+.add-option-btn,
+.add-blank-btn,
+.add-answer-section-btn,
+#quizForm [type="submit"] {
+    background-color: var(--quiz-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+#addQuestion:hover,
+.add-answer-btn:hover,
+.add-option-btn:hover,
+.add-blank-btn:hover,
+.add-answer-section-btn:hover,
+#quizForm [type="submit"]:hover {
+    background-color: var(--quiz-primary-hover);
+}
+
+#quizForm [type="submit"] {
+    background-color: var(--quiz-success);
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+}
+
+#quizForm [type="submit"]:hover {
+    background-color: var(--quiz-success-hover);
+}
+
+/* Error message styling */
+#errorText {
+    color: var(--quiz-danger);
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+/* Responsive adjustments for quiz only */
+@media (max-width: 768px) {
+    main.container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .answer-option,
+    .answer-item,
+    .answer-group,
+    .option-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* Time limit inputs in quiz form */
+#quizForm input[name="timelimithours"],
+#quizForm input[name="timelimitminutes"] {
+    width: 80px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/* Ensure these styles don't affect navigation */
+
+/* Restore your original navigation styles */
+
+
+
+footer {
+    background-color: #0382f1 !important;
+    color: white !important;
+    padding: 10px !important;
+    width: 100% !important;
+    text-align: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* Button Styles - Universal for all buttons */
+button:not(.delete-btn):not(.delete-option-btn):not(.remove-option-btn):not(.remove-answer-btn):not(.delete-blank-btn):not(.delete-answers-btn),
+#addQuestion,
+.add-answer-btn,
+.add-option-btn,
+.add-blank-btn,
+.add-answer-section-btn,
+[type="submit"],
+[type="button"] {
+    background-color: #0382f1; /* Matching your navigation color */
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0.25rem 0;
+}
+
+/* Hover state for all buttons */
+button:not(.delete-btn):not(.delete-option-btn):not(.remove-option-btn):not(.remove-answer-btn):not(.delete-blank-btn):not(.delete-answers-btn):hover,
+#addQuestion:hover,
+.add-answer-btn:hover,
+.add-option-btn:hover,
+.add-blank-btn:hover,
+.add-answer-section-btn:hover,
+[type="submit"]:hover,
+[type="button"]:hover {
+    background-color: #0368c1; /* Slightly darker blue */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Active state for all buttons */
+button:not(.delete-btn):not(.delete-option-btn):not(.remove-option-btn):not(.remove-answer-btn):not(.delete-blank-btn):not(.delete-answers-btn):active,
+#addQuestion:active,
+.add-answer-btn:active,
+.add-option-btn:active,
+.add-blank-btn:active,
+.add-answer-section-btn:active,
+[type="submit"]:active,
+[type="button"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Special style for submit button */
+[type="submit"] {
+    background-color: #28a745; /* Green color for submit */
+    padding: 0.875rem 2rem;
+    font-size: 1.1rem;
+}
+
+[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Danger buttons (delete/cancel actions) */
+.delete-btn,
+.delete-option-btn,
+.remove-option-btn,
+.remove-answer-btn,
+.delete-blank-btn,
+.delete-answers-btn {
+    background-color: #dc3545 !important; /* Red color for destructive actions */
+    color: white !important;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover,
+.delete-option-btn:hover,
+.remove-option-btn:hover,
+.remove-answer-btn:hover,
+.delete-blank-btn:hover,
+.delete-answers-btn:hover {
+    background-color: #c82333 !important;
+}
+
+/* Disabled state for buttons */
+button:disabled,
+[type="submit"]:disabled,
+[type="button"]:disabled {
+    background-color: #6c757d !important;
+    cursor: not-allowed;
+    opacity: 0.65;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Button icons */
+button svg,
+[type="submit"] svg,
+[type="button"] svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+}
+
+/* Ensure navigation buttons remain unchanged */
+nav button,
+.navbar button,
+.navbar-nav button,
+footer button {
+    background-color: transparent !important;
+    color: inherit !important;
+    padding: inherit !important;
+    border-radius: inherit !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* Responsive buttons */
+@media (max-width: 768px) {
+    button:not(.delete-btn):not(.delete-option-btn):not(.remove-option-btn):not(.remove-answer-btn):not(.delete-blank-btn):not(.delete-answers-btn),
+    #addQuestion,
+    .add-answer-btn,
+    .add-option-btn,
+    .add-blank-btn,
+    .add-answer-section-btn,
+    [type="submit"],
+    [type="button"] {
+        width: 100%;
+        padding: 0.875rem;
+    }
+}
