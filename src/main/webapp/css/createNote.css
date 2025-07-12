@@ -1,72 +1,80 @@
-/* webapp/css/createNote.css - LARGER FORM ELEMENTS */
+/* webapp/css/createNote.css - WIDE FORM VERSION */
 
-/* Main content styling */
+/* Main content styling - full width */
 main {
-    max-width: 900px; /* Slightly wider container */
-    margin: 3rem auto; /* More vertical spacing */
-    padding: 0 2rem; /* More horizontal padding */
+    max-width: 100%;
+    width: 100%;
+    margin: 3rem auto;
+    padding: 0;
 }
 
-/* Form sections */
+/* Form sections - now full width with constrained content */
 .form-section {
     background-color: #ffffff;
-    border-radius: 10px; /* Slightly rounder corners */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
-    padding: 3rem; /* More internal padding */
-    margin-bottom: 3rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+    margin: 0 auto 3rem;
+    width: 90%;
+    max-width: 1200px; /* Much wider maximum width */
 }
 
+/* Center the form content */
+.form-section form {
+    max-width: 800px; /* Constrain form width */
+    margin: 0 auto; /* Center the form */
+}
+
+/* Keep all other styles the same */
 .form-section h2 {
     color: #0382f1;
-    margin-bottom: 2rem; /* More space below heading */
+    margin-bottom: 2rem;
     text-align: center;
-    font-size: 1.8rem; /* Larger heading */
+    font-size: 1.8rem;
 }
 
-/* Form elements - LARGER */
 .form-section label {
     display: block;
-    margin: 1.5rem 0 1rem; /* More spacing */
+    margin: 1.5rem 0 1rem;
     color: #333;
     font-weight: 500;
-    font-size: 1.1rem; /* Slightly larger labels */
+    font-size: 1.1rem;
 }
 
 .form-section input[type="text"],
 .form-section textarea {
     width: 100%;
-    padding: 1.2rem; /* Larger padding */
-    border: 2px solid #e0e0e0; /* Thicker border */
-    border-radius: 6px; /* Rounder corners */
-    font-size: 1.1rem; /* Larger text */
+    padding: 1.2rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1.1rem;
     box-sizing: border-box;
     transition: all 0.3s ease;
 }
 
 .form-section textarea {
-    min-height: 200px; /* Taller textarea */
+    min-height: 200px;
     resize: vertical;
-    line-height: 1.6; /* Better text spacing */
+    line-height: 1.6;
 }
 
 .form-section input:focus,
 .form-section textarea:focus {
     border-color: #0382f1;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(3, 130, 241, 0.1); /* Subtle focus glow */
+    box-shadow: 0 0 0 3px rgba(3, 130, 241, 0.1);
 }
 
-/* Buttons - LARGER */
 .form-section button {
     display: block;
     width: 100%;
     background-color: #0382f1;
     color: white;
-    padding: 1.2rem; /* Taller button */
+    padding: 1.2rem;
     border: none;
     border-radius: 6px;
-    margin-top: 2rem; /* More space above button */
-    font-size: 1.1rem; /* Larger text */
+    margin-top: 2rem;
+    font-size: 1.1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -74,18 +82,23 @@ main {
 
 .form-section button:hover {
     background-color: #0266c8;
-    transform: translateY(-2px); /* Slight lift effect */
-    box-shadow: 0 4px 12px rgba(2, 102, 200, 0.2); /* Shadow on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(2, 102, 200, 0.2);
 }
 
 /* Responsive design */
-@media (max-width: 600px) {
-    main {
-        padding: 0 1.5rem;
-    }
-
+@media (max-width: 1200px) {
     .form-section {
-        padding: 2.5rem 2rem; /* Still generous on mobile */
+        width: 95%;
+        padding: 3rem 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-section {
+        width: 100%;
+        border-radius: 0;
+        padding: 2.5rem 1.5rem;
     }
 
     .form-section h2 {
@@ -94,7 +107,7 @@ main {
 
     .form-section input[type="text"],
     .form-section textarea {
-        padding: 1rem; /* Slightly smaller on mobile */
+        padding: 1rem;
     }
 
     .form-section textarea {
