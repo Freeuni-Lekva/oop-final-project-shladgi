@@ -376,6 +376,7 @@
     }
 
     function addCorrectCount(q, div){
+        q.correctCount = min(q.correctCount, 3);
         const prevCountDisplay = div.querySelector(".correct-count-display");
         if(prevCountDisplay !== null) prevCountDisplay.remove();
         const correctCountDisplay = document.createElement("div");

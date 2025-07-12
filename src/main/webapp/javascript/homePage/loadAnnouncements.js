@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     image.style.maxWidth = "100%";
                     image.style.objectFit = "cover";
                 }
-
+                console.log("LOGGING",ann.date);
                 // Footer: author + date
                 const footer = document.createElement("div");
                 footer.className = "d-flex justify-content-between text-muted fst-italic small";

@@ -135,7 +135,7 @@ export async function getUserQuizResultsDiv(userId, quizId, currentResultId, amo
         console.error("Error fetching previous result IDs:", err);
         const errorDiv = document.createElement("div");
         errorDiv.className = "list-group-item text-danger";
-        errorDiv.textContent = "Error loading previous attempts";
+        errorDiv.textContent = "No previous attempts found";
         listContainer.appendChild(errorDiv);
         return listContainer;
     }
