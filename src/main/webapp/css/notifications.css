@@ -1,3 +1,135 @@
-.viewed{
+:root {
+    --mg: #5c7056;   /* Moss Green */
+    --lg: #343a40;   /* Dark Gray */
+}
 
+/* Main Content Styles */
+main {
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 120px); /* Adjust based on header height */
+    padding-bottom: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Notification Header */
+.mt-5 h2 {
+    color: var(--lg);
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.mt-5 h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--mg);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--mg);
+    border-color: var(--mg);
+    color: white;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.btn-primary:hover {
+    background-color: #4a5a45;
+    border-color: #4a5a45;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn-outline-primary {
+    color: var(--mg);
+    border-color: var(--mg);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--mg);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Tab Styles */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-item {
+    text-align: center;
+}
+
+.nav-tabs .nav-link {
+    color: var(--lg);
+    border: none;
+    padding: 12px 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 0;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--mg);
+    background-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--mg);
+    background-color: transparent;
+    border: none;
+}
+
+.nav-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: var(--mg);
+}
+
+/* Notification Content Area */
+#notificationContent {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 20px;
+    min-height: 300px;
+}
+
+/* See More Button Container */
+#seeMoreContainer {
+    margin-top: 2rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .nav-tabs .nav-item {
+        margin-bottom: 5px;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    #notificationContent {
+        padding: 15px;
+    }
 }

@@ -13,8 +13,9 @@ DROP TABLE IF EXISTS user_achievements;
 DROP TABLE IF EXISTS achievements;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS quizzes;
+DROP TABLE IF EXISTS user_tokens;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS user_token;
+
 
 -- CREATE TABLES
 CREATE TABLE users

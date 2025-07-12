@@ -1,0 +1,595 @@
+/* ===== QUIZ CREATION STYLES (MAIN ONLY) ===== */
+:root {
+    --mg: #5c7056;   /* Moss Green */
+    --lg: #343a40;   /* Dark Gray */
+    --error: #dc3545;
+    --success: #28a745;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+}
+/* ONLY STYLES FOR MAIN QUIZ CREATION CONTENT */
+main.mt-4 {
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+    padding: 2rem 0;
+}
+
+main.mt-4 .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Quiz Header */
+main.mt-4 #createQuizHeader {
+    color: var(--lg);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+main.mt-4 #createQuizHeader::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--mg);
+}
+
+/* Form Elements - Scoped to main */
+main.mt-4 #quizForm {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+main.mt-4 #quizForm input[type="text"],
+main.mt-4 #quizForm textarea,
+main.mt-4 #quizForm input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+main.mt-4 #quizForm input[type="text"]:focus,
+main.mt-4 #quizForm textarea:focus,
+main.mt-4 #quizForm input[type="number"]:focus {
+    border-color: var(--mg);
+    box-shadow: 0 0 0 3px rgba(92, 112, 86, 0.2);
+    outline: none;
+}
+
+/* Checkboxes - Only within main */
+main.mt-4 #quizForm label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    color: var(--lg);
+}
+
+main.mt-4 #quizForm input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--mg);
+}
+
+/* Buttons - Only within main */
+main.mt-4 #addQuestion,
+main.mt-4 button[type="submit"] {
+    background-color: var(--mg);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+main.mt-4 #addQuestion:hover,
+main.mt-4 button[type="submit"]:hover {
+    background-color: #4a5a45;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Responsive - Only affects main content */
+@media (max-width: 768px) {
+    main.mt-4 .container {
+        padding: 0 15px;
+    }
+
+    main.mt-4 #quizForm {
+        padding: 1.5rem;
+    }
+
+    main.mt-4 #quizForm label[for="timelimithours"] {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main.mt-4 #quizForm input[name="timelimithours"],
+    main.mt-4 #quizForm input[name="timelimitminutes"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* === BASE STYLES (MAIN ONLY) === */
+main .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+main #createQuizHeader {
+    color: var(--lg);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+main #createQuizHeader::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--mg);
+}
+
+main #quizForm {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+/* === QUESTION CONTAINERS (MAIN ONLY) === */
+main .question-container,
+main .single-choice-container,
+main .multi-choice-container,
+main .text-answer-container,
+main .multi-text-answer-container,
+main .fill-in-blanks-container,
+main .fill-in-choices-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border-left: 4px solid var(--mg);
+    transition: all 0.3s ease;
+}
+
+main .question-container:hover,
+main .single-choice-container:hover,
+main .multi-choice-container:hover,
+main .text-answer-container:hover,
+main .multi-text-answer-container:hover,
+main .fill-in-blanks-container:hover,
+main .fill-in-choices-container:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* === FORM ELEMENTS (MAIN ONLY) === */
+main .question-input,
+main .photo-input,
+main .points-input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+main .question-input:focus,
+main .photo-input:focus,
+main .points-input:focus {
+    border-color: var(--mg);
+    box-shadow: 0 0 0 3px rgba(92, 112, 86, 0.2);
+    outline: none;
+}
+
+main .question-input[type="textarea"],
+main textarea.question-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+main .points-input {
+    width: 80px;
+}
+
+/* === ANSWER OPTIONS (MAIN ONLY) === */
+main .answers-div,
+main .answers-container,
+main .choices-container,
+main .correct-answers {
+    margin: 20px 0;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+main .answer-option,
+main .answer-group,
+main .option-group,
+main .answer-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    background-color: var(--light-bg);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+main .answer-option:hover,
+main .answer-group:hover,
+main .option-group:hover,
+main .answer-item:hover {
+    background-color: #e9ecef;
+}
+
+main .answer-option input[type="text"],
+main .answer-group input[type="text"],
+main .option-group input[type="text"],
+main .answer-item input[type="text"] {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* === RADIO/CHECKBOXES (MAIN ONLY) === */
+main .answer-option input[type="radio"],
+main .answer-option input[type="checkbox"],
+main .option-group input[type="radio"],
+main .exact-match-checkbox,
+main .ordered-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--mg);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+main .answer-option:hover input[type="radio"],
+main .answer-option:hover input[type="checkbox"],
+main .option-group:hover input[type="radio"],
+main .exact-match-option:hover .exact-match-checkbox,
+main .ordered-option:hover .ordered-checkbox {
+    opacity: 1;
+}
+
+main .answer-option input[type="radio"]:checked,
+main .answer-option input[type="checkbox"]:checked,
+main .option-group input[type="radio"]:checked {
+    opacity: 1;
+}
+
+/* === BUTTONS (MAIN ONLY) === */
+main .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #f8d7da;
+    color: var(--error);
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+main .question-container:hover .delete-btn,
+main .single-choice-container:hover .delete-btn,
+main .multi-choice-container:hover .delete-btn,
+main .text-answer-container:hover .delete-btn,
+main .multi-text-answer-container:hover .delete-btn,
+main .fill-in-blanks-container:hover .delete-btn,
+main .fill-in-choices-container:hover .delete-btn {
+    opacity: 1;
+}
+
+main .delete-btn:hover {
+    background-color: var(--error);
+    color: white;
+    transform: scale(1.1);
+}
+
+main .delete-option-btn,
+main .remove-answer-btn,
+main .delete-question {
+    background-color: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+main .answer-option:hover .delete-option-btn,
+main .answer-group:hover .remove-answer-btn,
+main .answer-item:hover .delete-question {
+    opacity: 1;
+}
+
+main .delete-option-btn:hover,
+main .remove-answer-btn:hover,
+main .delete-question:hover {
+    background-color: var(--error);
+    color: white;
+}
+
+main .add-option-btn,
+main .add-answer-btn,
+main .add-blank-btn,
+main .add-answer-section-btn,
+main .add-answer {
+    background-color: var(--mg);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+main .add-option-btn:hover,
+main .add-answer-btn:hover,
+main .add-blank-btn:hover,
+main .add-answer-section-btn:hover,
+main .add-answer:hover {
+    background-color: #4a5a45;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+main .delete-section-btn,
+main .delete-blank-btn,
+main .delete-answers-btn {
+    background-color: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+main .delete-section-btn:hover,
+main .delete-blank-btn:hover,
+main .delete-answers-btn:hover {
+    background-color: var(--error);
+    color: white;
+}
+
+/* === SPECIALIZED QUESTION STYLES (MAIN ONLY) === */
+/* Fill in Blanks */
+main .fill-in-blanks-container .answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+main .fill-in-blanks-container .answer-header {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--lg);
+}
+
+/* Fill in Choices */
+main .fill-in-choices-container .choice-section {
+    border: 1px dashed var(--border-color);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+main .fill-in-choices-container .options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Multi Text Answer */
+main .multi-text-answer-container .answer-section {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+main .multi-text-answer-container .answer-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--lg);
+}
+
+/* Checkbox Options */
+main .exact-match-option,
+main .ordered-option {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* === SUBMIT BUTTON (MAIN ONLY) === */
+main button[type="submit"] {
+    background-color: var(--mg);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    font-weight: 600;
+}
+
+main button[type="submit"]:hover {
+    background-color: #4a5a45;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* === ERROR MESSAGE (MAIN ONLY) === */
+main #errorText {
+    color: var(--error);
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 15px 0;
+}
+
+/* === RESPONSIVE ADJUSTMENTS (MAIN ONLY) === */
+@media (max-width: 768px) {
+    main .answer-option,
+    main .answer-group,
+    main .option-group,
+    main .answer-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    main .delete-option-btn,
+    main .remove-answer-btn,
+    main .delete-question {
+        align-self: flex-end;
+        opacity: 1;
+    }
+
+    main .answer-option input[type="radio"],
+    main .answer-option input[type="checkbox"],
+    main .option-group input[type="radio"],
+    main .exact-match-checkbox,
+    main .ordered-checkbox {
+        opacity: 1;
+    }
+
+    main .delete-btn {
+        opacity: 1;
+    }
+
+    main .points-input {
+        width: 100%;
+    }
+}
+
+
+/* Text Answer Specific Styles */
+main .text-answer-container {
+    padding: 20px;
+}
+
+main .text-answer-container label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--lg);
+    font-weight: 500;
+}
+
+main .text-answer-container input[type="text"],
+main .text-answer-container input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+main .text-answer-container .correct-answers {
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+main .text-answer-container .answers-list {
+    margin: 10px 0;
+}
+
+main .text-answer-container .answer-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+main .text-answer-container .answer-item input {
+    flex-grow: 1;
+}
+
+main .text-answer-container .add-answer {
+    background-color: var(--mg);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+main .text-answer-container .add-answer:hover {
+    background-color: #4a5a45;
+}
+
+main .text-answer-container .delete-question {
+    margin-top: 15px;
+    background-color: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+main .text-answer-container .delete-question:hover {
+    background-color: var(--error);
+    color: white;
+}
+
+main .text-answer-container br {
+    display: none;
+}

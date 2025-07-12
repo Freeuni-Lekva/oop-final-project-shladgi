@@ -1,11 +1,15 @@
+
+
 body{
 min-height: 100%;
 
 }
 
-
+main{
+    background-color: #343a40;
+}
 header nav {
-    background-color: #0382f1;
+    background-color: #6C8C66;
 
 }
 header nav .container .nava {
@@ -17,6 +21,12 @@ header nav li:hover{
     background-color: rgba(0, 0, 0, 0.4);
 
 }
+.navTag{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
 
 .footer-content {
     color: white;
@@ -31,6 +41,7 @@ html, body {
 }
 
 body {
+
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -38,16 +49,21 @@ body {
 
 main {
     flex-grow: 1;
+    background-color: #343a40;!important;
 }
 
 footer {
-    background-color: #0382f1; /* or #f8f9fa if you want lighter footer */
+    background-color: #6C8C66; /* or #f8f9fa if you want lighter footer */
     padding: 10px;             /* or 1rem, be consistent */
     width: 100%;
     text-align: center;
     flex-shrink: 0;
     color: white;              /* add this if footer text should be white */
 }
+
+
+
+
 
 
 

@@ -1,130 +1,243 @@
-/* Main container */
+/* ===== ENHANCED QUIZ INFO STYLES ===== */
 main {
-    max-width: 700px;
-    margin: 3rem auto;
-    padding: 1rem;
-}
-
-/* Quiz Info Section */
-.quiz-info {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    text-align: center;
-}
-
-.quiz-info h2 {
-    color: #0382f1;
-    font-size: 1.75rem;
-    margin-bottom: 1.2rem;
-}
-
-.quiz-info p {
-    font-size: 1.1rem;
-    margin: 0.6rem 0;
+    max-width: 800px;
+    margin: 2rem auto;
+    border-radius: 12px;
+    padding: 30px;
+    font-family: 'Poppins', sans-serif;
     color: #333;
 }
 
-/* Practice Mode Checkbox */
-#practiceModeSection {
-    margin-top: 1.5rem;
+main .container {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border: 1px solid rgba(92, 112, 86, 0.1);
+}
+
+main h1 {
+    color: var(--mg);
     text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 15px;
 }
 
-#practiceMode {
-    margin-right: 0.5rem;
+main h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--mg), #a8c0a0);
+    border-radius: 2px;
 }
 
-#practiceModeSection label {
-    font-weight: 500;
-    font-size: 1rem;
-    color: #444;
+main h2 {
+    color: var(--lg);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Start Button */
-#startQuizButton {
-    margin-top: 2rem;
-    padding: 0.75rem 1.5rem;
-    background-color: #0382f1;
-    color: white;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+main .label {
+    font-weight: 600;
+    color: var(--mg);
+    background: rgba(92, 112, 86, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
 }
 
-#startQuizButton:hover {
-    background-color: #0266c8;
+main p {
+    margin: 1rem 0;
+    line-height: 1.7;
+    color: #555;
 }
 
-/* Status Message */
-#quizStatus {
-    margin-top: 1.5rem;
+main ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 1.5rem 0;
+    background: rgba(245, 245, 245, 0.5);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #eee;
+}
+
+main ul li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+main ul li::before {
+    content: '•';
+    color: var(--mg);
     font-weight: bold;
+    font-size: 1.5rem;
+    line-height: 0;
+}
+
+/* Practice Mode Toggle - Always Visible */
+main #practiceModeSection {
+    margin: 25px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(92, 112, 86, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--mg);
+}
+
+main #practiceMode {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--mg);
+    transform: scale(1.2);
+}
+
+/* Button Styles - Always Visible */
+main .quiz-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+main .btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
     font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    opacity: 1 !important; /* Force visibility */
+    visibility: visible !important; /* Force visibility */
+}
+#startQuizButton{
+    visibility: visible;!important;
+    opacity: 1;!important;
+    color: #343a40;
+}
+
+main .btn-primary {
+    background: linear-gradient(135deg, var(--mg), #6b8563);
+    color: white;
+}
+
+main .btn-primary:hover {
+    background: linear-gradient(135deg, #4a5a45, #5c7056);
+    transform: translateY(-2px);
+}
+
+main .btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+main .btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+}
+
+/* Delete Buttons - Always Visible */
+main #deleteQuizBtn,
+main #deleteHistory {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Quiz Status */
+main #quizStatus {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+    background: rgba(92, 112, 86, 0.05);
+    border-left: 4px solid var(--mg);
+    font-size: 1.1rem;
+}
+
+/* Links */
+main a {
+    color: var(--mg);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px dashed rgba(92, 112, 86, 0.3);
+    padding-bottom: 2px;
+    transition: all 0.2s ease;
+}
+
+main a:hover {
+    color: #4a5a45;
+    border-bottom-color: var(--mg);
+}
+
+/* Stats Highlight */
+main #avgScore,
+main #totalScore,
+main #totalQuestions {
+    font-weight: 700;
+    color: var(--mg);
+    background: rgba(92, 112, 86, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* Edit/Delete Section - Always Visible */
+main #editDeleteSection {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 /* Responsive Design */
-@media (max-width: 600px) {
-    .quiz-info {
-        padding: 1.5rem;
+@media (max-width: 768px) {
+    main {
+        padding: 0 15px;
     }
 
-    .quiz-info h2 {
-        font-size: 1.4rem;
+    main .container {
+        padding: 20px;
     }
 
-    #startQuizButton {
+    main h1 {
+        font-size: 2rem;
+    }
+
+    main .quiz-actions {
+        flex-direction: column;
+    }
+
+    main .btn {
         width: 100%;
+        justify-content: center;
     }
 }
 
-/* Header */
-header h1 {
-    text-align: center;
-    color: #0382f1;
-    font-size: 2rem;
-    margin-top: 2rem;
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-
-
-.footer-content {
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
+main .quiz-info {
+    animation: fadeIn 0.6s ease-out forwards;
 }
-
-.label {
-    font-weight: bold;
-    color: #444;
-}
-
-
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-main {
-    flex-grow: 1;
-    max-width: 700px;
-    margin: 0 auto;           /* Remove vertical margins */
-    padding: 3rem 1rem 1rem;  /* Add top padding instead for spacing */
-}
-
-/* Your existing styles for quiz info, buttons, headers, etc. */
-
-
-
-
-
