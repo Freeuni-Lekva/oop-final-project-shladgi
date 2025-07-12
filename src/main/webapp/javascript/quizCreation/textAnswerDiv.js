@@ -3,12 +3,24 @@ export function getTextAnswerDiv() {
     div.classList.add("question-box");
     div.dataset.qtype = "TextAnswer";
 
+    // Delete button (X button in top-right corner) - Updated to match single choice style
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = 'X';
+    deleteBtn.onclick = () => {
+        if (confirm('Are you sure you want to delete this question?')) {
+            div.remove();
+        }
+    };
+    div.appendChild(deleteBtn);
+
     // Question text input
     const questionLabel = document.createElement("label");
     questionLabel.textContent = "Question Text:";
     const questionInput = document.createElement("input");
     questionInput.type = "text";
     questionInput.name = "questionText";
+    questionInput.className = 'question-input';
     questionInput.required = true;
     questionLabel.appendChild(questionInput);
 
@@ -18,6 +30,7 @@ export function getTextAnswerDiv() {
     const imageInput = document.createElement("input");
     imageInput.type = "text";
     imageInput.name = "imageLink";
+    imageInput.className = 'photo-input';
     imageLabel.appendChild(imageInput);
 
     // Points input
@@ -62,7 +75,8 @@ export function getTextAnswerDiv() {
 
         const deleteBtn = document.createElement("button");
         deleteBtn.type = "button";
-        deleteBtn.textContent = "remove answer";
+        deleteBtn.className = 'delete-option-btn'; // Added class to match single choice style
+        deleteBtn.textContent = 'Delete'; // Changed text to match
         deleteBtn.addEventListener("click", () => {
             // Prevent removing the last remaining answer
             if (answersList.childElementCount > 1) {
@@ -90,15 +104,6 @@ export function getTextAnswerDiv() {
     answersSection.appendChild(answersList);
     answersSection.appendChild(addAnswerBtn);
 
-    // Delete entire question button
-    const deleteBtn = document.createElement("button");
-    deleteBtn.type = "button";
-    deleteBtn.classList.add("delete-question");
-    deleteBtn.textContent = "❌ Delete";
-    deleteBtn.addEventListener("click", () => {
-        div.remove();
-    });
-
     // Append everything to the main div
     div.appendChild(questionLabel);
     div.appendChild(document.createElement("br"));
@@ -109,7 +114,6 @@ export function getTextAnswerDiv() {
     div.appendChild(exactMatchLabel);
     div.appendChild(document.createElement("br"));
     div.appendChild(answersSection);
-    div.appendChild(deleteBtn);
 
     return div;
 }

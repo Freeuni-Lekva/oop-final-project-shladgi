@@ -1,0 +1,271 @@
+/* Question Container Base Styles */
+.question-container {
+    position: relative;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--quiz-border);
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px var(--quiz-shadow);
+}
+
+/* Question Text Styles */
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--quiz-text);
+}
+
+/* Question Image Styles */
+.question-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--quiz-border);
+}
+
+/* Question Weight Indicator */
+.question-weight {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+/* Answer Input Fields */
+.answer-input,
+.multi-text-answer,
+input[type="text"] {
+    padding: 0.75rem;
+    border: 1px solid var(--quiz-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.answer-input:focus,
+.multi-text-answer:focus,
+input[type="text"]:focus {
+    border-color: var(--quiz-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Answer Groups */
+.answer-group {
+    margin-bottom: 1rem;
+}
+
+.answer-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Select Dropdown Styles */
+.answer-select {
+    padding: 0.75rem;
+    border: 1px solid var(--quiz-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Choice List Styles (for single/multiple choice) */
+.choice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.choice-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.choice-item:hover {
+    background-color: #f8f9fa;
+}
+
+.choice-item input[type="radio"],
+.choice-item input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .question-container {
+        padding: 1rem;
+    }
+
+    .answer-select {
+        max-width: 100%;
+    }
+
+    .choice-item {
+        padding: 0.5rem 0.25rem;
+    }
+}
+
+/* Special styles for different question types */
+.single-choice-question .choice-list {
+    gap: 0.5rem;
+}
+
+.multi-choice-question .choice-item {
+    padding: 0.75rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.fill-in-blanks-question .answer-input {
+    width: auto;
+    min-width: 150px;
+    display: inline-block;
+    margin: 0 0.5rem;
+}
+
+/* Ensure these don't affect navigation */
+nav .question-container,
+.navbar .question-container,
+footer .question-container {
+    all: unset;
+}
+
+
+/* Input Text Fields - Add Visible Borders */
+.answer-input,
+.multi-text-answer,
+input[type="text"],
+.answer-select,
+textarea {
+    border: 2px solid var(--quiz-border) !important; /* Added !important to ensure override */
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+/* Focus State for Inputs */
+.answer-input:focus,
+.multi-text-answer:focus,
+input[type="text"]:focus,
+.answer-select:focus,
+textarea:focus {
+    border-color: var(--quiz-primary) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Specific styles for fill-in-blanks inputs */
+.fill-in-blanks-question .answer-input {
+    border-bottom: 2px solid var(--quiz-primary) !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: 0;
+    padding: 0.5rem 0;
+    margin: 0 0.5rem;
+    width: auto;
+    min-width: 150px;
+    background-color: transparent;
+}
+
+/* Choice inputs (radio/checkbox) - keep without border */
+.choice-item input[type="radio"],
+.choice-item input[type="checkbox"] {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Error state for inputs */
+.answer-input.error,
+.multi-text-answer.error,
+input[type="text"].error {
+    border-color: var(--quiz-danger) !important;
+}
+
+/* Disabled state */
+.answer-input:disabled,
+.multi-text-answer:disabled,
+input[type="text"]:disabled {
+    background-color: #f8f9fa;
+    border-color: #e9ecef !important;
+}
+
+/* Always show borders for input fields */
+.question-container input[type="text"],
+.question-container input[type="number"],
+.question-container textarea,
+.question-container select,
+.answer-input,
+.multi-text-answer,
+.answer-select {
+    border: 2px solid var(--quiz-border) !important;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus state - change border color */
+.question-container input[type="text"]:focus,
+.question-container input[type="number"]:focus,
+.question-container textarea:focus,
+.question-container select:focus,
+.answer-input:focus,
+.multi-text-answer:focus,
+.answer-select:focus {
+    border-color: var(--quiz-primary) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Special style for fill-in-blank inputs */
+.fill-in-blanks-question .answer-input {
+    border: none !important;
+    border-bottom: 2px solid var(--quiz-border) !important;
+    border-radius: 0;
+    padding: 0.5rem 0;
+    margin: 0 0.5rem;
+    width: auto;
+    min-width: 150px;
+    background-color: transparent;
+}
+
+.fill-in-blanks-question .answer-input:focus {
+    border-bottom-color: var(--quiz-primary) !important;
+}
+
+/* Radio/Checkbox - no borders */
+.choice-item input[type="radio"],
+.choice-item input[type="checkbox"] {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Error state */
+.question-container input.error,
+.answer-input.error,
+.multi-text-answer.error {
+    border-color: var(--quiz-danger) !important;
+}
