@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         container.appendChild(heading);
 
         let displayedCount = 0;
-        const pageSize = 10;
+        const pageSize = 3;
 
         // Function to render next chunk
         const renderNextChunk = async () => {
