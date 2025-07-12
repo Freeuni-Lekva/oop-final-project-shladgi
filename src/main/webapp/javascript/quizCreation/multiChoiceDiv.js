@@ -219,5 +219,4 @@ export async function saveMultiChoiceQuestion(div, quizId) {
     }
 }
 
-//window.saveMultiChoiceQuestion = saveMultiChoiceQuestion;
 

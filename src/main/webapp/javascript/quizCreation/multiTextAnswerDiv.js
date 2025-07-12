@@ -240,5 +240,3 @@ export async function saveMultiTextAnswerQuestion(div, quizId) {
         return {success: false, message: error.message};
     }
 }
-
-window.saveMultiTextAnswerQuestion = saveMultiTextAnswerQuestion;

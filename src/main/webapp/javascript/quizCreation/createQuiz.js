@@ -1,6 +1,7 @@
 import {addQuestion} from "./questionAdd.js"
 import {saveQuestion} from "./qustionSaving.js";
 import {deleteQuiz} from "./quizDeletion.js";
+import {checkAchievements} from "../achievement.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const addButton = document.getElementById("addQuestion");
@@ -73,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             console.warn("Missing data-question-type on a question div.");
                         }
                     }
-
+                    await checkAchievements(data.userid, "create")
                     // Then redirect (optional: only after all saveQuestion calls succeed)
                     if(!failedSaving) window.location.href = `/startQuiz?id=${quizid}`;
                 } else {

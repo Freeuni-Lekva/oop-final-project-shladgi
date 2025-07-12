@@ -27,59 +27,82 @@ document.addEventListener("DOMContentLoaded", async () => {
             const userType = await loadSessionValue("type");
 
             nextChunk.forEach(ann => {
-                const div = document.createElement("div");
-                div.className = "announcement mb-3 p-2 border rounded";
+                const card = document.createElement("div");
+                card.className = "announcement-card mb-4 p-4 bg-white rounded shadow-sm position-relative";
 
-                div.innerHTML = `
-                    <h3>${ann.title}</h3>
-                    <p>${ann.content}</p>
-                    <p><em>By: ${ann.author}</em></p>
-                    <p><small>Created at: ${new Date(ann.date).toLocaleString()}</small></p>
-                    ${ann.image ? `<img src="${ann.image}" alt="Announcement image" style="max-width: 100%;">` : ""}
-                `;
-                if(userType != null&&userType === "Admin"){
+                // Title
+                const title = document.createElement("h4");
+                title.className = "mb-2 fw-bold";
+                title.textContent = ann.title;
+
+                // Content
+                const content = document.createElement("p");
+                content.className = "mb-3 text-secondary";
+                content.textContent = ann.content;
+
+                // Image (if any)
+                let image;
+                if (ann.image) {
+                    image = document.createElement("img");
+                    image.src = ann.image;
+                    image.alt = "Announcement Image";
+                    image.className = "announcement-image mb-3 rounded";
+                    image.style.maxWidth = "100%";
+                    image.style.objectFit = "cover";
+                }
+
+                // Footer: author + date
+                const footer = document.createElement("div");
+                footer.className = "d-flex justify-content-between text-muted fst-italic small";
+                footer.innerHTML = `
+            <span>By: ${ann.author}</span>
+            <span>${new Date(ann.date).toLocaleString()}</span>
+        `;
+
+                card.appendChild(title);
+                card.appendChild(content);
+                if (image) card.appendChild(image);
+                card.appendChild(footer);
+
+                // Admin remove button top-right corner
+                if (userType === "Admin") {
                     const removeBtn = document.createElement("button");
-                    removeBtn.className = "btn btn-outline-danger btn-sm";
-                    removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
+                    removeBtn.className = "btn btn-sm btn-outline-danger position-absolute top-2 end-2";
                     removeBtn.title = "Remove Announcement";
-                    removeBtn.textContent = "Remove Announcement";
-                    removeBtn.addEventListener("click",()=>{
-                            if (!confirm("Are you sure you want to delete this announcement?")) return;
+                    removeBtn.innerHTML = `<i class="bi bi-trash"></i>`;
 
-                            fetch( `/announcements?id=${ann.id}`, {
-                                method: "DELETE",
-                            })
+                    removeBtn.addEventListener("click", () => {
+                        if (!confirm("Are you sure you want to delete this announcement?")) return;
+
+                        fetch(`/announcements?id=${ann.id}`, { method: "DELETE" })
                             .then(res => res.json())
                             .then(data => {
                                 if (data.success) {
                                     alert("Announcement deleted successfully.");
-                                  location.reload();
-
+                                    location.reload();
                                 } else {
-                                    alert(data.message );
+                                    alert(data.message);
                                 }
                             })
                             .catch(err => {
                                 alert("Failed to delete announcement. Server error.");
                                 console.error(err);
                             });
-
-
-
                     });
-                    div.appendChild(removeBtn);
 
+                    card.appendChild(removeBtn);
                 }
 
-                container.appendChild(div);
+                container.appendChild(card);
             });
+
             displayedCount += nextChunk.length;
 
-            // Hide button if nothing more to show
             if (displayedCount >= announcements.length) {
                 showMoreBtn.style.display = "none";
             }
         };
+
 
         // Show first chunk initially
         renderNextChunk();

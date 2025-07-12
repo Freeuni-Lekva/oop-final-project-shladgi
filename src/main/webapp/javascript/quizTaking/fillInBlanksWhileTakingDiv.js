@@ -109,38 +109,48 @@ export function highlightCorrectionFillInBlanks(div, evaluationResult, questionD
 
     const inputs = div.querySelectorAll('input[type="text"].answer-input');
     const correctAnswersList = questionData.correctAnswers || [];
+    const exactMatch = !!questionData.exactMatch;
+
+    // Helper for normalized comparison
+    function normalize(str) {
+        return str.toLowerCase().replace(/\s+/g, '');
+    }
+
+    // Helper for checking equality with exactMatch logic
+    function isAnswerCorrect(userAnswer, possibleAnswers) {
+        for (const correct of possibleAnswers) {
+            if (exactMatch) {
+                if (userAnswer === correct) return true;
+            } else {
+                if (normalize(userAnswer) === normalize(correct)) return true;
+            }
+        }
+        return false;
+    }
 
     inputs.forEach((input, index) => {
-        input.readOnly = true; // Make input read-only after submission
-
+        input.readOnly = true; // Disable editing
         const userAnswer = input.value.trim();
         const correctAnswers = correctAnswersList[index] || [];
 
-        let isCorrect = false;
-        if (questionData.exactMatch) {
-            isCorrect = correctAnswers.includes(userAnswer);
-        } else {
-            const normalizedUser = userAnswer.toLowerCase().replace(/\s+/g, '');
-            isCorrect = correctAnswers.some(
-                correct => normalizedUser === correct.toLowerCase().replace(/\s+/g, '')
-            );
-        }
+        const isCorrect = isAnswerCorrect(userAnswer, correctAnswers);
 
-        // Remove prior highlights if any
+        // Reset previous styles
         input.classList.remove("correct-answer", "incorrect-answer");
 
-        // Apply styling
+        // Highlight
         input.classList.add(isCorrect ? "correct-answer" : "incorrect-answer");
 
-        // Add correct answer info only if wrong
+        // Show correct answers if wrong
         if (!isCorrect && correctAnswers.length > 0) {
-            const correctAnswerText = document.createElement("span");
-            correctAnswerText.className = "correct-answer-text";
-            correctAnswerText.textContent = ` (Correct: ${correctAnswers.join(' OR ')})`;
-            input.parentNode.appendChild(correctAnswerText);
+            const correctText = document.createElement("span");
+            correctText.className = "correct-answer-text";
+            correctText.textContent = ` (Correct: ${correctAnswers.join(" OR ")})`;
+            input.parentNode.appendChild(correctText);
         }
     });
 }
+
 
 
 export function populateFillInBlanksDiv(div, questionData, userAnswer) {
