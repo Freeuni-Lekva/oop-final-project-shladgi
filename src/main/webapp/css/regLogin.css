@@ -1,122 +1,91 @@
-:root {
-    --mg: #5c7056;   /* Moss Green */
-    --lg: #343a40;   /* Dark Gray */
-}
+/* register.css */
 
-/* Full-page layout */
 body, html {
-    margin: 0;
-    padding: 0;
     height: 100%;
-    background-color: var(--lg);
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Main container to center form */
 main {
-    min-height: 100vh;
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
 }
 
-/* Error message */
-#registerError {
-    color: #ff6b6b;
-    text-align: center;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
-/* Login form */
 form {
-    background-color: var(--mg);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    max-width: 500px;
     width: 100%;
-    max-width: 400px;
-}
-
-/* Labels and Inputs */
-form input[type="text"],
-form input[type="password"] {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 0.5rem;
-    margin-bottom: 1.5rem;
-    border: none;
-    border-radius: 8px;
-
-    font-size: 1rem;
-    background-color: #505050;
-    color: #ffffff;
-
     box-sizing: border-box;
 }
 
-
-form input:focus {
-    outline: none;
-    box-shadow: 0 0 4px #fff;
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 }
 
-/* Submit Button */
-#button {
+form input[type="text"]:focus,
+form input[type="password"]:focus {
+    outline: none;
+    border-color: #5a7ff8;
+    box-shadow: 0 0 5px #a1b9ff;
+}
+
+form button#button {
     width: 100%;
-    padding: 0.8rem;
-    background-color: white;
-    color: var(--lg);
-    font-weight: bold;
-    font-size: 1rem;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #0382f1;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.25s ease;
 }
 
-#button:hover {
-    background-color: #e6e6e6;
-    transform: scale(1.02);
+form button#button:hover {
+    background-color: rgba(0.5, 0, 0, 0.4);
 }
 
-/* Register link */
 form a {
     display: block;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     text-align: center;
-    color: #fff;
-    font-size: 0.95rem;
-    text-decoration: underline;
-    transition: color 0.2s ease;
+    color: #0382f1;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 form a:hover {
-    color: #dcdcdc;
+    text-decoration: underline;
 }
 
-
-#registerError{
-    background-color: #b94a48;       /* deep clay red for error */
-    color: #fff;                     /* white text for contrast */
-
-    border-radius: 8px;
+#registerError {
     text-align: center;
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 1.5rem;
-    animation: shake 0.3s ease;
 }
 
-/* Responsive tweaks */
-@media (max-width: 480px) {
+/* Responsive */
+@media (max-width: 400px) {
     form {
-        padding: 1.5rem;
-    }
-
-    #button {
-        font-size: 0.95rem;
+        padding: 1.5rem 1.5rem;
     }
 }

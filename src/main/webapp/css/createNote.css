@@ -1,117 +1,107 @@
-/* webapp/css/createNote.css */
+/* webapp/css/createNote.css - LARGER FORM ELEMENTS */
 
 /* Main content styling */
 main {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    max-width: 900px; /* Slightly wider container */
+    margin: 3rem auto; /* More vertical spacing */
+    padding: 0 2rem; /* More horizontal padding */
 }
 
 /* Form sections */
 .form-section {
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 10px; /* Slightly rounder corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    padding: 3rem; /* More internal padding */
+    margin-bottom: 3rem;
 }
 
 .form-section h2 {
-    color: #0382f1; /* Matching your header color */
-    margin-bottom: 1.5rem;
+    color: #0382f1;
+    margin-bottom: 2rem; /* More space below heading */
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Larger heading */
 }
 
-/* Form elements */
+/* Form elements - LARGER */
 .form-section label {
     display: block;
-    margin: 1rem 0 0.5rem;
+    margin: 1.5rem 0 1rem; /* More spacing */
     color: #333;
     font-weight: 500;
+    font-size: 1.1rem; /* Slightly larger labels */
 }
 
 .form-section input[type="text"],
 .form-section textarea {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+    padding: 1.2rem; /* Larger padding */
+    border: 2px solid #e0e0e0; /* Thicker border */
+    border-radius: 6px; /* Rounder corners */
+    font-size: 1.1rem; /* Larger text */
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
 }
 
-/* Removed input[type="number"] since we're using text input now */
-
 .form-section textarea {
-    min-height: 150px;
+    min-height: 200px; /* Taller textarea */
     resize: vertical;
+    line-height: 1.6; /* Better text spacing */
 }
 
 .form-section input:focus,
 .form-section textarea:focus {
     border-color: #0382f1;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(3, 130, 241, 0.1); /* Subtle focus glow */
 }
 
-/* Buttons */
+/* Buttons - LARGER */
 .form-section button {
     display: block;
     width: 100%;
     background-color: #0382f1;
     color: white;
-    padding: 0.75rem;
+    padding: 1.2rem; /* Taller button */
     border: none;
-    border-radius: 4px;
-    margin-top: 1.5rem;
-    font-size: 1rem;
+    border-radius: 6px;
+    margin-top: 2rem; /* More space above button */
+    font-size: 1.1rem; /* Larger text */
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .form-section button:hover {
     background-color: #0266c8;
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(2, 102, 200, 0.2); /* Shadow on hover */
 }
 
 /* Responsive design */
 @media (max-width: 600px) {
+    main {
+        padding: 0 1.5rem;
+    }
+
     .form-section {
-        padding: 1.5rem;
+        padding: 2.5rem 2rem; /* Still generous on mobile */
     }
 
     .form-section h2 {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
+    }
+
+    .form-section input[type="text"],
+    .form-section textarea {
+        padding: 1rem; /* Slightly smaller on mobile */
+    }
+
+    .form-section textarea {
+        min-height: 180px;
+    }
+
+    .form-section button {
+        padding: 1rem;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
