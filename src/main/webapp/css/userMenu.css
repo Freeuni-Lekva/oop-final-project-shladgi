@@ -1,0 +1,100 @@
+:root {
+    --mg: #5c7056;             /* Moss Green */
+    --lg: #343a40;             /* Dark Gray */
+    --light-gray: #444;        /* Extra for depth */
+    --text-light: #f9f9f9;     /* Light text */
+    --highlight: #7a9671;      /* Lighter green hover */
+    --active-bg: #3f5240;      /* Active button background */
+}
+
+/* Layout */
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--lg);
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-light);
+    height: 100%;
+}
+
+main.flex-fill {
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* Menu Styles */
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.menu-button {
+    background-color: var(--mg);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(92, 112, 86, 0.8); /* green shadow */
+}
+
+/* Hover Effect */
+.menu-button:hover {
+    background-color: var(--highlight);
+    transform: scale(1.05);
+}
+
+/* Active Button Styling */
+.menu-button.active {
+    background-color: var(--active-bg);
+    box-shadow: 0 0 10px 3px rgba(92, 112, 86, 0.7);
+    transform: scale(1.04);
+}
+
+/* Content Containers */
+#user,
+#friends-container,
+#friend-requests-container,
+#statistics {
+    background-color: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1.5rem;
+    display: none;
+}
+
+/* Show containers when active */
+#user.active,
+#friends-container.active,
+#friend-requests-container.active,
+#statistics.active {
+    display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .menu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .menu-button {
+        width: 100%;
+        text-align: center;
+    }
+}

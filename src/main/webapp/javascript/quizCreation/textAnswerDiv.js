@@ -1,6 +1,6 @@
 export function getTextAnswerDiv() {
     const div = document.createElement("div");
-    div.classList.add("question-box");
+    div.className ="question-box text-answer-container question-container";
     div.dataset.qtype = "TextAnswer";
 
     // Question text input
