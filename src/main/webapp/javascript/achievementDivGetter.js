@@ -33,6 +33,8 @@ export async function getAchievementDiv(achievementId) {
         icon.className = "me-3";
         icon.style.width = "64px";
         icon.style.height = "64px";
+        icon.style.borderRadius = "50%";
+        icon.style.objectFit = "cover";
 
         const content = document.createElement("div");
 

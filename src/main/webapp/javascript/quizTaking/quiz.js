@@ -3,7 +3,9 @@
     import {evalAnswer} from "./answerSaveWhileTaking.js";
     import {highlightQuestionDiv} from "./hihglightQuestion.js";
     import {loadSavedAnswers, startAutoSave, stopSavingGracefully} from "./quizAutoSave.js";
+    import {checkAchievements} from "../achievement.js"
     import {populateQuestionDiv} from "./populateQuestionDiv.js";
+
 
     document.addEventListener("DOMContentLoaded", async () => {
         const startTime = Date.now();
@@ -197,6 +199,7 @@
                         bottomContainer.appendChild(homeLink);
                         if(!practiceMode)bottomContainer.appendChild(resultLink);
 
+                        if(!practiceMode) await checkAchievements(userid, "take");
                     };
 
                 } else {
