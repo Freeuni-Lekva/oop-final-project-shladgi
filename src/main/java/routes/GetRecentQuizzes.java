@@ -28,7 +28,7 @@ public class GetRecentQuizzes extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
         UserDB userDB =(UserDB) getServletContext().getAttribute(USERDB);
-        List<Quiz> quizzes = quizDB.getMostRecentQuizzes(10);
+        List<Quiz> quizzes = quizDB.getMostRecentQuizzes(3);
 
         JsonArray jsonArray = new JsonArray();
 

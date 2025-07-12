@@ -28,11 +28,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const row = document.createElement("div");
-        row.className = "row g-3";
+        row.className = "row g-32";
+
 
         for (const quiz of quizzes) {
             const col = document.createElement("div");
-            col.className = "col-md-4";
+            col.className = "col-md-42";
 
             // Use helper to create consistent quiz card (with remove button etc.)
             const quizDiv = await getQuizDiv(quiz);

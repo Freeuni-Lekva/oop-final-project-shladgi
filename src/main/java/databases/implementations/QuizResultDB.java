@@ -23,7 +23,7 @@ public class QuizResultDB extends DataBase<QuizResult, QuizResultField> {
         JOIN users u ON qr.userid = u.id
         GROUP BY u.username
         ORDER BY COUNT(*) DESC
-        LIMIT 10
+        LIMIT 3
     """;
 
         try (PreparedStatement ps = con.prepareStatement(sql);

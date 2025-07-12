@@ -33,7 +33,7 @@ public class GetTop10PopularQuizzesServlet extends HttpServlet {
         QuizDB quizDB = (QuizDB) getServletContext().getAttribute(QUIZDB);
         UserDB userDB = (UserDB) getServletContext().getAttribute(USERDB);
 
-        List<Quiz> quizzes = quizDB.getTopQuizzes(10);
+        List<Quiz> quizzes = quizDB.getTopQuizzes(3);
 
         JsonArray jsonArray = new JsonArray();
 

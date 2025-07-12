@@ -28,11 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const row = document.createElement("div");
-        row.className = "row g-3";
+        row.className = "row g-32";
 
         for (const quiz of quizzes) {
             const col = document.createElement("div");
-            col.className = "col-md-4";
 
             const quizDiv = await getQuizDiv(quiz);
 
